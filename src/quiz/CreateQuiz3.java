@@ -36,7 +36,7 @@ public class CreateQuiz3 extends HttpServlet {
 	}
 	
 	private int getNumberOfQuestions(int zID) throws SQLException{
-		
+		//we need to make a db object
 		Statement statement = Database.statement;
 		String query = "Select count(*) as Count From questions Where zID=" + zID ;
 		
