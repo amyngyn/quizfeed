@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class User {
 	private static final int SALT_LENGTH = 20;
+	private static final Database database = new Database();
 	@SuppressWarnings("unused")
 	private String username;
 	private boolean isValidated;
@@ -22,6 +23,7 @@ public class User {
 		this.username = username;
 		isValidated = false;
 		// TODO check if user exists in database
+		
 		throw new IllegalArgumentException(username + " does not exist in the database.");
 	}
 	

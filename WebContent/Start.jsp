@@ -12,6 +12,19 @@
 </head>
 <body>
 
+<%if (getServletContext().getAttribute("userName") == null){ %>
+<p><a href="Login.html"><b>Login</b></a></p>
+<%}else{ %>
+<p>Hi, <%= getServletContext().getAttribute("userName") %>!</p>
+<p><a href="Logout">Log Out</a></p>
+
+<form action="UserSearch" method="post">
+<p>User Search: <input type="text" name="username"></p>
+<p><input type="submit" name="Search"></p>
+</form>
+
+<%}%>
+
 <p><b>Quiz Name</b></p>
 
 <% 

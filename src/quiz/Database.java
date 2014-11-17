@@ -9,7 +9,7 @@ import com.mysql.jdbc.Statement;
 
 public class Database {
 
-	public static Statement statement;
+	public static Statement statement; // TODO(amyng): why is this public?
 
 	/**
 	 * 	Establishes database connection and makes a Statement variable available
