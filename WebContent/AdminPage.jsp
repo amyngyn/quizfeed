@@ -12,12 +12,13 @@
 <body>
 <h1>Administrative Page</h1>
 
+<p>Add an announcement:
 <form action="AdminAnnouncement" method="post">
 <input type="text" id="input" name="announcement">
 <input type="submit" name="Post">
 </form>
 
-
+<p><a href="DeleteQuiz.jsp">Delete Quiz</a></p>
 <p><a href="Start.jsp">Home</a></p>
 </body>
 </html>
