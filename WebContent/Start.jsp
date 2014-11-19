@@ -9,23 +9,31 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
+<style>
+	td {vertical-align: top}
+
+</style>
 </head>
+
+
 <body>
 
 <%if (getServletContext().getAttribute("userName") == null){ %>
 <p><a href="Login.html"><b>Login</b></a></p>
 <%}else{ %>
-<p>Hi, <%= getServletContext().getAttribute("userName") %>!</p>
-<p><a href="Logout">Log Out</a></p>
+<p>Hi, <%= getServletContext().getAttribute("userName") %>!
+	<a href="AdminBegin">Admin Page</a>
+	<a href="Logout">Log Out</a>
 
 <form action="UserSearch" method="post">
-<p>User Search: <input type="text" name="username"></p>
-<p><input type="submit" name="Search"></p>
+User Search: <input type="text" name="username">
+<input type="submit" name="Search">
 </form>
+</p>
+
 
 <%}%>
-
-<p><b>Quiz Name</b></p>
 
 <% 
 Vector<String> names = new Vector<String>();
@@ -46,18 +54,24 @@ while(rs.next()){
 }
 %>
 
+<table>
+<tr>
+<td>
+<p><b>Quiz Name</b></p>
 <% for(int i=0; i<names.size(); i++){
 	%>
 <p><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></p>
 <%} %>
-
 <p><a href="CreateQuizBegin.html">Create a New Quiz</a></p>
-
-<br>
+</td>
+<td>
 <p><b>Announcements</b></p>
 <% for(int i=0; i<announcements.size(); i++){
 	%>
 <p><%=(i+1) + ". "%><%=announcements.get(i)%></p>
 <%} %>
+</td>
+</tr>
+</table>
 </body>
 </html>
