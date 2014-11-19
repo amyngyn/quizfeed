@@ -4,15 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Welcome</title>
+<title>Admin</title>
+<style>
+	input#input { width: 300px; }
+</style>
 </head>
 <body>
+<h1>Administrative Page</h1>
 
-<p>Hi, <%= getServletContext().getAttribute("userName") %>!</p>
-<p><a href="AdminBegin">Admin Page</a></p>
+<form action="AdminAnnouncement" method="post">
+<input type="text" id="input" name="announcement">
+<input type="submit" name="Post">
+</form>
 
-<p>uID: <%= getServletContext().getAttribute("uID") %></p>
 
-<p><a href="Start.jsp">Quizzes</a></p>
+<p><a href="Start.jsp">Home</a></p>
 </body>
 </html>

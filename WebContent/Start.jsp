@@ -36,6 +36,14 @@ ResultSet rs = statement.executeQuery(query);
 while(rs.next()){
 	names.add(rs.getString("name"));
 }
+
+Vector<String> announcements = new Vector<String>();
+
+query = "Select announcement From announcements";
+rs = statement.executeQuery(query);
+while(rs.next()){
+	announcements.add(rs.getString("announcement"));
+}
 %>
 
 <% for(int i=0; i<names.size(); i++){
@@ -45,5 +53,11 @@ while(rs.next()){
 
 <p><a href="CreateQuizBegin.html">Create a New Quiz</a></p>
 
+<br>
+<p><b>Announcements</b></p>
+<% for(int i=0; i<announcements.size(); i++){
+	%>
+<p><%=(i+1) + ". "%><%=announcements.get(i)%></p>
+<%} %>
 </body>
 </html>
