@@ -36,7 +36,7 @@ public class AdminBegin extends HttpServlet {
 			dispatch.forward(request, response);
 			return;
 		}
-		RequestDispatcher dispatch = request.getRequestDispatcher("LoginWelcome.jsp");
+		RequestDispatcher dispatch = request.getRequestDispatcher("UserHome.jsp");
 		dispatch.forward(request, response);
 		return;
 		// TODO Auto-generated method stub

@@ -61,7 +61,9 @@ public class Login extends HttpServlet {
 				
 				getServletContext().setAttribute("userName", user);
 				getServletContext().setAttribute("uID", uID);
-				nextPage = "LoginWelcome.jsp";
+				request.getSession().setAttribute("uID", uID);
+				
+				nextPage = "UserHome.jsp";
 			}
 		} catch (SQLException e) {e.printStackTrace();}
 				

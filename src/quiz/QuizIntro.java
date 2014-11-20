@@ -68,6 +68,8 @@ public class QuizIntro extends HttpServlet {
 		request.setAttribute("description", description);
 		request.setAttribute("uID", uID);
 		request.setAttribute("date", date);
+		
+		request.getSession().setAttribute("zID", zID);
 				
 		RequestDispatcher dispatch = request.getRequestDispatcher("QuizIntro.jsp");
 		dispatch.forward(request, response);

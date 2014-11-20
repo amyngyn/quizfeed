@@ -1,6 +1,14 @@
 package quiz;
 
+import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
@@ -30,6 +38,20 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+	}
+	
+	private void recordScore(int uID, int zID, int score, int possible){
+		Database db = new Database();
+		Statement s = db.statement;
+		
+		String insert = "INSERT INTO scores VALUES (" + uID + ", " + zID + ", " + score + ", " + possible + ", null);";
+		
+		try {
+			s.execute(insert);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -149,30 +171,27 @@ public class GradeQuiz extends HttpServlet {
 						score++;
 					}
 				}
-				
 			}
 		}
 		
-		
 		request.setAttribute("score", score);
 		request.setAttribute("possible", possible);
+		Integer uID = (Integer)request.getSession().getAttribute("uID");
+		
+		if(uID != null){
+			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible);
+		}
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("GradedQuiz.jsp");
 		dispatch.forward(request, response);
-		
 		
 	}
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
+
+
+
+
+

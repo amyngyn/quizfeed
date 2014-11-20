@@ -102,8 +102,8 @@ INSERT INTO answers VALUES
 	(2, 1, "SQL"),
 	(2, 2, "Investment banking");
 
-
-DROP TABLE IF EXISTS completions;
+#delete if not being used
+DROP TABLE IF EXISTS completions; 
 CREATE TABLE completions (
 	zID INT,
 	uID INT,
@@ -111,7 +111,6 @@ CREATE TABLE completions (
 );
 INSERT INTO completions VALUES
 	(0, 1, 0);
-
 
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends (
@@ -144,6 +143,17 @@ CREATE TABLE announcements (
 INSERT INTO announcements VALUES
 	(0, "Happy Thanksgiving!", "2014-11-10");
 
+#delete if not being used
+DROP TABLE IF EXISTS scores; 
+CREATE TABLE scores (
+	uID INT,
+	zID INT,
+	score INT,
+	possible INT,
+	time DATE
+);
+INSERT INTO scores VALUES
+	(0, 0, 0, 0, null);
 
 
 

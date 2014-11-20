@@ -96,6 +96,7 @@ public class GetQuiz extends HttpServlet {
 		}
 		request.getSession().setAttribute("answers", answers);
 		request.getSession().setAttribute("answersTo", answersTo);
+		request.getSession().setAttribute("zID", quizNumber);
 	
 		RequestDispatcher dispatch = request.getRequestDispatcher("quiz.jsp");
 		dispatch.forward(request, response);

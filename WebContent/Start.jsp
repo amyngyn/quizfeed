@@ -23,8 +23,10 @@
 <p><a href="Login.html"><b>Login</b></a></p>
 <%}else{ %>
 <p>Hi, <%= getServletContext().getAttribute("userName") %>!
+	<a href="UserHome.jsp">My Page</a>
 	<a href="AdminBegin">Admin Page</a>
 	<a href="Logout">Log Out</a>
+
 
 <form action="UserSearch" method="post">
 User Search: <input type="text" name="username">

@@ -28,8 +28,12 @@ public class Logout extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// servletContext is wrong right? do a getSession for user specific 
 		getServletContext().setAttribute("userName", null);
 		getServletContext().setAttribute("uID", null);
+		
+		request.getSession().setAttribute("uID", null);
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("Start.jsp");
 		dispatch.forward(request, response);
