@@ -40,7 +40,8 @@ User Search: <input type="text" name="username">
 <% 
 Vector<String> names = new Vector<String>();
 
-Statement statement = Database.statement;
+Database db = new Database();
+Statement statement = db.statement;
 String query = "Select name From quizzes";
 ResultSet rs = statement.executeQuery(query);
 while(rs.next()){
