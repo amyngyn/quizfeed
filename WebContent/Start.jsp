@@ -12,7 +12,10 @@
 
 <style>
 	td {vertical-align: top}
-
+	.border {
+		border: 1px solid black;
+	  	border-collapse: collapse;
+	}
 </style>
 </head>
 
@@ -56,6 +59,19 @@ while(rs.next()){
 	announcements.add(rs.getString("announcement"));
 	times.add(rs.getString("time"));
 }
+
+Vector<String> recentNames = new Vector<String>();
+Vector<Timestamp> recentTimes = new Vector<Timestamp>();
+query = "Select name, time From quizzes Order By time ASC";
+rs = statement.executeQuery(query);
+int count = 0;
+while(rs.next()){
+	count++;
+	recentNames.add(rs.getString("name"));
+	recentTimes.add(rs.getTimestamp("time"));
+	if(count == 5) break;
+}
+
 %>
 
 <table>
@@ -74,6 +90,16 @@ while(rs.next()){
 	%>
 <p><%=(i+1) + ". "%><%=announcements.get(i) + " at " + times.get(i) %></p>
 <%} %>
+</td>
+</tr>
+<tr>
+<td>
+<b>Recent Quizzes</b>
+<table class="border">
+<%for(int i=0; i<recentNames.size(); i++){ %>
+<tr><td class="border"><%=recentNames.get(i) %></td><td class="border"><%=recentTimes.get(i) %></td></tr>
+<%}%>
+</table>
 </td>
 </tr>
 </table>
