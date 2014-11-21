@@ -69,7 +69,10 @@ public class CreateQuiz1 extends HttpServlet {
 		String insert = ("'" + name + "'" + ", ");
 		insert += ("'" + description + "'" + ", ");
 		insert += (user + ", ");
-		insert += ("'2014-12-20'");
+		
+		TimeString t = new TimeString();
+		String string = t.string;
+		insert += ("'" + string + "'");
 		
 		int quizNumber = -1;
 		try {

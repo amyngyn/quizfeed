@@ -49,11 +49,12 @@ while(rs.next()){
 }
 
 Vector<String> announcements = new Vector<String>();
-
-query = "Select announcement From announcements";
+Vector<String> times = new Vector<String>();
+query = "Select announcement, time From announcements";
 rs = statement.executeQuery(query);
 while(rs.next()){
 	announcements.add(rs.getString("announcement"));
+	times.add(rs.getString("time"));
 }
 %>
 
@@ -71,7 +72,7 @@ while(rs.next()){
 <p><b>Announcements</b></p>
 <% for(int i=0; i<announcements.size(); i++){
 	%>
-<p><%=(i+1) + ". "%><%=announcements.get(i)%></p>
+<p><%=(i+1) + ". "%><%=announcements.get(i) + " at " + times.get(i) %></p>
 <%} %>
 </td>
 </tr>

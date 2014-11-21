@@ -27,7 +27,7 @@ int zID = (Integer)request.getAttribute("zID");
 String name = (String)request.getAttribute("name");
 String description = (String)request.getAttribute("description");
 int uID = (Integer)request.getAttribute("uID");
-Date date = (Date)request.getAttribute("time");
+Timestamp time = (Timestamp)request.getAttribute("time");
 
 Vector<Integer> uIDs = new Vector<Integer>();
 Vector<Integer> scores = new Vector<Integer>();
@@ -48,7 +48,7 @@ while(rs.next()){
 <p><b>Quiz Name: </b> <%=name %></p>
 <p><b>Quiz Description: </b> <%= description %></p>
 <p><b>Quiz Creator: </b> <%=uID %></p>
-<p><b>Quiz Time Created: </b> <%=date %></p>
+<p><b>Quiz Time Created: </b> <%=time %></p>
 
 <form action="GetQuiz">
 <input type="hidden" name="num" value="<%=zID %>">

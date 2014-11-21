@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
@@ -48,7 +50,11 @@ public class AdminAnnouncement extends HttpServlet {
 		String text = request.getParameter("announcement");
 		int uID = (Integer)request.getServletContext().getAttribute("uID");
 		
-		String insert = "INSERT INTO announcements VALUES ("+uID+ ", '" + text + "', null);";
+		TimeString time = new TimeString();
+		String string = time.string;
+		
+		String insert = "INSERT INTO announcements VALUES ("+uID+ ", '" + text + "', '" + string + "');";
+		
 		
 		if(!text.equals("")){
 			try {

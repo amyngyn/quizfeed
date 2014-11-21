@@ -6,12 +6,12 @@ CREATE TABLE quizzes (
     name CHAR(64),
     description TEXT,
     uID INT,
-    time Date
+    time DateTime
 );
 INSERT INTO quizzes VALUES
-	(0,"Test Quiz","First test quiz. One math question.", 0, 0),
-	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10"),
-	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10");
+	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03"),
+	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02"),
+	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01");
 
 DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
@@ -138,10 +138,10 @@ DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,
 	announcement TEXT,
-	time Date
+	time DateTime
 );
 INSERT INTO announcements VALUES
-	(0, "Happy Thanksgiving!", "2014-11-10");
+	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01");
 
 #delete if not being used
 DROP TABLE IF EXISTS scores; 
