@@ -3,18 +3,23 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="quiz.Database" %>
 <%@ page import="java.util.*" %>
+
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Home/User Page</title>
 
 <style>
 	td {vertical-align: top}
 	.border {
 		border: 1px solid black;
 	  	border-collapse: collapse;
+	}
+	
+	.pointer {
+		cursor:pointer;
 	}
 </style>
 </head>
@@ -130,6 +135,104 @@ while(rs.next()){
 <tr><td class="border"><%=popularNames.get(i) %></td><td class="border"><%=popularCounts.get(i) %></td></tr>
 <%}%>
 </table>
+</td>
+</tr>
+<tr>
+<td>
+<b>Your Achievements</b>
+
+<%if (getServletContext().getAttribute("userName") == null){ %>
+<br><a href="Login.html"><b>Login</b></a>
+<%} else { %>
+<table class="border">
+
+<%
+int uID = (Integer)session.getAttribute("uID");
+query = "Select name From achievements Where type = 0 AND uID=" + uID + ";";
+rs = statement.executeQuery(query);
+Vector<String> created = new Vector<String>();
+while(rs.next()){ 
+	created.add(rs.getString("name"));
+}
+int size = created.size();
+int AMATEUR_AUTHOR = 1;
+if(size >= AMATEUR_AUTHOR){
+	String title = "";
+	for(int i=0; i<AMATEUR_AUTHOR; i++){
+		title += created.get(i);
+		if(i != AMATEUR_AUTHOR - 1) title += ", ";
+	}
+%>
+<tr class="border"><td title="<%=title%>" class="pointer">Amateur Author</td></tr>
+<%	}
+int PROLIFIC_AUTHOR = 5;
+if(size >= PROLIFIC_AUTHOR){
+	String title = "";
+	for(int i=0; i<PROLIFIC_AUTHOR; i++){
+		title += created.get(i);
+		if(i != PROLIFIC_AUTHOR - 1) title += ", ";
+	}
+%>
+<tr class="border"><td title="<%=title%>" class="pointer">Prolific Author</td></tr>
+<%} %>
+
+<%	
+int PRODIGIOUS_AUTHOR = 10;
+if(size >= PRODIGIOUS_AUTHOR){
+	String title = "";
+	for(int i=0; i<PRODIGIOUS_AUTHOR; i++){
+		title += created.get(i);
+		if(i != PRODIGIOUS_AUTHOR - 1) title += ", ";
+	}
+%>
+<tr class="border"><td title="<%=title%>" class="pointer">Prodigious Author</td></tr>
+<%} %>
+
+<%
+query = "Select name From achievements Where type = 1 AND uID=" + uID + ";";
+rs = statement.executeQuery(query);
+Vector<String> taken = new Vector<String>();
+while(rs.next()){ 
+	taken.add(rs.getString("name"));
+}
+size = taken.size();
+int QUIZ_MACHINE = 10;
+if(size >= QUIZ_MACHINE){
+	String title = "";
+	for(int i=0; i<QUIZ_MACHINE; i++){
+		title += taken.get(i);
+		if(i != QUIZ_MACHINE - 1) title += ", ";
+	}
+%>
+<tr class="border"><td title="<%=title%>" class="pointer">Quiz Machine</td></tr>
+<%	} %>
+
+<%
+uID = (Integer)session.getAttribute("uID");
+query = "Select name From achievements Where type = 2 AND uID=" + uID + ";";
+rs = statement.executeQuery(query);
+%>
+<%	if(rs.next()){ 
+	String high = rs.getString("name");
+%>
+<tr class="border"><td title="<%=high %>" class="pointer">I am the Greatest</td></tr>
+<%	} %>
+
+<%
+// TO-DO: award this achievement when practice mode works
+// For achievements, finished all but this last step. Figured we'd find this while testing.
+query = "Select name From achievements Where type = 3 AND uID=" + uID + ";";
+rs = statement.executeQuery(query);
+%>
+<%	if(rs.next()){ 
+	String practice = rs.getString("name");
+%>
+<tr class="border"><td title="<%=practice %>" class="pointer">Practice Makes Perfect</td></tr>
+<%	} %>
+
+</table>
+<%}%>
+
 </td>
 </tr>
 </table>

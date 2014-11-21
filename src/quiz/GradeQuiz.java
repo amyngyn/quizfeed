@@ -55,6 +55,42 @@ public class GradeQuiz extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	
+	private void addQuizMachineAchievement(int uID, int zID) throws SQLException{
+		Database d = new Database();
+		String query = "Select name From quizzes Where zID=" + zID + ";";
+		ResultSet rs = d.statement.executeQuery(query);
+		rs.next();
+		String name = rs.getString("name");
+		
+		int QUIZMACHINE_TYPE = 1;
+		// uID type name
+		String insert = "INSERT INTO achievements VALUES (" + uID + ", " + QUIZMACHINE_TYPE + ", '" + name + "');"; 
+		d.statement.execute(insert);
+	}
+	
+	private void addHighScoreAchievement(int score, int uID, int zID) throws SQLException{
+		int HIGHSCORE_TYPE = 2;
+		Database d = new Database();
+		
+		String query = "Select name From quizzes Where zID=" + zID + ";";
+		ResultSet rs = d.statement.executeQuery(query);
+		rs.next();
+		String name = rs.getString("name");
+		
+		query = "Select max(score) as score From scores Where zID=" + zID + ";";
+		rs = d.statement.executeQuery(query);
+		if(!rs.next()){
+			String insert = "INSERT INTO achievements VALUES (" + uID + ", " + HIGHSCORE_TYPE + ", '" + name + "');"; 
+			d.statement.execute(insert);
+			return;
+		}
+		int high = rs.getInt("score");
+		if(score < high) return;
+		
+		String insert = "INSERT INTO achievements VALUES (" + uID + ", " + HIGHSCORE_TYPE + ", '" + name + "');"; 
+		d.statement.execute(insert);
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -183,6 +219,11 @@ public class GradeQuiz extends HttpServlet {
 		if(uID != null){
 			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible);
 		}
+		
+		try {
+			addQuizMachineAchievement(uID, (Integer)request.getSession().getAttribute("zID"));
+			addHighScoreAchievement(score, uID, (Integer)request.getSession().getAttribute("zID"));
+		} catch (SQLException e) {e.printStackTrace();}
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("GradedQuiz.jsp");
 		dispatch.forward(request, response);

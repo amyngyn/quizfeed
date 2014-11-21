@@ -79,6 +79,14 @@ public class CreateQuiz1 extends HttpServlet {
 			quizNumber = getNumberOfQuizzes();
 			insert = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insert + ");";
 			statement.execute(insert);
+			
+			// add tuple to achievements
+			int AUTHOR_TYPE = 0;
+			Integer uID = (Integer)request.getSession().getAttribute("uID");
+			if(uID != null){
+				insert = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
+				statement.execute(insert);
+			}
 		} catch (SQLException e) {e.printStackTrace();}
 		
 		request.getSession().setAttribute("quizNumber", quizNumber);

@@ -145,6 +145,37 @@ CREATE TABLE scores (
 INSERT INTO scores VALUES
 	(0, 0, 0, 0, "1980-11-10 00:00:01");
 
+# data isn't true -- only for test purposes
+DROP TABLE IF EXISTS achievements; 
+CREATE TABLE achievements (
+	uID INT,
+	type INT,
+	name Text
+);
+INSERT INTO achievements VALUES
+	(0, 0, "Fake Make 1"),
+	(0, 0, "Fake Make 2"),
+	(0, 0, "Fake Make 3"),
+	(0, 0, "Fake Make 4"),
+	(0, 0, "Fake Make 5"),
+	(0, 0, "Fake Make 6"),
+	(0, 0, "Fake Make 7"),
+	(0, 0, "Fake Make 8"),
+	(0, 0, "Fake Make 9"),
+	(0, 0, "Fake Make 10"),
+	(0, 1, "Fake Take 1"),
+	(0, 1, "Fake Take 2"),
+	(0, 1, "Fake Take 3"),
+	(0, 1, "Fake Take 4"),
+	(0, 1, "Fake Take 5"),
+	(0, 1, "Fake Take 6"),
+	(0, 1, "Fake Take 7"),
+	(0, 1, "Fake Take 8"),
+	(0, 1, "Fake Take 9"),
+	(0, 1, "Fake Take 10"),
+	(0, 2, "Fake Greatest"),
+	(0, 3, "Fake Practice");
+
 
 
 
