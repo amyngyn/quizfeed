@@ -72,6 +72,26 @@ while(rs.next()){
 	if(count == 5) break;
 }
 
+Database d = new Database();
+Statement statementTwo = d.statement;
+Vector<String> popularNames = new Vector<String>();
+Vector<Integer> popularCounts = new Vector<Integer>();
+query = "Select zID,count(*) as Count From scores Group By zID Order By Count DESC";
+rs = statement.executeQuery(query);
+count = 0;
+while(rs.next()){
+	count++;
+	int z = rs.getInt("zID");
+	String queryTwo = "Select name From quizzes Where zID =" + z + ";";
+	ResultSet rsTwo = statementTwo.executeQuery(queryTwo);
+	rsTwo.next();
+	String name = rsTwo.getString("name");
+	popularNames.add(name);
+	popularCounts.add(rs.getInt("Count"));
+	if(count == 5) break;
+}
+
+
 %>
 
 <table>
@@ -96,8 +116,18 @@ while(rs.next()){
 <td>
 <b>Recent Quizzes</b>
 <table class="border">
+<tr><td class ="border"><b>Name</b></td><td class="border"><b>Time Created</b></td></tr>
 <%for(int i=0; i<recentNames.size(); i++){ %>
 <tr><td class="border"><%=recentNames.get(i) %></td><td class="border"><%=recentTimes.get(i) %></td></tr>
+<%}%>
+</table>
+</td>
+<td>
+<b>Popular Quizzes</b>
+<table class="border">
+<tr><td class ="border"><b>Name</b></td><td class="border"><b>Attempts</b></td></tr>
+<%for(int i=0; i<popularNames.size(); i++){ %>
+<tr><td class="border"><%=popularNames.get(i) %></td><td class="border"><%=popularCounts.get(i) %></td></tr>
 <%}%>
 </table>
 </td>

@@ -102,16 +102,6 @@ INSERT INTO answers VALUES
 	(2, 1, "SQL"),
 	(2, 2, "Investment banking");
 
-#delete if not being used
-DROP TABLE IF EXISTS completions; 
-CREATE TABLE completions (
-	zID INT,
-	uID INT,
-	time DATE
-);
-INSERT INTO completions VALUES
-	(0, 1, 0);
-
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends (
 	id1 INT,
@@ -150,10 +140,10 @@ CREATE TABLE scores (
 	zID INT,
 	score INT,
 	possible INT,
-	time DATE
+	time DateTime
 );
 INSERT INTO scores VALUES
-	(0, 0, 0, 0, null);
+	(0, 0, 0, 0, "1980-11-10 00:00:01");
 
 
 

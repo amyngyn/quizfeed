@@ -43,8 +43,10 @@ public class GradeQuiz extends HttpServlet {
 	private void recordScore(int uID, int zID, int score, int possible){
 		Database db = new Database();
 		Statement s = db.statement;
+		TimeString t = new TimeString();
+		String string = t.string;
 		
-		String insert = "INSERT INTO scores VALUES (" + uID + ", " + zID + ", " + score + ", " + possible + ", null);";
+		String insert = "INSERT INTO scores VALUES (" + uID + ", " + zID + ", " + score + ", " + possible + ", '" + string + "');";
 		
 		try {
 			s.execute(insert);
