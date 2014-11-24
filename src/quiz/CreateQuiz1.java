@@ -1,5 +1,3 @@
-// TODO delete this comment (git example)
-
 package quiz;
 
 import javax.servlet.annotation.WebListener;

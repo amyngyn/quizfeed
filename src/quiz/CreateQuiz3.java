@@ -80,7 +80,6 @@ public class CreateQuiz3 extends HttpServlet {
 		
 		/* NEED TO INSERT INTO DATABASE*/
 		
-		/* THIS REDIRECT DOESN'T WORK*/
 		RequestDispatcher dispatch = request.getRequestDispatcher(redirectTo);
 		dispatch.forward(request, response);
 	}
