@@ -6,12 +6,12 @@ CREATE TABLE quizzes (
     name CHAR(64),
     description TEXT,
     uID INT,
-    time Date
+    time DateTime
 );
 INSERT INTO quizzes VALUES
-	(0,"Test Quiz","First test quiz. One math question.", 0, 0),
-	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10"),
-	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10");
+	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03"),
+	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02"),
+	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01");
 
 DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
@@ -102,16 +102,6 @@ INSERT INTO answers VALUES
 	(2, 1, "SQL"),
 	(2, 2, "Investment banking");
 
-#delete if not being used
-DROP TABLE IF EXISTS completions; 
-CREATE TABLE completions (
-	zID INT,
-	uID INT,
-	time DATE
-);
-INSERT INTO completions VALUES
-	(0, 1, 0);
-
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends (
 	id1 INT,
@@ -139,22 +129,53 @@ DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,
 	announcement TEXT,
-	time Date
+	time DateTime
 );
 INSERT INTO announcements VALUES
-	(0, "Happy Thanksgiving!", "2014-11-10");
+	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01");
 
-#delete if not being used
+
 DROP TABLE IF EXISTS scores; 
 CREATE TABLE scores (
 	uID INT,
 	zID INT,
 	score INT,
 	possible INT,
-	time DATE
+	time DateTime
 );
 INSERT INTO scores VALUES
-	(0, 0, 0, 0, null);
+	(0, 0, 0, 0, "1980-11-10 00:00:01");
+
+# data isn't true -- only for test purposes
+DROP TABLE IF EXISTS achievements; 
+CREATE TABLE achievements (
+	uID INT,
+	type INT,
+	name Text
+);
+INSERT INTO achievements VALUES
+	(0, 0, "Fake Make 1"),
+	(0, 0, "Fake Make 2"),
+	(0, 0, "Fake Make 3"),
+	(0, 0, "Fake Make 4"),
+	(0, 0, "Fake Make 5"),
+	(0, 0, "Fake Make 6"),
+	(0, 0, "Fake Make 7"),
+	(0, 0, "Fake Make 8"),
+	(0, 0, "Fake Make 9"),
+	(0, 0, "Fake Make 10"),
+	(0, 1, "Fake Take 1"),
+	(0, 1, "Fake Take 2"),
+	(0, 1, "Fake Take 3"),
+	(0, 1, "Fake Take 4"),
+	(0, 1, "Fake Take 5"),
+	(0, 1, "Fake Take 6"),
+	(0, 1, "Fake Take 7"),
+	(0, 1, "Fake Take 8"),
+	(0, 1, "Fake Take 9"),
+	(0, 1, "Fake Take 10"),
+	(0, 2, "Fake Greatest"),
+	(0, 3, "Fake Practice");
 
 
 

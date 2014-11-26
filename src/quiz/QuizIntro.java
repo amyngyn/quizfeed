@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class QuizIntro extends HttpServlet {
 		String name = "";
 		String description = "";
 		int uID = -1;
-		Date date = new Date();
+		Timestamp time = null;
 			    
 		try {
 			rs = statement.executeQuery("SELECT * FROM quizzes WHERE zID='" + num + "'");
@@ -56,7 +57,7 @@ public class QuizIntro extends HttpServlet {
 			name = rs.getString("name");
 			description = rs.getString("description");
 			uID = rs.getInt("uID");
-			date = rs.getDate("time");
+			time = rs.getTimestamp("time");
 		} catch (SQLException e) {
 			System.out.print("database");
 					// TODO Auto-generated catch block
@@ -67,7 +68,7 @@ public class QuizIntro extends HttpServlet {
 		request.setAttribute("name", name);
 		request.setAttribute("description", description);
 		request.setAttribute("uID", uID);
-		request.setAttribute("date", date);
+		request.setAttribute("time", time);
 		
 		request.getSession().setAttribute("zID", zID);
 				

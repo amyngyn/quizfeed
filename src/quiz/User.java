@@ -58,7 +58,7 @@ public class User {
 	 * @param salt The salt to use. If null, this method will generate a new salt.
 	 * @return A String representation of the plaintext bytes hashed with a salt.
 	 */
-	private static String generateSaltedHash(String plaintext, String salt) {
+	public static String generateSaltedHash(String plaintext, String salt) {
 		if (salt == null)
 			salt = generateSalt();
 		

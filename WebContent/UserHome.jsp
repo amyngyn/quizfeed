@@ -21,6 +21,8 @@
 }
 </style>
 
+
+
 <%
 int uID = (Integer)session.getAttribute("uID");
 String query = "Select zID, score, possible from scores where zID=" + uID + ";";
@@ -41,7 +43,10 @@ while(rs.next()){
 %>
 
 <body>
-
+<% String message = (String)getServletContext().getAttribute("error");
+if(message != null){ %>
+<p> <%= message %> </p>
+<%}%>
 <p>Hi, <%= getServletContext().getAttribute("userName") %>!</p>
 
 <table>

@@ -6,6 +6,12 @@
 </head>
 <body>
 
+<% String message = (String)getServletContext().getAttribute("error");
+if(message != null){ %>
+<p> <%= message %> </p>
+<%}%>
+
+
 <form action="Login" method="post">
 <p>Username: <input type="text" name="username"></p>
 <p>Password: <input type="password" name="password"></p>

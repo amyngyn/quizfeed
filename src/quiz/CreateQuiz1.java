@@ -1,5 +1,3 @@
-// TODO delete this comment (git example)
-
 package quiz;
 
 import javax.servlet.annotation.WebListener;
@@ -69,13 +67,24 @@ public class CreateQuiz1 extends HttpServlet {
 		String insert = ("'" + name + "'" + ", ");
 		insert += ("'" + description + "'" + ", ");
 		insert += (user + ", ");
-		insert += ("'2014-12-20'");
+		
+		TimeString t = new TimeString();
+		String string = t.string;
+		insert += ("'" + string + "'");
 		
 		int quizNumber = -1;
 		try {
 			quizNumber = getNumberOfQuizzes();
 			insert = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insert + ");";
 			statement.execute(insert);
+			
+			// add tuple to achievements
+			int AUTHOR_TYPE = 0;
+			Integer uID = (Integer)request.getSession().getAttribute("uID");
+			if(uID != null){
+				insert = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
+				statement.execute(insert);
+			}
 		} catch (SQLException e) {e.printStackTrace();}
 		
 		request.getSession().setAttribute("quizNumber", quizNumber);

@@ -66,6 +66,7 @@ public class Login extends HttpServlet {
 				}
 				int uID = rs.getInt("uID");
 
+				// should all be converted to getSession right?
 				context.setAttribute("userName", user);
 				context.setAttribute("uID", uID);
 				request.getSession().setAttribute("uID", uID);

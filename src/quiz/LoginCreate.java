@@ -52,9 +52,11 @@ public class LoginCreate extends HttpServlet {
 		String query = "Select count(*) as count From users;";
 		ResultSet rs = statement.executeQuery(query);
 		rs.next();
+		
 		int count = rs.getInt("count");
 		
-		String insert = "INSERT INTO users VALUES (" + count + ", '" + username + "', '" + password + "');";
+		String passwordHash = User.generateSaltedHash(password, null);
+		String insert = "INSERT INTO users VALUES (" + count + ", '" + username + "', '" + passwordHash + "');";
 		statement.execute(insert);
 		
 		getServletContext().setAttribute("userName", username);
@@ -93,9 +95,6 @@ public class LoginCreate extends HttpServlet {
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("Start.jsp");
 		dispatch.forward(request, response);	
-		
-	
-		
 	
 	}
 
