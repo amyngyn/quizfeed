@@ -73,7 +73,7 @@ public class CreateQuiz3 extends HttpServlet {
 			answer = choices.get(answerIndex - 1);
 		}
 		String insert = "";
-		String redirectTo = "Start.jsp";
+		String redirectTo = QuizConstants.INDEX_FILE;
 		if (request.getParameter("status").equals("continue")) {
 			redirectTo = "CreateQuizType.html";
 		}

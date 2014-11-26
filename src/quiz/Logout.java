@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import quiz.QuizConstants;
 
 /**
  * Servlet implementation class Logout
@@ -35,7 +36,7 @@ public class Logout extends HttpServlet {
 		
 		request.getSession().setAttribute("uID", null);
 		
-		RequestDispatcher dispatch = request.getRequestDispatcher("Start.jsp");
+		RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
 		dispatch.forward(request, response);
 	}
 

@@ -59,7 +59,7 @@ public class UserSearch extends HttpServlet {
 		
 		
 		if(!next){
-			RequestDispatcher dispatch = request.getRequestDispatcher("Start.jsp");
+			RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
 			dispatch.forward(request, response);
 			return;
 		}

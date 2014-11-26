@@ -12,7 +12,7 @@
 	<br>
 	Total Points Possible: <%= request.getAttribute("possible") %>
 	<br>
-	<a href="Start.jsp">Home</a>
+	
 
 
 </body>

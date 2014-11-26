@@ -93,7 +93,7 @@ public class LoginCreate extends HttpServlet {
 		
 		getServletContext().setAttribute("message", "");
 		
-		RequestDispatcher dispatch = request.getRequestDispatcher("Start.jsp");
+		RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
 		dispatch.forward(request, response);	
 	
 	}
