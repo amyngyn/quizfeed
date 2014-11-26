@@ -20,7 +20,7 @@
 <body>
 
 <%if (getServletContext().getAttribute("userName") == null){ %>
-<p><a href="Login.html"><b>Login</b></a></p>
+<p><a href="Login.jsp"><b>Login</b></a></p>
 <%}else{ %>
 <p>Hi, <%= getServletContext().getAttribute("userName") %>!
 	<a href="UserHome.jsp">My Page</a>

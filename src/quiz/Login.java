@@ -12,6 +12,7 @@ import java.sql.Time;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,14 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Login() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Login() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -43,35 +44,42 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
+		ServletContext context = getServletContext();
+
 		Statement statement = Database.statement;
 		String user = request.getParameter("username");
 		String password = request.getParameter("password");
-		
-		String query = "Select uID, password From users Where name='" + user + "';";
-		
+
+		String query = "Select uID, password, salt From users Where name='" + user + "';";
+
 		ResultSet rs = null;
-		String nextPage = "Login.html";
+		String nextPage = "Login.jsp";
 		try {
 			rs = statement.executeQuery(query);
-		
 			if(rs.next()){
+				String passwordDatabase = rs.getString("password");
+				String salt = rs.getString("salt");
+				if (!passwordDatabase.equals(User.generateSaltedHash(password, salt))) {
+					context.setAttribute("message", "Password was invalid.");
+				} else {
+					context.setAttribute("message", "FYI: Password was valid.");
+				}
 				int uID = rs.getInt("uID");
-				
-				getServletContext().setAttribute("userName", user);
-				getServletContext().setAttribute("uID", uID);
+
+				context.setAttribute("userName", user);
+				context.setAttribute("uID", uID);
 				request.getSession().setAttribute("uID", uID);
-				
+
 				nextPage = "UserHome.jsp";
+
 			}
 		} catch (SQLException e) {e.printStackTrace();}
-				
+
 		RequestDispatcher dispatch = request.getRequestDispatcher(nextPage);
 		dispatch.forward(request, response);
-		
-		
-		
+
+
+
 	}
 
 }
