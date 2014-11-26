@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/Login")
+@WebServlet("/login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -30,14 +30,14 @@ public class Login extends HttpServlet {
 	 */
 	public Login() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp");
+		dispatch.forward(request, response);
 	}
 
 	/**
@@ -53,14 +53,14 @@ public class Login extends HttpServlet {
 		String query = "Select uID, password, salt From users Where name='" + user + "';";
 
 		ResultSet rs = null;
-		String nextPage = "Login.jsp";
+		String nextPage = "login.jsp";
 		try {
 			rs = statement.executeQuery(query);
 			if(rs.next()){
 				String passwordDatabase = rs.getString("password");
 				String salt = rs.getString("salt");
 				if (!passwordDatabase.equals(User.generateSaltedHash(password, salt))) {
-					context.setAttribute("message", "Password was invalid.");
+					context.setAttribute("error", "Password was invalid.");
 				} else {
 					context.setAttribute("message", "FYI: Password was valid.");
 				}
@@ -74,7 +74,9 @@ public class Login extends HttpServlet {
 				nextPage = "UserHome.jsp";
 
 			}
-		} catch (SQLException e) {e.printStackTrace();}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		RequestDispatcher dispatch = request.getRequestDispatcher(nextPage);
 		dispatch.forward(request, response);
