@@ -29,6 +29,7 @@ String description = (String)request.getAttribute("description");
 int uID = (Integer)request.getAttribute("uID");
 Timestamp time = (Timestamp)request.getAttribute("time");
 
+
 Vector<Integer> uIDs = new Vector<Integer>();
 Vector<Integer> scores = new Vector<Integer>();
 Vector<Integer> total = new Vector<Integer>();
@@ -41,6 +42,7 @@ while(rs.next()){
 	scores.add(rs.getInt("score"));
 	total.add(rs.getInt("possible"));
 }
+
 %>
 
 
@@ -59,8 +61,9 @@ while(rs.next()){
 <tr><td colspan="3"><b>High Scores</b></td></tr>
 <tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td></tr>
 <%
+
 int size = uIDs.size();
-int count = size < 5 ? size : 5;
+int count = size > 5 ? 5: size;
 
 for(int i=0; i<count; i++){ %>
 <tr><td><%= uIDs.get(i)%></td><td><%=scores.get(i)%></td><td><%=total.get(i)%></td></tr>
