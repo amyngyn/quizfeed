@@ -1,15 +1,9 @@
 package quiz;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,14 +24,12 @@ public class CreateQuiz1 extends HttpServlet {
      */
     public CreateQuiz1() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	
@@ -60,7 +52,7 @@ public class CreateQuiz1 extends HttpServlet {
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");
 		int user = 0;
-		int time = 0;
+		//int time = 0; unused
 		
 		Statement statement = Database.statement;
 		
@@ -78,7 +70,7 @@ public class CreateQuiz1 extends HttpServlet {
 			insert = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insert + ");";
 			statement.execute(insert);
 			
-			// add tuple to achievements
+			//add tuple to achievements
 			int AUTHOR_TYPE = 0;
 			Integer uID = (Integer)request.getSession().getAttribute("uID");
 			if(uID != null){
@@ -91,8 +83,6 @@ public class CreateQuiz1 extends HttpServlet {
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizType.html");
 		dispatch.forward(request, response);
-		
-		// TODO Auto-generated method stub
 	}
 
 }

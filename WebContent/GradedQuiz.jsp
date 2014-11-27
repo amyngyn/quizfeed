@@ -12,7 +12,10 @@
 	<br>
 	Total Points Possible: <%= request.getAttribute("possible") %>
 	<br>
-	
+	<form action="index.jsp" method="post">
+		<input type="submit" value="Back to Homepage">
+	</form>
+
 
 
 </body>

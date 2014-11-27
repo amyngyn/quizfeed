@@ -29,14 +29,12 @@ public class AdminAnnouncement extends HttpServlet {
      */
     public AdminAnnouncement() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -50,7 +48,7 @@ public class AdminAnnouncement extends HttpServlet {
 		TimeString time = new TimeString();
 		String string = time.string;
 		
-		String insert = "INSERT INTO announcements VALUES ("+uID+ ", '" + text + "', '" + string + "');";
+		String insert = "INSERT INTO announcements VALUES (" +uID+ ", '" + text + "', '" + string + "');";
 		
 		
 		if(!text.equals("")){

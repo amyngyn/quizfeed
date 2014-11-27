@@ -39,14 +39,12 @@ public class AdminBegin extends HttpServlet {
 		RequestDispatcher dispatch = request.getRequestDispatcher("UserHome.jsp");
 		dispatch.forward(request, response);
 		return;
-		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 }

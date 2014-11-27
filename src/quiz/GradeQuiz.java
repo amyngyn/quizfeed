@@ -215,19 +215,19 @@ public class GradeQuiz extends HttpServlet {
 		request.setAttribute("score", score);
 		request.setAttribute("possible", possible);
 		Integer uID = (Integer)request.getSession().getAttribute("uID");
+		Integer zID = (Integer)request.getSession().getAttribute("zID");
 		
 		if(uID != null){
 			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible);
+			try {
+				addQuizMachineAchievement(uID, zID);
+				addHighScoreAchievement(score, uID, (Integer)request.getSession().getAttribute("zID"));
+			} catch (SQLException e) {e.printStackTrace();}
+			
 		}
 		
-		try {
-			addQuizMachineAchievement(uID, (Integer)request.getSession().getAttribute("zID"));
-			addHighScoreAchievement(score, uID, (Integer)request.getSession().getAttribute("zID"));
-		} catch (SQLException e) {e.printStackTrace();}
-		
 		RequestDispatcher dispatch = request.getRequestDispatcher("GradedQuiz.jsp");
-		dispatch.forward(request, response);
-		
+		dispatch.forward(request, response);	
 	}
 	
 	

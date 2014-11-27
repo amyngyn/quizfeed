@@ -35,11 +35,17 @@ public class CreateQuiz2 extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int type = Integer.parseInt(request.getParameter("type"));
-		request.getSession().setAttribute("type", type);
+		if (request.getParameter("type") != null) {
+			int type = Integer.parseInt(request.getParameter("type"));
+			request.getSession().setAttribute("type", type);
+			RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizQuestion.jsp");
+			dispatch.forward(request, response);
+		}
+		else {
+			RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizTypeBadInput.html");
+			dispatch.forward(request, response);
+		}
 		
-		RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizQuestion.jsp");
-		dispatch.forward(request, response);
 		
 	}
 

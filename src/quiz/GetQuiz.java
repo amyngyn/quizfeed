@@ -30,7 +30,6 @@ public class GetQuiz extends HttpServlet {
      */
     public GetQuiz() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -55,7 +54,6 @@ public class GetQuiz extends HttpServlet {
 				types.add(rs.getInt("type"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		request.setAttribute("questions", questions);
@@ -73,7 +71,6 @@ public class GetQuiz extends HttpServlet {
 				choicesTo.add(rs.getInt("sID"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		request.setAttribute("choices", choices);
@@ -91,7 +88,6 @@ public class GetQuiz extends HttpServlet {
 				answersTo.add(rs.getInt("sID"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		request.getSession().setAttribute("answers", answers);

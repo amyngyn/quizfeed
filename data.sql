@@ -133,6 +133,7 @@ CREATE TABLE announcements (
 );
 INSERT INTO announcements VALUES
 	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01");
+	(1, "Danielle writes an announcement!", "1980-11-10 00:00:01");
 
 
 DROP TABLE IF EXISTS scores; 

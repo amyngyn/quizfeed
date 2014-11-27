@@ -25,18 +25,15 @@ public class CreateQuiz3 extends HttpServlet {
      */
     public CreateQuiz3() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 	
 	private int getNumberOfQuestions(int zID) throws SQLException{
-		//we need to make a db object
 		Statement statement = Database.statement;
 		String query = "Select count(*) as Count From questions Where zID=" + zID ;
 		
@@ -51,16 +48,17 @@ public class CreateQuiz3 extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Statement statement = Database.statement;
 		int zID = (Integer)request.getSession().getAttribute("quizNumber");
+		int sID = -1;
 		try {
-            int sID = getNumberOfQuestions(zID);
+            sID = getNumberOfQuestions(zID);
 		} catch (SQLException e) {e.printStackTrace();}
 		
 		String question = request.getParameter("question");
 		ArrayList<String> choices = new ArrayList<String>();
 		String answer = "";
 		int type = (Integer)request.getSession().getAttribute("type");
-		
 		
 		if (type == 1 || type == 2 || type == 4) {
 			answer = request.getParameter("answer");
@@ -72,14 +70,19 @@ public class CreateQuiz3 extends HttpServlet {
 			int answerIndex = Integer.parseInt(request.getParameter("correctAnswer"));
 			answer = choices.get(answerIndex - 1);
 		}
-		String insert = "";
+		String insertQ  = "INSERT INTO questions VALUES (" + zID + ", " + sID + ", '" + question + "', " + type + ");";
+		String insertA = "INSERT INTO answers VALUES (" + zID + ", " + sID + ", '" + answer + "');";
+		System.out.println(insertA + "\n\n\n\n\n\n\n");
+		try {
+			statement.execute(insertQ);
+			statement.execute(insertA);
+		} catch (SQLException e) {e.printStackTrace();}
+		
 		String redirectTo = QuizConstants.INDEX_FILE;
 		if (request.getParameter("status").equals("continue")) {
 			redirectTo = "CreateQuizType.html";
 		}
-		
-		/* NEED TO INSERT INTO DATABASE*/
-		
+
 		RequestDispatcher dispatch = request.getRequestDispatcher(redirectTo);
 		dispatch.forward(request, response);
 	}
