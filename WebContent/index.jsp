@@ -20,7 +20,7 @@
 		if (context.getAttribute("userName") == null) {
 	%>
 	<p>
-		<a href="Login.jsp"><b>Login</b></a>
+		<a href="login.jsp"><b>Login</b></a>
 	</p>
 	<%
 		} else {

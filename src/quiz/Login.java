@@ -58,21 +58,24 @@ public class Login extends HttpServlet {
 			rs = statement.executeQuery(query);
 			if(rs.next()){
 				String passwordDatabase = rs.getString("password");
+				System.out.println("raw password: " + passwordDatabase);
 				String salt = rs.getString("salt");
 				if (!passwordDatabase.equals(User.generateSaltedHash(password, salt))) {
 					context.setAttribute("error", "Password was invalid.");
 				} else {
 					context.setAttribute("message", "FYI: Password was valid.");
+					int uID = rs.getInt("uID");
+
+					// should all be converted to getSession right?
+					context.setAttribute("userName", user);
+					context.setAttribute("uID", uID);
+					request.getSession().setAttribute("uID", uID);
+
+					nextPage = "UserHome.jsp";
 				}
-				int uID = rs.getInt("uID");
-
-				// should all be converted to getSession right?
-				context.setAttribute("userName", user);
-				context.setAttribute("uID", uID);
-				request.getSession().setAttribute("uID", uID);
-
-				nextPage = "UserHome.jsp";
-
+			}
+			else {
+				context.setAttribute("error", "That user does not exist.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

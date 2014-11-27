@@ -19,7 +19,7 @@ if(message != null){ %>
 <p><input type="submit" name="Submit"></p>
 </form>
 
-<p><a href="Start.jsp">Home</a></p>
+<p><a href="index.jsp">Home</a></p>
 
 </body>
 </html>

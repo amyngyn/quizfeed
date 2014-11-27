@@ -78,7 +78,6 @@ public class LoginCreate extends HttpServlet {
 		
 
 		if(!available){
-			
 			getServletContext().setAttribute("message", "Username already used.");
 			
 			RequestDispatcher dispatch = request.getRequestDispatcher("LoginCreate.jsp");
