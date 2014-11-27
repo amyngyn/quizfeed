@@ -41,7 +41,8 @@ public class QuizIntro extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int num = Integer.parseInt(request.getParameter("num"));
 				
-		Statement statement = Database.statement;
+		Database db = new Database();
+		Statement statement = db.statement;
 		ResultSet rs;
 				
 		int zID = -1;
