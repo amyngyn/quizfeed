@@ -140,7 +140,7 @@
 		
 		if(uID == null){
 		%>
-			<p><a href="Login.jsp">Login</a>, to view achievements.<p>
+			<p><a href="login.jsp">Login</a>, to view achievements.<p>
 		<%
 		}else{
 	
