@@ -62,7 +62,7 @@
 		<tr>
 			<td>uID: <%=getServletContext().getAttribute("uID")%></td>
 			<td><a href="AdminBegin">Admin Page</a></td>
-			<td><a href="Start.jsp">Quizzes</a></td>
+			<td><a href="index.jsp">Quizzes</a></td>
 		</tr>
 	</table>
 

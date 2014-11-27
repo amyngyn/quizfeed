@@ -135,7 +135,15 @@
 	<h4>Your Achievements</h4>
 	<table class="border">
 	<%
-		int uID = (Integer) context.getAttribute("uID");
+	
+		Integer uID = (Integer) context.getAttribute("uID");
+		
+		if(uID == null){
+		%>
+			<p><a href="Login.jsp">Login</a>, to view achievements.<p>
+		<%
+		}else{
+	
 		query = "Select name From achievements Where type = 0 AND uID=" + uID + ";";
 		rs = statement.executeQuery(query);
 		Vector<String> created = new Vector<String>();
@@ -250,9 +258,7 @@
 						}
 					%>
 
-				</table> <%
- 	
- %>
+				</table> <%}%>
 
 </body>
 </html>
