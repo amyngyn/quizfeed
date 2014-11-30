@@ -45,7 +45,6 @@ int size = questions.size();%>
 	<%} else if (type == QuizConstants.PICTURE_RESPONSE){%>
 		<!-- Cycle through choices to find picture URL-->
 		<% 
-		int choicesSize = choices.size();
 		String picture = questions.get(i);
 		%>
 		<!-- Output picture and blank text box-->
