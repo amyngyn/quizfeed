@@ -22,8 +22,12 @@ int size = questions.size();%>
 
 <%for (int i=0; i<size; i++){ %>
 	<!-- Question number and name -->
-	<p><%=i + 1%>.<%=questions.get(i) %><br>
 	<% int type = types.get(i); %>
+	<% if (type != QuizConstants.PICTURE_RESPONSE){  %>
+		<p><%=i + 1%>.<%=questions.get(i) %><br>
+	<% } %>
+
+	
 	<% if(type == QuizConstants.TEXT_RESPONSE){ %>
 		<br><input type="text" value="" name="<%=i%>">			
 	<%}else if(type == QuizConstants.FILL_IN_BLANK){ %>
@@ -42,15 +46,10 @@ int size = questions.size();%>
 		<!-- Cycle through choices to find picture URL-->
 		<% 
 		int choicesSize = choices.size();
-		String picture = null;
-		for (int j=0; j<choicesSize; j++) {
-			if(choicesTo.get(j) == i) {
-				picture = choices.get(j);
-			}
-		}
+		String picture = questions.get(i);
 		%>
 		<!-- Output picture and blank text box-->
-		<img src="<%=picture%>" height="60" width="60">
+		<img src="<%=picture%>" height="300" width="300">
 		<br><input type="text" value="" name="<%=i%>">
 		
 	<!-- Question type 5 multi text response -->	
