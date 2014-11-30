@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.Time" %>    
-<%@ page import="java.util.Vector" %>    
+<%@ page import="java.util.ArrayList" %>    
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -11,10 +11,10 @@
 </head>
 <body>
 <% 
-Vector<String> questions = (Vector<String>)request.getAttribute("questions");
-Vector<Integer> types = (Vector<Integer>)request.getAttribute("types");
-Vector<String> choices = (Vector<String>)request.getAttribute("choices");
-Vector<Integer> choicesTo = (Vector<Integer>)request.getAttribute("choicesTo");
+ArrayList<String> questions = (ArrayList<String>)request.getAttribute("questions");
+ArrayList<Integer> types = (ArrayList<Integer>)request.getAttribute("types");
+ArrayList<String> choices = (ArrayList<String>)request.getAttribute("choices");
+ArrayList<Integer> choicesTo = (ArrayList<Integer>)request.getAttribute("choicesTo");
 
 int size = questions.size();%>
 
@@ -34,10 +34,9 @@ int size = questions.size();%>
 		7 matching 
 	-->
 	<% int type = types.get(i); %>
-	
 	<!-- Question type 1 text response  -->
 	<% if(type == 1){ %>
-		<br><input type="text" value="" name="<%=i%>">	
+		<input type="text" value="" name="<%=i%>">	
 		
 	<!-- Question type 2 text fill in the blank -->	
 	<%}else if(type == 2){ %>

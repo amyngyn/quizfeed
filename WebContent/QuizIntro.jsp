@@ -29,9 +29,9 @@ String description = (String)request.getAttribute("description");
 int uID = (Integer)request.getAttribute("uID");
 Timestamp time = (Timestamp)request.getAttribute("time");
 
-Vector<Integer> uIDs = new Vector<Integer>();
-Vector<Integer> scores = new Vector<Integer>();
-Vector<Integer> total = new Vector<Integer>();
+ArrayList<Integer> uIDs = new ArrayList<Integer>();
+ArrayList<Integer> scores = new ArrayList<Integer>();
+ArrayList<Integer> total = new ArrayList<Integer>();
 Connection con = Database.openConnection();
 Statement s = Database.getStatement(con);
 String query = "Select * from scores where zID = " + zID + " order by score ASC;";

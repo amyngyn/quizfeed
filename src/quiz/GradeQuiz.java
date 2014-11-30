@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -116,10 +116,10 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Vector<Integer> types = (Vector<Integer>) request.getSession().getAttribute("types");
+		ArrayList<Integer> types = (ArrayList<Integer>) request.getSession().getAttribute("types");
 		request.setAttribute("size", types.size());
-		Vector<String> answers = (Vector<String>) request.getSession().getAttribute("answers");
-		Vector<Integer> answersTo = (Vector<Integer>) request.getSession().getAttribute("answersTo");
+		ArrayList<String> answers = (ArrayList<String>) request.getSession().getAttribute("answers");
+		ArrayList<Integer> answersTo = (ArrayList<Integer>) request.getSession().getAttribute("answersTo");
 		int answersSize = answers.size();
 
 		int questions = types.size();
@@ -160,7 +160,7 @@ public class GradeQuiz extends HttpServlet {
 				possible++;
 
 			} else if (types.get(i) == 5) { // multi text
-				Vector<String> theAnswers = new Vector<String>();
+				ArrayList<String> theAnswers = new ArrayList<String>();
 				answersSize = answers.size();
 				for (int j = 0; j < answersSize; j++) {
 					if (answersTo.get(j) == i) {
@@ -177,7 +177,7 @@ public class GradeQuiz extends HttpServlet {
 				}
 
 			} else if (types.get(i) == 6) { // multi answer multi choice
-				Vector<String> theAnswers = new Vector<String>();
+				ArrayList<String> theAnswers = new ArrayList<String>();
 				answersSize = answers.size();
 
 				for (int j = 0; j < answersSize; j++) {
@@ -199,7 +199,7 @@ public class GradeQuiz extends HttpServlet {
 					}
 				}
 			} else if(types.get(i) == 7) {
-				Vector<String> theAnswers = new Vector<String>();
+				ArrayList<String> theAnswers = new ArrayList<String>();
 				answersSize = answers.size();
 
 				for (int j = 0; j < answersSize; j++) {
