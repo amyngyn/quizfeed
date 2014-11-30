@@ -1,16 +1,10 @@
 package quiz;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.util.Vector;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,14 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/UserSearch")
 public class UserSearch extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UserSearch() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public UserSearch() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,30 +39,30 @@ public class UserSearch extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = (String)request.getParameter("username");
-		
-		Statement statement = Database.statement;
-		String query = "Select uID From users Where name='" + name + "'";
-		
-		ResultSet rs;
-		Boolean next = false;
-		try {
-			rs = statement.executeQuery(query);
-			next = rs.next();
-		} catch (SQLException e) {e.printStackTrace();}
-		
-		
-		
-		if(!next){
-			RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
-			dispatch.forward(request, response);
-			return;
-		}
-		
-		
-		getServletContext().setAttribute("search", name);
-		RequestDispatcher dispatch = request.getRequestDispatcher("UserProfile.jsp");
-		dispatch.forward(request, response);
-		
-	}
 
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			
+			String query = "Select uID From users Where name='" + name + "'";
+			rs = statement.executeQuery(query);
+			
+			if (rs.next()) {
+				getServletContext().setAttribute("search", name);
+				RequestDispatcher dispatch = request.getRequestDispatcher("UserProfile.jsp");
+				dispatch.forward(request, response);
+			} else {
+				RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
+				dispatch.forward(request, response);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+	}
 }

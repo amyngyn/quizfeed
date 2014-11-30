@@ -29,12 +29,11 @@ String description = (String)request.getAttribute("description");
 int uID = (Integer)request.getAttribute("uID");
 Timestamp time = (Timestamp)request.getAttribute("time");
 
-
 Vector<Integer> uIDs = new Vector<Integer>();
 Vector<Integer> scores = new Vector<Integer>();
 Vector<Integer> total = new Vector<Integer>();
-Database db = new Database();
-Statement s = db.statement;
+Connection con = Database.openConnection();
+Statement s = Database.getStatement(con);
 String query = "Select * from scores where zID = " + zID + " order by score ASC;";
 ResultSet rs = s.executeQuery(query);
 while(rs.next()){

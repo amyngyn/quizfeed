@@ -177,10 +177,3 @@ INSERT INTO achievements VALUES
 	(0, 1, "Fake Take 10"),
 	(0, 2, "Fake Greatest"),
 	(0, 3, "Fake Practice");
-
-
-
-
-
-
-

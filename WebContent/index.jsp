@@ -26,15 +26,14 @@
 		} else {
 	%>
 	<p>
-		Hi, <%=context.getAttribute("userName")%>!
-		<a href="UserHome.jsp">My Page</a>
-		<a href="AdminBegin">Admin Page</a>
-		<a href="Logout">Log Out</a>
+		Hi,
+		<%=context.getAttribute("userName")%>! <a href="UserHome.jsp">My
+			Page</a> <a href="AdminBegin">Admin Page</a> <a href="Logout">Log Out</a>
 	</p>
-	
+
 	<form action="UserSearch" method="post">
-		User Search: <input type="text" name="username">
-		<input type="submit" name="Search">
+		User Search: <input type="text" name="username"> <input
+			type="submit" name="Search">
 	</form>
 
 	<%
@@ -42,8 +41,16 @@
 	%>
 
 	<%
-		Vector<String> names = new Vector<String>();
-		Statement statement = Database.statement;
+		ArrayList<String> names = new ArrayList<String>();
+		Connection con = null;
+		Statement statement = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
 		String query = "Select name From quizzes";
 		ResultSet rs = statement.executeQuery(query);
 		while (rs.next()) {
@@ -69,8 +76,7 @@
 			if (count == 5)
 				break;
 		}
-		Database d = new Database();
-		Statement statementTwo = d.statement;
+		Statement statementTwo = Database.getStatement(con);
 		Vector<String> popularNames = new Vector<String>();
 		Vector<Integer> popularCounts = new Vector<Integer>();
 		query = "Select zID,count(*) as Count From scores Group By zID Order By Count DESC";
@@ -92,20 +98,30 @@
 	%>
 
 	<table>
-		<tr><th>Quiz Name</th></tr>
+		<tr>
+			<th>Quiz Name</th>
+		</tr>
 		<% for (int i = 0; i < names.size(); i++) { %>
-		<tr><td> <a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a> </td></tr>
+		<tr>
+			<td><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></td>
+		</tr>
 		<% } %>
 	</table>
-	<p><a href="CreateQuizBegin.html">Create a New Quiz</a> </p>
+	<p>
+		<a href="CreateQuizBegin.html">Create a New Quiz</a>
+	</p>
 
 	<table>
-		<tr><th>Announcements</th></tr>
+		<tr>
+			<th>Announcements</th>
+		</tr>
 		<% for (int i = 0; i < announcements.size(); i++) { %>
-		<tr><td><%=(i + 1) + ". "%><%=announcements.get(i) + " at " + times.get(i)%></td></tr>
+		<tr>
+			<td><%=(i + 1) + ". "%><%=announcements.get(i) + " at " + times.get(i)%></td>
+		</tr>
 		<% } %>
 	</table>
-	
+
 	<h4>Recent Quizzes</h4>
 	<table class="border">
 		<tr>
@@ -113,10 +129,10 @@
 			<th class="border"><b>Time Created</b></th>
 		</tr>
 		<% for (int i = 0; i < recentNames.size(); i++) { %>
-			<tr>
-				<td class="border"><%=recentNames.get(i)%></td>
-				<td class="border"><%=recentTimes.get(i)%></td>
-			</tr>
+		<tr>
+			<td class="border"><%=recentNames.get(i)%></td>
+			<td class="border"><%=recentTimes.get(i)%></td>
+		</tr>
 		<% } %>
 	</table>
 	<h4>Popular Quizzes</h4>
@@ -134,14 +150,16 @@
 	</table>
 	<h4>Your Achievements</h4>
 	<table class="border">
-	<%
+		<%
 	
 		Integer uID = (Integer) context.getAttribute("uID");
 		
 		if(uID == null){
 		%>
-			<p><a href="login.jsp">Login</a>, to view achievements.<p>
-		<%
+		<p>
+			<a href="login.jsp">Login</a>, to view achievements.
+		<p>
+			<%
 		}else{
 	
 		query = "Select name From achievements Where type = 0 AND uID=" + uID + ";";
@@ -160,10 +178,11 @@
 					title += ", ";
 			}
 	%>
-			<tr class="border">
-				<td title="<%=title%>" class="pointer">Amateur Author</td>
-			</tr>
-	<%  }
+		
+		<tr class="border">
+			<td title="<%=title%>" class="pointer">Amateur Author</td>
+		</tr>
+		<%  }
 		int PROLIFIC_AUTHOR = 5;
 		if (size >= PROLIFIC_AUTHOR) {
 			String title = "";
@@ -173,14 +192,14 @@
 					title += ", ";
 			}
 	%>
-			<tr class="border">
-				<td title="<%=title%>" class="pointer">Prolific Author</td>
-			</tr>
-			<%
+		<tr class="border">
+			<td title="<%=title%>" class="pointer">Prolific Author</td>
+		</tr>
+		<%
 				}
 			%>
 
-					<%
+		<%
 						int PRODIGIOUS_AUTHOR = 10;
 							if (size >= PRODIGIOUS_AUTHOR) {
 								String title = "";
@@ -190,14 +209,14 @@
 										title += ", ";
 								}
 					%>
-					<tr class="border">
-						<td title="<%=title%>" class="pointer">Prodigious Author</td>
-					</tr>
-					<%
+		<tr class="border">
+			<td title="<%=title%>" class="pointer">Prodigious Author</td>
+		</tr>
+		<%
 						}
 					%>
 
-					<%
+		<%
 						query = "Select name From achievements Where type = 1 AND uID="
 									+ uID + ";";
 							rs = statement.executeQuery(query);
@@ -215,50 +234,50 @@
 										title += ", ";
 								}
 					%>
-					<tr class="border">
-						<td title="<%=title%>" class="pointer">Quiz Machine</td>
-					</tr>
-					<%
+		<tr class="border">
+			<td title="<%=title%>" class="pointer">Quiz Machine</td>
+		</tr>
+		<%
 						}
 					%>
 
-					<%
+		<%
 						uID = (Integer) context.getAttribute("uID");
 							query = "Select name From achievements Where type = 2 AND uID="
 									+ uID + ";";
 							rs = statement.executeQuery(query);
 					%>
-					<%
+		<%
 						if (rs.next()) {
 								String high = rs.getString("name");
 					%>
-					<tr class="border">
-						<td title="<%=high%>" class="pointer">I am the Greatest</td>
-					</tr>
-					<%
+		<tr class="border">
+			<td title="<%=high%>" class="pointer">I am the Greatest</td>
+		</tr>
+		<%
 						}
 					%>
 
-					<%
+		<%
 						// TO-DO: award this achievement when practice mode works
 							// For achievements, finished all but this last step. Figured we'd find this while testing.
 							query = "Select name From achievements Where type = 3 AND uID="
 									+ uID + ";";
 							rs = statement.executeQuery(query);
 					%>
-					<%
+		<%
 						if (rs.next()) {
 								String practice = rs.getString("name");
 					%>
-					<tr class="border">
-						<td title="<%=practice%>" class="pointer">Practice Makes
-							Perfect</td>
-					</tr>
-					<%
+		<tr class="border">
+			<td title="<%=practice%>" class="pointer">Practice Makes Perfect</td>
+		</tr>
+		<%
 						}
 					%>
 
-				</table> <%}%>
+	</table>
+	<%}%>
 
 </body>
 </html>

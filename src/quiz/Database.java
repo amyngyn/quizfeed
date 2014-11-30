@@ -3,25 +3,34 @@ package quiz;
 import java.sql.*;
 
 public class Database {
+	public static final String USE_STATEMENT = "USE " + DatabaseInfo.MYSQL_DATABASE_NAME;
 
-	public static Statement statement; // TODO(amyng): why is this public?
+	public static Connection openConnection() throws SQLException {
+		return (Connection) DriverManager.getConnection(
+				"jdbc:mysql://" + DatabaseInfo.MYSQL_DATABASE_SERVER,
+				DatabaseInfo.MYSQL_USERNAME,
+				DatabaseInfo.MYSQL_PASSWORD);
+	}
 
-	/**
-	 * 	Establishes database connection and makes a Statement variable available
-	 **/
-	public Database(){
+	public static Statement getStatement(Connection con) throws SQLException {
+		Statement statement = (Statement) con.createStatement();
+		statement.executeQuery(USE_STATEMENT);
+		return statement;
+	}
+
+	public static void closeConnections(Connection con, Statement statement, ResultSet rs) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.MYSQL_DATABASE_SERVER, DatabaseInfo.MYSQL_USERNAME, DatabaseInfo.MYSQL_PASSWORD);
-			statement = (Statement) con.createStatement();
-			statement.executeQuery("USE " + DatabaseInfo.MYSQL_DATABASE_NAME);
-		} catch (SQLException e) {	
+			if (rs != null) {
+				rs.close();
+			}
+			if (statement != null) {
+				statement.close();
+			}
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.exit(0);
 		}
-	}	
-
+	}
 }

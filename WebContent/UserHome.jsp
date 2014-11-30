@@ -28,8 +28,8 @@
 	int uID = (Integer) session.getAttribute("uID");
 	String query = "Select zID, score, possible from scores where zID="
 			+ uID + ";";
-	Database db = new Database();
-	Statement s = db.statement;
+	Connection con = Database.openConnection();
+	Statement s = Database.getStatement(con);
 
 	Vector<Integer> zIDs = new Vector<Integer>();
 	Vector<Integer> scores = new Vector<Integer>();

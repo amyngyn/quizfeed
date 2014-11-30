@@ -1,33 +1,56 @@
 package quiz;
 
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
 public class Quiz {
-	ArrayList<Question> allQuestions;
-	String quizName;
-	boolean randomOrder;
-	boolean practiceMode;
+	private int zID;
+	private String quizName;
+	private String description;
 	
-	public Quiz(String name, boolean practiceMode, boolean randomOrder) {
-		allQuestions = new ArrayList<Question>();
-		quizName = name;
-		this.practiceMode = practiceMode;
-		this.randomOrder = randomOrder;
+	public Quiz(int zID, String quizName, String description) {
+		this.zID = zID;
+		this.quizName = quizName;
+		this.description = description;
+	}
+	
+	public int getID() {
+		return zID;
 	}
 	
 	public String getName() {
 		return quizName;
 	}
 	
-	public void addQuestion(Question q) {
-		allQuestions.add(q);
+	public String getDescription() {
+		return description;
 	}
 	
-	public Question getQuestion(int index) {
-		return allQuestions.get(index);
+	// TODO use skip and amount params in query!
+	public static ArrayList<Quiz> getQuizzes() {
+		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			
+			String query = "Select zID, name, description From quizzes Order by zID;";
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String description = rs.getString("description");
+				int zID = rs.getInt("zID");
+				quizzes.add(new Quiz(zID, name, description));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return null;
 	}
-	
-	public int getNumQuestions() {
-		return allQuestions.size();
-	}	
 }
