@@ -11,6 +11,7 @@
 	<jsp:include page="<%=QuizConstants.HEADER_FILE%>" />
 
 	<%
+		// TODO this error message will show up for ANY user
 		String message = (String) getServletContext().getAttribute("error");
 		if (message != null) {
 	%>

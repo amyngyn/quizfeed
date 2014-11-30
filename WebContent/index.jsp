@@ -154,14 +154,8 @@
 	
 		Integer uID = (Integer) context.getAttribute("uID");
 		
-		if(uID == null){
-		%>
-		<p>
-			<a href="login.jsp">Login</a>, to view achievements.
-		<p>
-			<%
-		}else{
-	
+		if (uID != null) {
+		
 		query = "Select name From achievements Where type = 0 AND uID=" + uID + ";";
 		rs = statement.executeQuery(query);
 		Vector<String> created = new Vector<String>();
@@ -178,7 +172,7 @@
 					title += ", ";
 			}
 	%>
-		
+
 		<tr class="border">
 			<td title="<%=title%>" class="pointer">Amateur Author</td>
 		</tr>

@@ -8,47 +8,80 @@ public class User {
 	private static final int SALT_LENGTH = 20;
 
 	/**
-	 * 
 	 * @param username
 	 * @param passwordText
 	 * @return
 	 */
 	public static boolean addUserToDatabase(String username, String passwordText) {
-		String passwordHash = generateSaltedHash(passwordText, null);
+		Connection con = null;
+		Statement existsStatement = null;
+		ResultSet existsResult = null;
+		Statement insertStatement = null;
+		try {
+			con = Database.openConnection();
 
-		if (passwordHash == null) return false;
+			String existsQuery = "SELECT * FROM users WHERE name='" + username + "';";
+			existsStatement = Database.getStatement(con);
+			existsResult = existsStatement.executeQuery(existsQuery);
+			if (existsResult.next()) return false;
 
+			String salt = generateSalt();
+			String passwordHash = generateSaltedHash(passwordText, salt);
+			if (passwordHash == null) return false;
+			
+			String insertQuery = "INSERT INTO users (name, password, salt) VALUES ("
+					+ "'" + username + "', "
+					+ "'" + passwordHash + "', "
+					+ "'" + salt + "');";
+			insertStatement = Database.getStatement(con);
+			insertStatement.execute(insertQuery);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			Database.closeConnections(con, existsStatement, existsResult, insertStatement);
+		}
+	}
+
+	public static int validateUser(String username, String passwordAttemptText) {
 		Connection con = null;
 		Statement statement = null;
+		ResultSet rs = null;
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
+			
+			String userQuery = "SELECT uID, password, salt FROM users WHERE UPPER(name) = UPPER('" + username + "');";
+			rs = statement.executeQuery(userQuery);
+			if (!rs.next()) return -1;
+			int uID = rs.getInt("uID");
+			String passwordInDatabase = rs.getString("password");
+			String salt = rs.getString("salt");
 
-			//TODO check if user already exists and return false.
-
+			String passwordAttempt = generateSaltedHash(passwordAttemptText, salt);
+			if (passwordInDatabase.equals(passwordAttempt)) {
+				return uID;
+			} else {
+				return -1;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
 		} finally {
-			Database.closeConnections(con, statement, null);
+			Database.closeConnections(con, statement, rs);
 		}
-		return true;
-	}
-
-	public static boolean validateUser(String username, String passwordAttempt) {
-		String salt = ""; // TODO get salt from database for this user
-		String passwordInDatabase = generateSaltedHash(passwordAttempt, salt);
-		return passwordInDatabase.equals(passwordAttempt);
 	}
 
 	/**
 	 * @param plaintext The text to hash.
-	 * @param salt The salt to use. If null, this method will generate a new salt.
+	 * @param salt The salt to use. If null, this method will not use a salt.
 	 * @return A String representation of the plaintext bytes hashed with a salt.
 	 */
 	public static String generateSaltedHash(String plaintext, String salt) {
 		if (salt == null)
-			salt = generateSalt();
-
+			salt = "";
+		
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA");
 			md.update((plaintext + salt).getBytes());

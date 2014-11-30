@@ -4,6 +4,7 @@
 <%@ page import="quiz.Database"%>
 <%@ page import="quiz.QuizConstants"%>
 <%@ page import="java.util.*"%>
+<%@ page import="quiz.CookieHelper"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -25,9 +26,14 @@
 <jsp:include page="<%=QuizConstants.HEADER_FILE%>" />
 
 <%
-	int uID = (Integer) session.getAttribute("uID");
-	String query = "Select zID, score, possible from scores where zID="
-			+ uID + ";";
+	Cookie uIDCookie = CookieHelper.getCookie(request.getCookies(), "uID");
+	if (uIDCookie == null) {
+		System.out.println("stahp");
+		return;
+	}
+	System.out.println("-------------");
+	int uID = Integer.parseInt(uIDCookie.getValue());
+	String query = "Select zID, score, possible from scores where zID=" + uID + ";";
 	Connection con = Database.openConnection();
 	Statement s = Database.getStatement(con);
 

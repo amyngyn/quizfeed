@@ -9,6 +9,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,48 +41,28 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = getServletContext();
-		Connection con = null;
-		Statement statement = null;
-		ResultSet rs = null;
-
-
-		String user = request.getParameter("username");
+		
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		
+		int uID = User.validateUser(username, password);
 
-		String query = "Select uID, password, salt From users Where name='" + user + "';";
-
-		String nextPage = "login.jsp";
-		try {
-			con = Database.openConnection();
-			statement = Database.getStatement(con);
-
-			rs = statement.executeQuery(query);
-			if (!rs.next()) {
-				context.setAttribute("error", "That user does not exist.");
-				return;
-			}
+		if (uID != -1) {
+			Cookie uIDCookie = new Cookie("uID", "" + uID);
+			uIDCookie.setMaxAge(60 * 60); // 1 hour
+			response.addCookie(uIDCookie);
 			
-			String passwordDatabase = rs.getString("password");
-			String salt = rs.getString("salt");
-			if (!passwordDatabase.equals(User.generateSaltedHash(password, salt))) {
-				context.setAttribute("error", "Password was invalid. password: " + password + ", " + salt);
-			} else {
-				context.setAttribute("message", "FYI: Password was valid.");
-				int uID = rs.getInt("uID");
-
-				// should all be converted to getSession right?
-				context.setAttribute("userName", user);
-				context.setAttribute("uID", uID);
-				request.getSession().setAttribute("uID", uID);
-
-				nextPage = "UserHome.jsp";
-			}
-			RequestDispatcher dispatch = request.getRequestDispatcher(nextPage);
+			Cookie usernameCookie = new Cookie("username", username);
+			uIDCookie.setMaxAge(60 * 60); // 1 hour
+			response.addCookie(usernameCookie);
+			
+			System.out.println("added cookie username with value " + username);
+			RequestDispatcher dispatch = request.getRequestDispatcher("UserHome.jsp");
 			dispatch.forward(request, response);
-		} catch (SQLException e){
-			e.printStackTrace();
-		} finally {
-			Database.closeConnections(con, statement, rs);
+		} else {
+			context.setAttribute("error", "Password was invalid. password: " + password);
+			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp");
+			dispatch.forward(request, response);
 		}
 	}
 }

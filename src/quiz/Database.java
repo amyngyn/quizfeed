@@ -18,19 +18,22 @@ public class Database {
 		return statement;
 	}
 
-	public static void closeConnections(Connection con, Statement statement, ResultSet rs) {
-		try {
-			if (rs != null) {
-				rs.close();
+	public static void closeConnections(Object... sqlObjects) {
+		for (int i = 0; i < sqlObjects.length; i++) {
+			try {
+				if (sqlObjects[i] instanceof Connection) {
+					((Connection) sqlObjects[i]).close();
+				} else if (sqlObjects[i] instanceof Statement) {
+					((Statement) sqlObjects[i]).close();
+				} else if (sqlObjects[i] instanceof ResultSet) {
+					((ResultSet) sqlObjects[i]).close();
+				} else if (sqlObjects[i] != null){
+					throw new IllegalArgumentException(
+							"Object must be a Connection, Statement, or ResultSet.");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			if (statement != null) {
-				statement.close();
-			}
-			if (con != null) {
-				con.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 }

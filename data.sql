@@ -120,9 +120,9 @@ CREATE TABLE users (
 	salt TEXT
 );
 INSERT INTO users (name, password, salt) VALUES
-	("Ryan", "password", "salt"),
-	("Danielle", "password", "salt"),
-	("Amy", "password", "salt");
+	("Ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("Danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("Amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
 
 
 DROP TABLE IF EXISTS announcements;
@@ -147,7 +147,7 @@ CREATE TABLE scores (
 INSERT INTO scores VALUES
 	(0, 0, 0, 0, "1980-11-10 00:00:01");
 
-# data isn't true -- only for test purposes
+-- data isn't true -- only for test purposes
 DROP TABLE IF EXISTS achievements; 
 CREATE TABLE achievements (
 	uID INT,
