@@ -1,6 +1,8 @@
 package quiz;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,16 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class UserSearch
+ * Servlet implementation class SearchServlet
  */
-@WebServlet("/user")
-public class UserDisplayServlet extends HttpServlet {
+@WebServlet("/search")
+public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public UserDisplayServlet() {
+	public SearchServlet() {
 		super();
 	}
 
@@ -26,15 +28,12 @@ public class UserDisplayServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String[] userIDs = request.getParameterValues("uid");
-		if (userIDs == null || userIDs.length != 1) {
-			response.sendRedirect(Constants.INDEX);
-		} else {
-			int uID = Integer.parseInt(userIDs[0]);
-			User user = User.getUser(uID);
-			request.setAttribute("user", user);
-			RequestDispatcher dispatch = request.getRequestDispatcher("profile.jsp");
-			dispatch.forward(request, response);
-		}
+		String[] queryParams = request.getParameterValues("query");
+		String query = queryParams == null ? "" : queryParams[0];
+
+		ArrayList<User> userMatches = User.findUsers(query);
+		request.setAttribute("users", userMatches);
+		RequestDispatcher dispatch = request.getRequestDispatcher("search.jsp");
+		dispatch.forward(request, response);
 	}
 }

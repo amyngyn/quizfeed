@@ -13,7 +13,11 @@
 <title><%=user.getUsername()%> - <%=Constants.QUIZ_SITE_TITLE%></title>
 </head>
 <body>
-	<jsp:include page="<%=Constants.HEADER_FILE%>" />
+
+	<jsp:include page="<%=Constants.HEADER_FILE%>">
+		<jsp:param value="<%=user.getUsername()%>" name="title" />
+	</jsp:include>
 	<h1><%=user.getUsername()%></h1>
+
 </body>
 </html>

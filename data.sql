@@ -114,18 +114,6 @@ INSERT INTO friends VALUES
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-<<<<<<< HEAD
-	uID INT,
-	name TEXT,
-	password TEXT,
-	salt TEXT
-);
-INSERT INTO users (name, password, salt) VALUES
-	(0, "Ryan", "password", "salt"),
-	(1, "Danielle", "password", "salt"),
-	(2, "Amy", "password", "salt");
-
-=======
 	uID INT AUTO_INCREMENT,
 	username TEXT,
 	password TEXT,
@@ -135,7 +123,6 @@ INSERT INTO users (username, password, salt) VALUES
 	("ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
 	("danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
 	("amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
->>>>>>> 3dde9b4c740b212648f4291a2d1affeb69c02087
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (

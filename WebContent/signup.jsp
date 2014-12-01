@@ -9,15 +9,16 @@
 <title>Create User Name</title>
 </head>
 <body>
-	<jsp:include page="<%=Constants.HEADER_FILE%>" />
 
+<jsp:include page="<%=Constants.HEADER_FILE%>">
+	<jsp:param value="Sign Up" name="title" />
+</jsp:include>
 	<%
-		String message = (String) getServletContext().getAttribute(
-				"message");
-		if (message != null) {
+		String errorMessage = (String) getServletContext().getAttribute("error");
+		if (errorMessage != null) {
 	%>
 	<p>
-		<%=message%>
+		<%=errorMessage%>
 	</p>
 	<%
 		}
