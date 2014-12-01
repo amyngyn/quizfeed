@@ -1,24 +1,17 @@
 package quiz;
 
-import java.lang.Object;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 /**
  * Servlet implementation class QuizIntro
@@ -32,18 +25,17 @@ public class QuizIntro extends HttpServlet {
      */
     public QuizIntro() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		
 		int num = Integer.parseInt(request.getParameter("num"));
-				
-		Database db = new Database();
-		Statement statement = db.statement;
-		ResultSet rs;
 				
 		int zID = -1;
 		String name = "";
@@ -52,6 +44,8 @@ public class QuizIntro extends HttpServlet {
 		Timestamp time = null;
 			    
 		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
 			rs = statement.executeQuery("SELECT * FROM quizzes WHERE zID='" + num + "'");
 			rs.next();
 			zID = rs.getInt("zID");
@@ -60,9 +54,9 @@ public class QuizIntro extends HttpServlet {
 			uID = rs.getInt("uID");
 			time = rs.getTimestamp("time");
 		} catch (SQLException e) {
-			System.out.print("database");
-					// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
 		}
 				
 		request.setAttribute("zID", zID);
@@ -75,16 +69,11 @@ public class QuizIntro extends HttpServlet {
 				
 		RequestDispatcher dispatch = request.getRequestDispatcher("QuizIntro.jsp");
 		dispatch.forward(request, response);
-				
-				
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
 
 }

@@ -1,16 +1,9 @@
 package quiz;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import java.io.IOException;
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.util.Vector;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class DeleteQuiz
  */
 @WebServlet("/DeleteQuiz")
-public class DeleteQuiz extends HttpServlet {
+public class DeleteQuizServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public DeleteQuiz() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public DeleteQuizServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,30 +37,31 @@ public class DeleteQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		int delete = Integer.parseInt(request.getParameter("zID"));
-		
+
 		String doUpdate = "Update quizzes Set zID = zID - 1 Where zID > " + delete + ";";
 		String doDelete = "Delete from quizzes Where zID = " + delete + ";";
-		
-		Database db = new Database();
-		Statement statement = db.statement;
-		
+
+		Connection con = null;
+		Statement statement = null;
+
 		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
 			statement.execute(doDelete);
 			statement.execute(doUpdate);
+			getServletContext().setAttribute("message", "Delete successful.");	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			getServletContext().setAttribute("message", "Delete failed.");	
+		} finally {
+			Database.closeConnections(con, statement, null);
 		}
-		getServletContext().setAttribute("message", "Delete Successful");
-		
+
 		RequestDispatcher dispatch = request.getRequestDispatcher("DeleteQuiz.jsp");
 		dispatch.forward(request, response);
-		
-		
 	}
-
 }
 
 

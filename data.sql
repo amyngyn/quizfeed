@@ -114,6 +114,7 @@ INSERT INTO friends VALUES
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
+<<<<<<< HEAD
 	uID INT,
 	name TEXT,
 	password TEXT,
@@ -124,15 +125,26 @@ INSERT INTO users (name, password, salt) VALUES
 	(1, "Danielle", "password", "salt"),
 	(2, "Amy", "password", "salt");
 
+=======
+	uID INT AUTO_INCREMENT,
+	username TEXT,
+	password TEXT,
+	salt TEXT
+);
+INSERT INTO users (username, password, salt) VALUES
+	("ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
+>>>>>>> 3dde9b4c740b212648f4291a2d1affeb69c02087
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,
 	announcement TEXT,
-	time DateTime
+	timestamp DateTime
 );
 INSERT INTO announcements VALUES
-	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01");
+	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01"),
 	(1, "Danielle writes an announcement!", "1980-11-10 00:00:01");
 
 
@@ -147,7 +159,7 @@ CREATE TABLE scores (
 INSERT INTO scores VALUES
 	(0, 0, 0, 0, "1980-11-10 00:00:01");
 
-# data isn't true -- only for test purposes
+-- data isn't true -- only for test purposes
 DROP TABLE IF EXISTS achievements; 
 CREATE TABLE achievements (
 	uID INT,
@@ -177,10 +189,3 @@ INSERT INTO achievements VALUES
 	(0, 1, "Fake Take 10"),
 	(0, 2, "Fake Greatest"),
 	(0, 3, "Fake Practice");
-
-
-
-
-
-
-

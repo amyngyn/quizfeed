@@ -1,67 +1,148 @@
 package quiz;
 
 import java.security.*;
+import java.sql.*;
 import java.util.Random;
 
 public class User {
 	private static final int SALT_LENGTH = 20;
-	private static final Database database = new Database();
-	@SuppressWarnings("unused")
-	private String username;
-	private boolean isValidated;
-	
-	/**
-	 * Returns a User object representing a user with the given username from
-	 * the database. Must validate password to perform secure actions.
-	 * Note: Use createUserAccount to create a new user. This constructor
-	 * assumes the user already exists.
-	 * 
-	 * @param username The username of the account to fetch.
-	 * @return a User object representing a User in the database.
+	private final int uID;
+	private final String username;
+
+	// Empty User object should never be constructed.
+	private User() {
+		throw new IllegalAccessError();
+	}
+
+	/* 
+	 * Private because User objects should only be obtained via getUser, 
+	 * which validates against the database.
 	 */
-	public User(String username) {
-		this.username = username;
-		isValidated = false;
-		// TODO check if user exists in database
-		
-		throw new IllegalArgumentException(username + " does not exist in the database.");
+	private User(int uID, String username) {
+		this.uID = uID;
+		this.username = username;	
 	}
 	
+	public int getUID() {
+		return uID;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	private static User getUser(Integer requestedUID, String requestedUsername) {
+		String query = "";
+		if (requestedUID != null && requestedUsername != null) {
+			throw new IllegalArgumentException();
+		} else if (requestedUID == null) {
+			query = "SELECT * FROM users WHERE " + Constants.USERNAME_KEY + "='" + requestedUsername + "';";
+		} else {
+			query = "SELECT * FROM users WHERE uID='" + requestedUID + "';";
+		}
+		
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			if (!rs.next()) return null;
+			int uID = rs.getInt("uID");
+			String username = rs.getString(Constants.USERNAME_KEY);
+			return new User(uID, username);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return null;
+	}
+
+	public static User getUser(int uID) {
+		return getUser(uID, null);
+	}
+
+	public static User getUser(String username) {
+		return getUser(null, username.toLowerCase());
+	}
+
 	/**
-	 * 
 	 * @param username
 	 * @param passwordText
 	 * @return
 	 */
-	public static User createUserAccount(String username, String passwordText) {
-		//TODO check if user already exists and return null.
-		
-		String passwordHash = generateSaltedHash(passwordText, null);
-		
-		if (passwordHash == null) return null;
+	public static User addUserToDatabase(String username, String passwordText) {
+		Connection con = null;
+		Statement insertStatement = null;
+		username = username.toLowerCase();
+		try {
+			con = Database.openConnection();
 
-		// TODO insert username + passwordHash + passwordSalt into DB
-		return new User(username);
+			// The user already exists.
+			if (getUser(username) != null) {
+				return null;
+			}
+
+			String salt = generateSalt();
+			String passwordHash = generateSaltedHash(passwordText, salt);
+			if (passwordHash == null) return null;
+
+			String insertQuery = "INSERT INTO users (username, password, salt) VALUES ("
+					+ "'" + username + "', "
+					+ "'" + passwordHash + "', "
+					+ "'" + salt + "');";
+			insertStatement = Database.getStatement(con);
+			insertStatement.execute(insertQuery);
+			return getUser(username);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			Database.closeConnections(con, insertStatement);
+		}
 	}
-	
-	@SuppressWarnings("unused")
-	public boolean validateUser(String password) {
-		if (isValidated) return true;
-		String salt = null; // TODO get salt from database for this user
-		String passwordHash = generateSaltedHash(password, salt);
-		// TODO check passwordHash against what is stored for this user
-		return false;
+
+	public static int validateUser(String username, String passwordAttemptText) {
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		username = username.toLowerCase();
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+
+			String userQuery = "SELECT uID, password, salt FROM users WHERE username='" + username + "';";
+			rs = statement.executeQuery(userQuery);
+			if (!rs.next()) return -1;
+			int uID = rs.getInt("uID");
+			String passwordInDatabase = rs.getString("password");
+			String salt = rs.getString("salt");
+
+			String passwordAttempt = generateSaltedHash(passwordAttemptText, salt);
+			if (passwordInDatabase.equals(passwordAttempt)) {
+				return uID;
+			} else {
+				return -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
 	}
-	
+
 	/**
 	 * @param plaintext The text to hash.
-	 * @param salt The salt to use. If null, this method will generate a new salt.
+	 * @param salt The salt to use. If null, this method will not use a salt.
 	 * @return A String representation of the plaintext bytes hashed with a salt.
 	 */
 	public static String generateSaltedHash(String plaintext, String salt) {
 		if (salt == null)
-			salt = generateSalt();
-		
+			salt = "";
+
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA");
 			md.update((plaintext + salt).getBytes());
@@ -72,7 +153,7 @@ public class User {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Randomly generates a String representation of randomly generated bytes.
 	 */
@@ -81,7 +162,7 @@ public class User {
 		new Random().nextBytes(salt);
 		return hexToString(salt);
 	}
-	
+
 	/**
 	 * Given a byte[] array, produces a hex String, such as "234a6f"
 	 * with 2 chars for each byte in the array.
@@ -96,5 +177,5 @@ public class User {
 			buff.append(Integer.toString(val, 16)); 
 		} 
 		return buff.toString(); 
-	} 
+	}
 }

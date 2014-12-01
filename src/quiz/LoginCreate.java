@@ -37,7 +37,7 @@ public class LoginCreate extends HttpServlet {
 
 	
 	private boolean available(String username) throws SQLException{
-		Statement statement = Database.statement;
+		Statement statement = (new Database()).getStatement();
 		String query = "Select count(*) as count From users Where name='" + username + "';";
 		ResultSet rs = statement.executeQuery(query);
 		rs.next();
@@ -92,7 +92,7 @@ public class LoginCreate extends HttpServlet {
 		
 		getServletContext().setAttribute("message", "");
 		
-		RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
+		RequestDispatcher dispatch = request.getRequestDispatcher(Constants.INDEX);
 		dispatch.forward(request, response);	
 	
 	}

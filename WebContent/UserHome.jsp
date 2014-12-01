@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="quiz.Database"%>
-<%@ page import="quiz.QuizConstants"%>
+<%@ page import="quiz.Constants"%>
 <%@ page import="java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -22,14 +22,14 @@
 }
 </style>
 
-<jsp:include page="<%=QuizConstants.HEADER_FILE%>" />
+<jsp:include page="<%=Constants.HEADER_FILE%>" />
 
 <%
-	int uID = (Integer) session.getAttribute("uID");
-	String query = "Select zID, score, possible from scores where zID="
-			+ uID + ";";
-	Database db = new Database();
-	Statement s = db.statement;
+	Integer uID = (Integer) session.getAttribute("uID");
+	if (uID == null) return;
+	String query = "Select zID, score, possible from scores where zID=" + uID + ";";
+	Connection con = Database.openConnection();
+	Statement s = Database.getStatement(con);
 
 	Vector<Integer> zIDs = new Vector<Integer>();
 	Vector<Integer> scores = new Vector<Integer>();

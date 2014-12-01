@@ -14,26 +14,16 @@ public class Listener implements ServletContextListener {
     /**
      * Default constructor. 
      */
-    public Listener() {
-        // TODO Auto-generated constructor stub
-    }
+    public Listener() { }
 
 	/**
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
      */
-    public void contextInitialized(ServletContextEvent arg0)  { 
-    	// creates new database and stores in ServletContext
-    	Database db = new Database();
-    	arg0.getServletContext().setAttribute("db", db);
-    	
-    	// TODO Auto-generated method stub
-    }
+    public void contextInitialized(ServletContextEvent arg0)  { }
 
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
-    public void contextDestroyed(ServletContextEvent arg0)  { 
-         // TODO Auto-generated method stub
-    }
+    public void contextDestroyed(ServletContextEvent arg0)  { }
 	
 }
