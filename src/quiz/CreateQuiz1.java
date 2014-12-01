@@ -60,7 +60,7 @@ public class CreateQuiz1 extends HttpServlet {
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");
 		int user = 0;
-		String timestamp = TimeFormat.getTime();
+		String timestamp = TimeFormat.getHumanTimestamp();
 
 		Connection con = null;
 		Statement statement = null;

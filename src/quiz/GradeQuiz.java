@@ -36,7 +36,7 @@ public class GradeQuiz extends HttpServlet {
 	private void recordScore(int uID, int zID, int score, int possible){
 		Connection con = null;
 		Statement statement = null;
-		String timestamp = TimeFormat.getTime();
+		String timestamp = TimeFormat.getTimestamp();
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);

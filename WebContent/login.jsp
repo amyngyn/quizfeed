@@ -1,4 +1,4 @@
-<%@ page import="quiz.QuizConstants"%>
+<%@ page import="quiz.Constants"%>
 
 <!DOCTYPE html>
 <html>
@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-	<jsp:include page="<%=QuizConstants.HEADER_FILE%>" />
+	<jsp:include page="<%=Constants.HEADER_FILE%>" />
 
 	<%
 		// TODO this error message will show up for ANY user

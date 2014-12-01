@@ -6,6 +6,67 @@ import java.util.Random;
 
 public class User {
 	private static final int SALT_LENGTH = 20;
+	private final int uID;
+	private final String username;
+
+	// Empty User object should never be constructed.
+	private User() {
+		throw new IllegalAccessError();
+	}
+
+	/* 
+	 * Private because User objects should only be obtained via getUser, 
+	 * which validates against the database.
+	 */
+	private User(int uID, String username) {
+		this.uID = uID;
+		this.username = username;	
+	}
+	
+	public int getUID() {
+		return uID;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	private static User getUser(Integer requestedUID, String requestedUsername) {
+		String query = "";
+		if (requestedUID != null && requestedUsername != null) {
+			throw new IllegalArgumentException();
+		} else if (requestedUID == null) {
+			query = "SELECT * FROM users WHERE username='" + requestedUsername + "';";
+		} else {
+			query = "SELECT * FROM users WHERE uID='" + requestedUID + "';";
+		}
+		
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			if (!rs.next()) return null;
+			int uID = rs.getInt("uID");
+			String username = rs.getString("name");
+			return new User(uID, username);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return null;
+	}
+
+	public static User getUser(int uID) {
+		return getUser(uID, null);
+	}
+
+	public static User getUser(String username) {
+		return getUser(null, username.toLowerCase());
+	}
 
 	/**
 	 * @param username
@@ -14,21 +75,20 @@ public class User {
 	 */
 	public static boolean addUserToDatabase(String username, String passwordText) {
 		Connection con = null;
-		Statement existsStatement = null;
-		ResultSet existsResult = null;
 		Statement insertStatement = null;
+		username = username.toLowerCase();
 		try {
 			con = Database.openConnection();
 
-			String existsQuery = "SELECT * FROM users WHERE name='" + username + "';";
-			existsStatement = Database.getStatement(con);
-			existsResult = existsStatement.executeQuery(existsQuery);
-			if (existsResult.next()) return false;
+			// The user already exists.
+			if (getUser(username) != null) {
+				return false;
+			}
 
 			String salt = generateSalt();
 			String passwordHash = generateSaltedHash(passwordText, salt);
 			if (passwordHash == null) return false;
-			
+
 			String insertQuery = "INSERT INTO users (name, password, salt) VALUES ("
 					+ "'" + username + "', "
 					+ "'" + passwordHash + "', "
@@ -40,7 +100,7 @@ public class User {
 			e.printStackTrace();
 			return false;
 		} finally {
-			Database.closeConnections(con, existsStatement, existsResult, insertStatement);
+			Database.closeConnections(con, insertStatement);
 		}
 	}
 
@@ -48,11 +108,12 @@ public class User {
 		Connection con = null;
 		Statement statement = null;
 		ResultSet rs = null;
+		username = username.toLowerCase();
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
-			
-			String userQuery = "SELECT uID, password, salt FROM users WHERE UPPER(name) = UPPER('" + username + "');";
+
+			String userQuery = "SELECT uID, password, salt FROM users WHERE name='" + username + "';";
 			rs = statement.executeQuery(userQuery);
 			if (!rs.next()) return -1;
 			int uID = rs.getInt("uID");
@@ -81,7 +142,7 @@ public class User {
 	public static String generateSaltedHash(String plaintext, String salt) {
 		if (salt == null)
 			salt = "";
-		
+
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA");
 			md.update((plaintext + salt).getBytes());
@@ -116,5 +177,5 @@ public class User {
 			buff.append(Integer.toString(val, 16)); 
 		} 
 		return buff.toString(); 
-	} 
+	}
 }

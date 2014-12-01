@@ -120,19 +120,18 @@ CREATE TABLE users (
 	salt TEXT
 );
 INSERT INTO users (name, password, salt) VALUES
-	("Ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
-	("Danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
-	("Amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
-
+	("ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,
 	announcement TEXT,
-	time DateTime
+	timestamp DateTime
 );
 INSERT INTO announcements VALUES
-	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01");
+	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01"),
 	(1, "Danielle writes an announcement!", "1980-11-10 00:00:01");
 
 

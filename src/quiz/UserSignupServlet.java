@@ -12,23 +12,23 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class LoginCreate
  */
-@WebServlet("/LoginCreate")
-public class LoginCreate extends HttpServlet {
+@WebServlet("/signup")
+public class UserSignupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LoginCreate() {
+	public UserSignupServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		RequestDispatcher dispatch = request.getRequestDispatcher(Constants.SIGNUP_PAGE);
+		dispatch.forward(request, response);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class LoginCreate extends HttpServlet {
 		if (User.addUserToDatabase(username, password)) {			
 			getServletContext().setAttribute("message", "");
 
-			RequestDispatcher dispatch = request.getRequestDispatcher(QuizConstants.INDEX_FILE);
+			RequestDispatcher dispatch = request.getRequestDispatcher(Constants.INDEX);
 			dispatch.forward(request, response);
 		} else {
 			getServletContext().setAttribute("message", "Username unavailable.");
