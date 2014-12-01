@@ -13,17 +13,17 @@
 <% int type = (Integer)request.getSession().getAttribute("type"); %>
 
 <form action="CreateQuiz3" method="post">
-<%if(type == QuizConstants.TEXT_RESPONSE){ %>
+<%if(type == Constants.TEXT_RESPONSE){ %>
 	<p>Text Response</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == QuizConstants.FILL_IN_BLANK){ %>
+<%if(type == Constants.FILL_IN_BLANK){ %>
 	<p>Fill in the Blank</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == QuizConstants.MULT_CHOICE){ %>
+<%if(type == Constants.MULT_CHOICE){ %>
 	<p>Multiple Choice</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Option 1: <input type="text" name="answer1"></p>
@@ -36,20 +36,20 @@
 		<input type="radio" name="correctAnswer" value="4">4
 	</p>
 <%} %>
-<%if(type == QuizConstants.PICTURE_RESPONSE){ %>
+<%if(type == Constants.PICTURE_RESPONSE){ %>
 	<p>Picture</p>
 	<p>Photo Url: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == QuizConstants.MULTI_TEXT_RESPONSE){ %>
+<%if(type == Constants.MULTI_TEXT_RESPONSE){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == QuizConstants.MULTI_CHOICE_ANSWER){ %>
+<%if(type == Constants.MULTI_CHOICE_ANSWER){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if (type == QuizConstants.MATCHING){ %>
+<%if (type == Constants.MATCHING){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
