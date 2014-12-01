@@ -45,10 +45,10 @@
 
 .search-field {
 	position: relative;
-	top: 12px;
+	top: 11px;
 	padding: 6px;
 	border: 1px solid #CCCCCC;
-	border-radius: 7px;
+	border-radius: 5px;
 	width: 200px;
 	outline: none;
 	color: #343434;

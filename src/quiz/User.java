@@ -235,4 +235,36 @@ public class User {
 		}
 		return users;
 	}
+	
+	public ArrayList<User> getFriends() {
+		String query = "SELECT friendID FROM friendships WHERE uID=" + id + ";";
+		return getUsersFromQuery(query, "friendID");
+	}
+	
+	public ArrayList<User> getFriendRequests() {
+		String query = "SELECT fromID FROM friend_requests WHERE toID=" + id + ";";
+		return getUsersFromQuery(query, "fromID");
+	}
+	
+	public ArrayList<User> getUsersFromQuery(String query, String idKey) {
+		ArrayList<User> users = new ArrayList<User>();
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int uID = rs.getInt(idKey);
+				users.add(getUser(uID));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return users;
+	}
 }

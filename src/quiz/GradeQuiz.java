@@ -222,13 +222,16 @@ public class GradeQuiz extends HttpServlet {
 
 		request.setAttribute("score", score);
 		request.setAttribute("possible", possible);
-		Integer uID = (Integer)request.getSession().getAttribute("uID");
+		User user = (User) request.getSession().getAttribute("user");
 		Integer zID = (Integer)request.getSession().getAttribute("zID");
 
-		if (uID != null){
+		if (user != null) {
+			int uID = user.getID();
 			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible);
 			addQuizMachineAchievement(uID, zID);
 			addHighScoreAchievement(score, uID, (Integer)request.getSession().getAttribute("zID"));
+		} else {
+			throw new IllegalStateException("Somehow a quiz is being graded without a logged in user?? Fix this!");
 		}
 
 		RequestDispatcher dispatch = request.getRequestDispatcher("GradedQuiz.jsp");
