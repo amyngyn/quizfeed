@@ -48,7 +48,7 @@ public class LoginCreate extends HttpServlet {
 	}
 	
 	private void addUsername(String username, String password) throws SQLException{
-		Statement statement = Database.statement;
+		Statement statement = (new Database()).statement;
 		String query = "Select count(*) as count From users;";
 		ResultSet rs = statement.executeQuery(query);
 		rs.next();
@@ -56,7 +56,7 @@ public class LoginCreate extends HttpServlet {
 		int count = rs.getInt("count");
 		
 		String passwordHash = User.generateSaltedHash(password, null);
-		String insert = "INSERT INTO users VALUES (" + count + ", '" + username + "', '" + passwordHash + "');";
+		String insert = "INSERT INTO users VALUES ( " + count + ", '" + username + "', '" + passwordHash + "');";
 		statement.execute(insert);
 		
 		getServletContext().setAttribute("userName", username);
