@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class LoginCreate
@@ -36,18 +37,17 @@ public class UserSignupServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletContext context = getServletContext();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
 		try {
 			User user = User.addUserToDatabase(username, password);
-			context.setAttribute("error", "");
 			request.getSession().setAttribute("user", user);
 			response.sendRedirect(Constants.INDEX);
 		} catch (Exception e) {
-			context.setAttribute("error", e.getMessage());
-			response.sendRedirect(Constants.SIGNUP_PAGE);
+			request.setAttribute("error", e.getMessage());
+			RequestDispatcher dispatch = request.getRequestDispatcher(Constants.SIGNUP_PAGE);
+			dispatch.forward(request, response);
 		}
 	}
 }
