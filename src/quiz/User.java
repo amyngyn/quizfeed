@@ -2,10 +2,12 @@ package quiz;
 
 import java.security.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class User {
 	private static final int SALT_LENGTH = 20;
+	private static final int PASSWORD_MINIMUM = 8;
 	private final int uID;
 	private final String username;
 
@@ -22,15 +24,15 @@ public class User {
 		this.uID = uID;
 		this.username = username;	
 	}
-	
+
 	public int getUID() {
 		return uID;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
-	
+
 	private static User getUser(Integer requestedUID, String requestedUsername) {
 		String query = "";
 		if (requestedUID != null && requestedUsername != null) {
@@ -40,7 +42,7 @@ public class User {
 		} else {
 			query = "SELECT * FROM users WHERE uID='" + requestedUID + "';";
 		}
-		
+
 		Connection con = null;
 		Statement statement = null;
 		ResultSet rs = null;
@@ -73,7 +75,7 @@ public class User {
 	 * @param passwordText
 	 * @return
 	 */
-	public static User addUserToDatabase(String username, String passwordText) {
+	public static User addUserToDatabase(String username, String passwordText) throws Exception {
 		Connection con = null;
 		Statement insertStatement = null;
 		username = username.toLowerCase();
@@ -82,12 +84,16 @@ public class User {
 
 			// The user already exists.
 			if (getUser(username) != null) {
-				return null;
+				throw new Exception("User already exists.");
 			}
+
+			validatePassword(passwordText);
 
 			String salt = generateSalt();
 			String passwordHash = generateSaltedHash(passwordText, salt);
-			if (passwordHash == null) return null;
+			if (passwordHash == null) {
+				throw new Exception("An error occurred. Please try again later.");
+			}
 
 			String insertQuery = "INSERT INTO users (username, password, salt) VALUES ("
 					+ "'" + username + "', "
@@ -95,12 +101,39 @@ public class User {
 					+ "'" + salt + "');";
 			insertStatement = Database.getStatement(con);
 			insertStatement.execute(insertQuery);
+
 			return getUser(username);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			throw new Exception("An error occurred while accessing the database. Please try again later.");
 		} finally {
 			Database.closeConnections(con, insertStatement);
+		}
+	}
+
+	private static void validatePassword(String passwordText) throws Exception {
+		if (passwordText.length() < PASSWORD_MINIMUM) {
+			throw new Exception("Password must be greater than 8 characters.");
+		} else {
+			boolean containsLower = false;
+			boolean containsUpper = false;
+			boolean containsPunct = false;
+			for (int i = 0; i < passwordText.length(); i++) {
+				char ch = passwordText.charAt(i);
+				if (Character.isLowerCase(ch)) {
+					containsLower = true;
+				} else if (Character.isUpperCase(ch)) {
+					containsUpper = true;
+				} else {
+					switch (ch) {
+					case '.': case ',': case '!': case '?': case ';': case ':':
+						containsPunct = true;
+					}
+				}
+			}
+			if (!(containsLower && containsUpper && containsPunct)) {
+				throw new Exception("Password must contain at least one lowercase letter, uppercase letter, and punctuation character.");
+			}
 		}
 	}
 
@@ -177,5 +210,29 @@ public class User {
 			buff.append(Integer.toString(val, 16)); 
 		} 
 		return buff.toString(); 
+	}
+
+	public static ArrayList<User> findUsers(String queryTerm) {
+		ArrayList<User> users = new ArrayList<User>();
+		String query = "SELECT * FROM users WHERE username like '%" + queryTerm + "%'";
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int uID = rs.getInt("uID");
+				String username = rs.getString(Constants.USERNAME_KEY);
+				users.add(new User(uID, username));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return users;
 	}
 }

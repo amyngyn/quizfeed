@@ -8,8 +8,9 @@
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-	<jsp:include page="<%=Constants.HEADER_FILE%>" />
-
+	<jsp:include page="<%=Constants.HEADER_FILE%>">
+		<jsp:param value="Login" name="title" />
+	</jsp:include>
 	<%
 		// TODO this error message will show up for ANY user
 		String message = (String) getServletContext().getAttribute("error");

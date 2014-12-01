@@ -3,6 +3,7 @@ package quiz;
 
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,17 +36,17 @@ public class UserSignupServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletContext context = getServletContext();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		User user = User.addUserToDatabase(username, password);
-		if (user != null) {			
-			getServletContext().setAttribute("message", "");
+		try {
+			User user = User.addUserToDatabase(username, password);
+			context.setAttribute("error", "");
 			request.getSession().setAttribute("user", user);
-			
 			response.sendRedirect(Constants.INDEX);
-		} else {
-			getServletContext().setAttribute("message", "Username unavailable.");
+		} catch (Exception e) {
+			context.setAttribute("error", e.getMessage());
 			response.sendRedirect(Constants.SIGNUP_PAGE);
 		}
 	}

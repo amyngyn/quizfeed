@@ -23,16 +23,16 @@ int size = questions.size();%>
 <%for (int i=0; i<size; i++){ %>
 	<!-- Question number and name -->
 	<% int type = types.get(i); %>
-	<% if (type != QuizConstants.PICTURE_RESPONSE){  %>
+	<% if (type != Constants.PICTURE_RESPONSE){  %>
 		<p><%=i + 1%>.<%=questions.get(i) %><br>
 	<% } %>
 
 	
-	<% if(type == QuizConstants.TEXT_RESPONSE){ %>
+	<% if(type == Constants.TEXT_RESPONSE){ %>
 		<br><input type="text" value="" name="<%=i%>">			
-	<%}else if(type == QuizConstants.FILL_IN_BLANK){ %>
+	<%}else if(type == Constants.FILL_IN_BLANK){ %>
 		<input type="text" value="" name="<%=i%>">	
-	<%}else if (type == QuizConstants.MULT_CHOICE){%>
+	<%}else if (type == Constants.MULT_CHOICE){%>
 		<!--  Cycle through choices and output ones corresponding to the question -->
 		<%int choicesSize = choices.size();
 		for (int j=0; j<choicesSize; j++){ 
@@ -42,7 +42,7 @@ int size = questions.size();%>
 			<input type="radio" name="<%=i %>" value="<%=choices.get(j) %>"><%=choices.get(j)%>
 			<% }
 		}%>
-	<%} else if (type == QuizConstants.PICTURE_RESPONSE){%>
+	<%} else if (type == Constants.PICTURE_RESPONSE){%>
 		<!-- Cycle through choices to find picture URL-->
 		<% 
 		String picture = questions.get(i);
@@ -52,7 +52,7 @@ int size = questions.size();%>
 		<br><input type="text" value="" name="<%=i%>">
 		
 	<!-- Question type 5 multi text response -->	
-	<%} else if (type == QuizConstants.MULTI_TEXT_RESPONSE){%>
+	<%} else if (type == Constants.MULTI_TEXT_RESPONSE){%>
 		<!-- choices contains inputs the number of inputs-->
 		<!-- each time a corresponding entry is found in choices, output a text box-->
 		<%int choicesSize = choices.size();
@@ -64,7 +64,7 @@ int size = questions.size();%>
 		<%	}
 		}
 		%>
-	<%} else if (type == QuizConstants.MULTI_CHOICE_ANSWER){%>
+	<%} else if (type == Constants.MULTI_CHOICE_ANSWER){%>
 		<!-- For each choice, output a checkbox and the name of the choice-->
 		<%int choicesSize = choices.size();
 			int count = 0;
@@ -76,7 +76,7 @@ int size = questions.size();%>
 			}
 		}
 		%>
-	<%} else if (type == QuizConstants.MATCHING){%>
+	<%} else if (type == Constants.MATCHING){%>
 		<!-- Count the number of choices for this question
 			Find half that value, which is the number of choices with a selection box
 			Either output a number or a selection box with each question.
@@ -118,8 +118,4 @@ int size = questions.size();%>
 <input type="submit" value="Submit">
 </form>
 
-
-
-
-</body>
-</html>
+<jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
