@@ -8,7 +8,7 @@ import java.util.Random;
 public class User {
 	private static final int SALT_LENGTH = 20;
 	private static final int PASSWORD_MINIMUM = 8;
-	private final int uID;
+	private final int id;
 	private final String username;
 
 	// Empty User object should never be constructed.
@@ -21,12 +21,12 @@ public class User {
 	 * which validates against the database.
 	 */
 	private User(int uID, String username) {
-		this.uID = uID;
+		this.id = uID;
 		this.username = username;	
 	}
 
-	public int getUID() {
-		return uID;
+	public int getID() {
+		return id;
 	}
 
 	public String getUsername() {

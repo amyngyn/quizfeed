@@ -15,13 +15,30 @@
 	<%
 		for (User user : users) {
 	%>
-	<li><a href="user?uid=<%=user.getUID()%>"><%=user.getUsername()%></a></li>
+	<li><a href="user?uid=<%=user.getID()%>"><%=user.getUsername()%></a></li>
 	<%
 		}
 		}
 	%>
 </ul>
+
+<%
+	ArrayList<Quiz> quizzes = (ArrayList<Quiz>) request
+			.getAttribute("quizzes");
+	if (quizzes != null && !quizzes.isEmpty()) {
+%>
 <h1>Quizzes</h1>
-<p>No quizzes found. (WARNING: THIS IS NOT IMPLEMENTED!)</p>
+<ul>
+	<%
+		for (Quiz quiz : quizzes) {
+	%>
+	<li><a href="quiz?uid=<%=quiz.getID()%>"><b>
+				<%=quiz.getName()%>
+		</b></a> - <%= quiz.getDescription() %></li>
+	<%
+		}
+		}
+	%>
+</ul>
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
