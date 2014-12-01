@@ -75,10 +75,10 @@ public class CreateQuiz3 extends HttpServlet {
 			String answer = "";
 			int type = (Integer)request.getSession().getAttribute("type");
 
-			if (type == QuizConstants.TEXT_RESPONSE 
-					|| type == QuizConstants.FILL_IN_BLANK || type == QuizConstants.PICTURE_RESPONSE) {
+			if (type == Constants.TEXT_RESPONSE 
+					|| type == Constants.FILL_IN_BLANK || type == Constants.PICTURE_RESPONSE) {
 				answer = request.getParameter("answer");
-			} else if (type == QuizConstants.MULT_CHOICE) {
+			} else if (type == Constants.MULT_CHOICE) {
 				int answerIndex = Integer.parseInt(request.getParameter("correctAnswer"));
 				for (int i = 1; i < 5; i++) {
 					String choice = request.getParameter("answer" + i);

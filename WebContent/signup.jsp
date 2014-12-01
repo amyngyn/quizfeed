@@ -23,7 +23,7 @@
 		}
 	%>
 
-	<form action="LoginCreate" method="post">
+	<form action="signup" method="post">
 		<p>
 			Username: <input type="text" name="username">
 		</p>

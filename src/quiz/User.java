@@ -36,7 +36,7 @@ public class User {
 		if (requestedUID != null && requestedUsername != null) {
 			throw new IllegalArgumentException();
 		} else if (requestedUID == null) {
-			query = "SELECT * FROM users WHERE username='" + requestedUsername + "';";
+			query = "SELECT * FROM users WHERE " + Constants.USERNAME_KEY + "='" + requestedUsername + "';";
 		} else {
 			query = "SELECT * FROM users WHERE uID='" + requestedUID + "';";
 		}
@@ -50,7 +50,7 @@ public class User {
 			rs = statement.executeQuery(query);
 			if (!rs.next()) return null;
 			int uID = rs.getInt("uID");
-			String username = rs.getString("name");
+			String username = rs.getString(Constants.USERNAME_KEY);
 			return new User(uID, username);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class User {
 	 * @param passwordText
 	 * @return
 	 */
-	public static boolean addUserToDatabase(String username, String passwordText) {
+	public static User addUserToDatabase(String username, String passwordText) {
 		Connection con = null;
 		Statement insertStatement = null;
 		username = username.toLowerCase();
@@ -82,23 +82,23 @@ public class User {
 
 			// The user already exists.
 			if (getUser(username) != null) {
-				return false;
+				return null;
 			}
 
 			String salt = generateSalt();
 			String passwordHash = generateSaltedHash(passwordText, salt);
-			if (passwordHash == null) return false;
+			if (passwordHash == null) return null;
 
-			String insertQuery = "INSERT INTO users (name, password, salt) VALUES ("
+			String insertQuery = "INSERT INTO users (username, password, salt) VALUES ("
 					+ "'" + username + "', "
 					+ "'" + passwordHash + "', "
 					+ "'" + salt + "');";
 			insertStatement = Database.getStatement(con);
 			insertStatement.execute(insertQuery);
-			return true;
+			return getUser(username);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		} finally {
 			Database.closeConnections(con, insertStatement);
 		}
@@ -113,7 +113,7 @@ public class User {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 
-			String userQuery = "SELECT uID, password, salt FROM users WHERE name='" + username + "';";
+			String userQuery = "SELECT uID, password, salt FROM users WHERE username='" + username + "';";
 			rs = statement.executeQuery(userQuery);
 			if (!rs.next()) return -1;
 			int uID = rs.getInt("uID");

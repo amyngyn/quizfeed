@@ -42,7 +42,7 @@ public class AdminAnnouncement extends HttpServlet {
 			String text = request.getParameter("announcement");
 			int uID = (Integer) request.getServletContext().getAttribute("uID");
 
-			String timestamp = TimeFormat.getHumanTimestamp();
+			String timestamp = TimeFormat.getTimestamp();
 
 			String insertQuery =
 					"INSERT INTO announcements VALUES (" 

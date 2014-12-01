@@ -38,16 +38,15 @@ public class UserSignupServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		if (User.addUserToDatabase(username, password)) {			
+		User user = User.addUserToDatabase(username, password);
+		if (user != null) {			
 			getServletContext().setAttribute("message", "");
-
-			RequestDispatcher dispatch = request.getRequestDispatcher(Constants.INDEX);
-			dispatch.forward(request, response);
+			request.getSession().setAttribute("user", user);
+			
+			response.sendRedirect(Constants.INDEX);
 		} else {
 			getServletContext().setAttribute("message", "Username unavailable.");
-
-			RequestDispatcher dispatch = request.getRequestDispatcher("LoginCreate.jsp");
-			dispatch.forward(request, response);
+			response.sendRedirect(Constants.SIGNUP_PAGE);
 		}
 	}
 }
