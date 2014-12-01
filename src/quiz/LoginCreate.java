@@ -2,10 +2,10 @@ package quiz;
 
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,7 +37,10 @@ public class LoginCreate extends HttpServlet {
 
 	
 	private boolean available(String username) throws SQLException{
-		Statement statement = (new Database()).getStatement();
+		Connection c = Database.openConnection();
+		Statement statement = Database.getStatement(c);
+		
+		
 		String query = "Select count(*) as count From users Where name='" + username + "';";
 		ResultSet rs = statement.executeQuery(query);
 		rs.next();
@@ -48,7 +51,9 @@ public class LoginCreate extends HttpServlet {
 	}
 	
 	private void addUsername(String username, String password) throws SQLException{
-		Statement statement = (new Database()).statement;
+		
+		Connection c = Database.openConnection();
+		Statement statement = Database.getStatement(c);
 		String query = "Select count(*) as count From users;";
 		ResultSet rs = statement.executeQuery(query);
 		rs.next();

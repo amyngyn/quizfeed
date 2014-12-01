@@ -1,5 +1,6 @@
-<%@page import="quiz.Constants"%>
+
 <%@page import="quiz.User"%>
+<%@page import="quiz.Constants"%>
 <div>
 	<div style="margin-top: 50px;">
 		<a class="header-title" href="<%=Constants.INDEX%>">QuizFeed</a>
