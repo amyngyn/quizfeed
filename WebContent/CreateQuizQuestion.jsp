@@ -1,10 +1,11 @@
+<%@ page import="quiz.*" %>    
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Make a question</title>
 </head>
 <body>
 
@@ -12,17 +13,17 @@
 <% int type = (Integer)request.getSession().getAttribute("type"); %>
 
 <form action="CreateQuiz3" method="post">
-<%if(type == 1){ %>
+<%if(type == QuizConstants.TEXT_RESPONSE){ %>
 	<p>Text Response</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == 2){ %>
+<%if(type == QuizConstants.FILL_IN_BLANK){ %>
 	<p>Fill in the Blank</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == 3){ %>
+<%if(type == QuizConstants.MULT_CHOICE){ %>
 	<p>Multiple Choice</p>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Option 1: <input type="text" name="answer1"></p>
@@ -35,20 +36,20 @@
 		<input type="radio" name="correctAnswer" value="4">4
 	</p>
 <%} %>
-<%if(type == 4){ %>
+<%if(type == QuizConstants.PICTURE_RESPONSE){ %>
 	<p>Picture</p>
 	<p>Photo Url: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == 5){ %>
+<%if(type == QuizConstants.MULTI_TEXT_RESPONSE){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if(type == 6){ %>
+<%if(type == QuizConstants.MULTI_CHOICE_ANSWER){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>
-<%if (type == 7){ %>
+<%if (type == QuizConstants.MATCHING){ %>
 	<p>Question: <input type="text" name="question"></p>
 	<p>Answer: <input type="text" name="answer"></p>
 <%} %>

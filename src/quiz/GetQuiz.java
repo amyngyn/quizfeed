@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -59,8 +58,8 @@ public class GetQuiz extends HttpServlet {
 			session.setAttribute("types", types);
 
 			// Query for choices
-			Vector<String> choices = new Vector<String>();
-			Vector<Integer> choicesTo = new Vector<Integer>();
+			ArrayList<String> choices = new ArrayList<String>();
+			ArrayList<Integer> choicesTo = new ArrayList<Integer>();
 
 			rs = statement.executeQuery("SELECT * FROM choices WHERE zID=" + quizNumber + " ORDER BY sID");
 			while(rs.next()){
@@ -72,8 +71,8 @@ public class GetQuiz extends HttpServlet {
 			request.setAttribute("choicesTo", choicesTo);		
 
 			// Query for answers
-			Vector<String> answers = new Vector<String>();
-			Vector<Integer> answersTo = new Vector<Integer>();
+			ArrayList<String> answers = new ArrayList<String>();
+			ArrayList<Integer> answersTo = new ArrayList<Integer>();
 
 			rs = statement.executeQuery("SELECT * FROM answers WHERE zID='" + quizNumber + "' ORDER BY sID");
 			while(rs.next()){

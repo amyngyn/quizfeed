@@ -75,19 +75,22 @@ public class CreateQuiz3 extends HttpServlet {
 			String answer = "";
 			int type = (Integer)request.getSession().getAttribute("type");
 
-			// TODO make these constants
-			if (type == 1 || type == 2 || type == 4) {
+			if (type == QuizConstants.TEXT_RESPONSE 
+					|| type == QuizConstants.FILL_IN_BLANK || type == QuizConstants.PICTURE_RESPONSE) {
 				answer = request.getParameter("answer");
-			} else if (type == 3) {
-				for (int i = 1; i < 5; i++) {
-					choices.add(request.getParameter("answer" + i));
-				}
+			} else if (type == QuizConstants.MULT_CHOICE) {
 				int answerIndex = Integer.parseInt(request.getParameter("correctAnswer"));
-				answer = choices.get(answerIndex - 1);
+				for (int i = 1; i < 5; i++) {
+					String choice = request.getParameter("answer" + i);
+					String insertC = "INSERT INTO choices VALUES (" + zID + ", " + sID + ", " + choice + ");";
+					statement.execute(insertC);
+					if (i == answerIndex) {
+						answer = choice;
+					}
+				}
 			}
 			String insertQ  = "INSERT INTO questions VALUES (" + zID + ", " + sID + ", '" + question + "', " + type + ");";
 			String insertA = "INSERT INTO answers VALUES (" + zID + ", " + sID + ", '" + answer + "');";
-
 			statement.execute(insertQ);
 			statement.execute(insertA);
 
