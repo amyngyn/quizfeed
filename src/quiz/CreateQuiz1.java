@@ -58,8 +58,17 @@ public class CreateQuiz1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
+		name = name.replaceAll("'", "''");
+	
 		String description = request.getParameter("description");
-		int user = 0;
+		int user = -1;
+		
+		Object j = request.getSession().getAttribute("user");
+		if(j != null){
+			User u = (User)j;
+			user = u.getID();
+		}
+		
 		String timestamp = TimeFormat.getTimestamp();
 
 		Connection con = null;
@@ -70,11 +79,11 @@ public class CreateQuiz1 extends HttpServlet {
 
 			int quizNumber = getNumberOfQuizzes();
 
-			String insertValues= "'" + name + "'" + ", "
-					+ "'" + description + "'" + ", "
-					+ user + ", "
-					+ "'" + timestamp + "'";
-			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues+ ");";
+			String insertValues= "'" + name + "', '" 
+					+ description + "', "
+					+ user + ", '" + 
+					timestamp + "'";
+			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues + ");";
 			statement.execute(insertQuery);
 
 			//add tuple to achievements
