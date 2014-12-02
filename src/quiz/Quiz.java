@@ -87,6 +87,22 @@ public class Quiz {
 		
 		return type;
 	}
+
+	public ArrayList<Integer> getQuestionTypes() throws SQLException{
+		String query = "Select * from questions where zID =" + zID + " order by sID ASC;";
+		Connection c = Database.openConnection();
+		Statement s = Database.getStatement(c);
+		ResultSet rs = s.executeQuery(query);
+		
+		ArrayList<Integer> types = new ArrayList<Integer>();
+		while(rs.next()){
+			types.add(rs.getInt("type"));
+		}
+		Database.closeConnections(c, s, rs);
+		
+		return types;
+	}
+	
 	
 	public ArrayList<String> getChoices(int sID) throws SQLException{
 		String query = "Select * from choices where zID =" + zID + " and sID=" + sID + ";";
@@ -104,6 +120,39 @@ public class Quiz {
 		
 		return choices;
 	}
+	
+	public ArrayList<String> getAnswers(int sID) throws SQLException{
+		String query = "Select * from answers where zID =" + zID + " and sID=" + sID + ";";
+		Connection c = Database.openConnection();
+		Statement s = Database.getStatement(c);
+		ResultSet rs = s.executeQuery(query);
+		
+		ArrayList<String> answers = new ArrayList();
+		
+		while(rs.next()){
+			answers.add(rs.getString("answer"));
+		}
+
+		Database.closeConnections(c, s, rs);
+		
+		return answers;
+	}
+	
+	public Integer getChoicesCount(int sID) throws SQLException{
+		String query = "Select count(*) as count from choices where zID =" + zID + " and sID=" + sID + ";";
+		Connection c = Database.openConnection();
+		Statement s = Database.getStatement(c);
+		ResultSet rs = s.executeQuery(query);
+		rs.next();
+		
+		int count = rs.getInt("count");
+		
+		Database.closeConnections(c, s, rs);
+		
+		return count;
+	}
+	
+	
 	
 	// TODO use skip and amount params in query!
 	public static ArrayList<Quiz> getQuizzes() {
