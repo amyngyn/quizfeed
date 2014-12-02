@@ -6,16 +6,16 @@
 </jsp:include>
 
 <%
-	ArrayList<User> users = (ArrayList<User>) request
+	HashMap<Integer, User> users = (HashMap<Integer, User>) request
 			.getAttribute("users");
 	if (users != null && !users.isEmpty()) {
 %>
 <h1>Users</h1>
 <ul>
 	<%
-		for (User user : users) {
+		for (Integer uID : users.keySet()) {
 	%>
-	<li><a href="user?uid=<%=user.getID()%>"><%=user.getUsername()%></a></li>
+	<li><a href="user?uid=<%=uID%>"><%=users.get(uID).getUsername()%></a></li>
 	<%
 		}
 		}
@@ -32,9 +32,8 @@
 	<%
 		for (Quiz quiz : quizzes) {
 	%>
-	<li><a href="quiz?uid=<%=quiz.getID()%>"><b>
-				<%=quiz.getName()%>
-		</b></a> - <%= quiz.getDescription() %></li>
+	<li><a href="quiz?uid=<%=quiz.getID()%>"><b> <%=quiz.getName()%>
+		</b></a> - <%=quiz.getDescription()%></li>
 	<%
 		}
 		}

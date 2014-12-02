@@ -132,12 +132,38 @@ for(int i=0; i< topuID.size(); i++){
 		else topName.add("Deleted User");
 	}
 }
-
-
 for(int i=0; i<topName.size(); i++){ %>
 <tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
 <%}%>
 </table>
+<br>
+
+<table>
+<tr><td colspan="4"><b>Top Scores in Last 15 Mins.</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td></tr>
+<%
+Vector<Boolean> recent = new Vector<Boolean>();
+int big = topName.size();
+
+Calendar now = Calendar.getInstance();
+now.add(Calendar.MINUTE, -15);
+
+for(int i=0; i<big; i++){
+	Timestamp t = topTimes.get(i);
+	
+	if(t.after(now.getTime())){
+		recent.add(true);
+	}else{
+		recent.add(false);
+	}
+}
+
+for(int i=0; i<topName.size(); i++){
+	if(recent.get(i)){%>
+<tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
+<%}}%>
+</table>
+
 
 
 </body>
