@@ -36,18 +36,21 @@
 
 	Vector<String> recentNames = new Vector<String>();
 	Vector<Timestamp> recentTimes = new Vector<Timestamp>();
-	query = "Select name, time From quizzes Order By time ASC";
+	Vector<Integer> recentIDs = new Vector<Integer>();
+	query = "Select name, time, zID From quizzes Order By time ASC";
 	rs = statement.executeQuery(query);
 	int count = 0;
 	while (rs.next()) {
 		count++;
 		recentNames.add(rs.getString("name"));
 		recentTimes.add(rs.getTimestamp("time"));
+		recentIDs.add(rs.getInt("zID"));
 		if (count == 5)
 			break;
 	}
 	Statement statementTwo = Database.getStatement(con);
 	Vector<String> popularNames = new Vector<String>();
+	Vector<Integer> popularID = new Vector<Integer>();
 	Vector<Integer> popularCounts = new Vector<Integer>();
 	query = "Select zID,count(*) as Count From scores Group By zID Order By Count DESC";
 	rs = statement.executeQuery(query);
@@ -55,6 +58,7 @@
 	while (rs.next()) {
 		count++;
 		int z = rs.getInt("zID");
+		popularID.add(z);
 		String queryTwo = "Select name From quizzes Where zID =" + z
 				+ ";";
 		ResultSet rsTwo = statementTwo.executeQuery(queryTwo);
@@ -111,7 +115,7 @@
 		for (int i = 0; i < recentNames.size(); i++) {
 	%>
 	<tr>
-		<td class="border"><%=recentNames.get(i)%></td>
+		<td class="border"><a href="QuizIntro?num=<%=recentIDs.get(i)%>"><%=recentNames.get(i)%></a></td>
 		<td class="border"><%=recentTimes.get(i)%></td>
 	</tr>
 	<%
@@ -128,7 +132,7 @@
 		for (int i = 0; i < popularNames.size(); i++) {
 	%>
 	<tr>
-		<td class="border"><%=popularNames.get(i)%></td>
+		<td class="border"><a href="QuizIntro?num=<%=popularID.get(i)%>"><%=popularNames.get(i)%></a></td>
 		<td class="border"><%=popularCounts.get(i)%></td>
 	</tr>
 	<%
@@ -184,7 +188,7 @@
 				for (int i = 0; i < zIDs.size(); i++) {
 			%>
 			<tr class="border">
-				<td class="border"><%=quizNames.get(i)%></td>
+				<td class="border"><a href="QuizIntro?num=<%=zIDs.get(i)%>"><%=quizNames.get(i)%></a></td>
 				<td class="border"><%=scores.get(i)%></td>
 				<td class="border"><%=possible.get(i)%></td>
 				<td class="border"><%=scoreTimes.get(i)%></td>
@@ -338,15 +342,17 @@
 		Integer uID = user.getID();
 
 		
-		query = "Select name, time from quizzes where uID=" + uID + " order by time;";
+		query = "Select name, time, zID from quizzes where uID=" + uID + " order by time;";
 		con = Database.openConnection();
 		Statement s = Database.getStatement(con);
 
+		Vector<Integer> createID = new Vector<Integer>();
 		Vector<String> createNames = new Vector<String>();
 		Vector<Timestamp> createTimes = new Vector<Timestamp>();
 
 		rs = s.executeQuery(query);
 		while (rs.next()) {
+			createID.add(rs.getInt("zID"));
 			createNames.add(rs.getString("name"));
 			createTimes.add(rs.getTimestamp("time"));
 		}
@@ -362,7 +368,8 @@
 				for (int i = 0; i < createTimes.size(); i++) {
 			%>
 			<tr class="border">
-				<td class="border"><%=createNames.get(i)%></td>
+				<td class="border">
+				<a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></td></a>
 				<td class="border"><%=createTimes.get(i)%></td>
 			</tr>
 			<%
