@@ -101,7 +101,7 @@
 	%>
 </table>
 
-<h4>Recent Quizzes</h4>
+<h4>Recently Created Quizzes</h4>
 <table class="border">
 	<tr>
 		<th class="border"><b>Name</b></th>
