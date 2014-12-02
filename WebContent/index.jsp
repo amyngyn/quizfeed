@@ -146,7 +146,7 @@
 		Integer uID = user.getID();
 
 		if (uID == null) return;
-		query = "Select zID, score, possible from scores where zID=" + uID + " order by time;";
+		query = "Select zID, score, possible from scores where uID=" + uID + " order by time;";
 		con = Database.openConnection();
 		Statement s = Database.getStatement(con);
 
