@@ -96,10 +96,48 @@ while(rs.next()){
 for(int i=0; i<yourScores.size(); i++){ %>
 <tr><td><%= yourScores.get(i)%></td><td><%=yourTotal.get(i)%></td><td><%=yourTimes.get(i)%></td></tr>
 <%}}else{ %>
-<tr><td><a href="login.jsp">Login</a></tr></td>
+<tr><td><a href="login.jsp">Login</a></td></tr>
 <%} %>
 </table>
 
+<br>
+
+<table>
+<tr><td colspan="4"><b>Top Performances</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td></tr>
+<%
+Vector<Integer> topuID = new Vector<Integer>();
+Vector<String> topName = new Vector<String>();
+Vector<Integer> topScore = new Vector<Integer>();
+Vector<Integer> topTotal = new Vector<Integer>();
+Vector<Timestamp> topTimes = new Vector<Timestamp>();
+
+String topQuery = "Select * from scores where zID=" + zID + " order by score DESC;";
+rs = s.executeQuery(topQuery);
+while(rs.next()){
+	topuID.add(rs.getInt("uID"));
+	topScore.add(rs.getInt("score"));
+	topTotal.add(rs.getInt("possible"));
+	topTimes.add(rs.getTimestamp("time"));
+}
+
+for(int i=0; i< topuID.size(); i++){
+	int u = topuID.get(i);
+	topQuery = "Select username from users where uID =" + u  + ";";
+	rs = s.executeQuery(topQuery);
+	if(rs.next()){
+		topName.add(rs.getString("username"));
+	}else{
+		if(u == -1) topName.add("Anonymous");
+		else topName.add("Deleted User");
+	}
+}
+
+
+for(int i=0; i<topName.size(); i++){ %>
+<tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
+<%}%>
+</table>
 
 
 </body>
