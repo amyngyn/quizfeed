@@ -14,7 +14,7 @@
 	<jsp:param value="Sign Up" name="title" />
 </jsp:include>
 	<%
-		String errorMessage = (String) getServletContext().getAttribute("error");
+		String errorMessage = (String) request.getAttribute("error");
 		if (errorMessage != null) {
 	%>
 	<p>

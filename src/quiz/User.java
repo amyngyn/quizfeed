@@ -8,7 +8,7 @@ import java.util.Random;
 public class User {
 	private static final int SALT_LENGTH = 20;
 	private static final int PASSWORD_MINIMUM = 8;
-	private final int uID;
+	private final int id;
 	private final String username;
 
 	// Empty User object should never be constructed.
@@ -21,12 +21,12 @@ public class User {
 	 * which validates against the database.
 	 */
 	private User(int uID, String username) {
-		this.uID = uID;
+		this.id = uID;
 		this.username = username;	
 	}
 
-	public int getUID() {
-		return uID;
+	public int getID() {
+		return id;
 	}
 
 	public String getUsername() {
@@ -227,6 +227,38 @@ public class User {
 				int uID = rs.getInt("uID");
 				String username = rs.getString(Constants.USERNAME_KEY);
 				users.add(new User(uID, username));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return users;
+	}
+	
+	public ArrayList<User> getFriends() {
+		String query = "SELECT friendID FROM friendships WHERE uID=" + id + ";";
+		return getUsersFromQuery(query, "friendID");
+	}
+	
+	public ArrayList<User> getFriendRequests() {
+		String query = "SELECT fromID FROM friend_requests WHERE toID=" + id + ";";
+		return getUsersFromQuery(query, "fromID");
+	}
+	
+	public ArrayList<User> getUsersFromQuery(String query, String idKey) {
+		ArrayList<User> users = new ArrayList<User>();
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int uID = rs.getInt(idKey);
+				users.add(getUser(uID));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

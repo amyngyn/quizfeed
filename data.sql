@@ -1,4 +1,5 @@
 USE c_cs108_rrb;
+SET @@auto_increment_increment=1;
 
 DROP TABLE IF EXISTS quizzes;
 CREATE TABLE quizzes (
@@ -114,7 +115,7 @@ INSERT INTO friends VALUES
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-	uID INT AUTO_INCREMENT,
+	uID INT AUTO_INCREMENT PRIMARY KEY,
 	username TEXT,
 	password TEXT,
 	salt TEXT
@@ -122,8 +123,14 @@ CREATE TABLE users (
 INSERT INTO users (username, password, salt) VALUES
 	("ryan", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
 	("danielle", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
-	("amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
-
+	("amy", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test4", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test5", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test6", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test7", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test8", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
+	("test9", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
+	
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,
@@ -133,7 +140,6 @@ CREATE TABLE announcements (
 INSERT INTO announcements VALUES
 	(0, "Happy Thanksgiving!", "1980-11-10 00:00:01"),
 	(1, "Danielle writes an announcement!", "1980-11-10 00:00:01");
-
 
 DROP TABLE IF EXISTS scores; 
 CREATE TABLE scores (
@@ -145,6 +151,31 @@ CREATE TABLE scores (
 );
 INSERT INTO scores VALUES
 	(0, 0, 0, 0, "1980-11-10 00:00:01");
+	
+DROP TABLE IF EXISTS friendships;
+CREATE TABLE friendships (
+	uID INT,
+	friendID INT
+);
+-- we are all friends with each other
+INSERT INTO friendships VALUES
+	(1, 2),
+	(1, 3),
+	(2, 1),
+	(2, 3),
+	(3, 1),
+	(3, 2);
+
+DROP TABLE IF EXISTS friend_requests;
+CREATE TABLE friend_requests (
+	fromID INT,
+	toID INT
+);
+-- some people want to be friends with us!
+INSERT INTO friend_requests VALUES
+	(5, 1),
+	(6, 2),
+	(7, 3);
 
 -- data isn't true -- only for test purposes
 DROP TABLE IF EXISTS achievements; 

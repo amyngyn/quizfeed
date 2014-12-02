@@ -36,11 +36,9 @@ public class UserLoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletContext context = getServletContext();
-		
 		String username = request.getParameter("username").toLowerCase();
 		String password = request.getParameter("password");
-		
+
 		int uID = User.validateUser(username, password);
 
 		if (uID != -1) {
@@ -49,7 +47,7 @@ public class UserLoginServlet extends HttpServlet {
 			session.setAttribute("user", user);
 			response.sendRedirect(Constants.INDEX);
 		} else {
-			context.setAttribute("error", "Password was invalid.");
+			request.setAttribute("error", "Username or password was incorrect.");
 			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp");
 			dispatch.forward(request, response);
 		}

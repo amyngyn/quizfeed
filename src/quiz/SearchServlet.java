@@ -1,8 +1,6 @@
 package quiz;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,8 +29,9 @@ public class SearchServlet extends HttpServlet {
 		String[] queryParams = request.getParameterValues("query");
 		String query = queryParams == null ? "" : queryParams[0];
 
-		ArrayList<User> userMatches = User.findUsers(query);
-		request.setAttribute("users", userMatches);
+		request.setAttribute("users", User.findUsers(query));
+		request.setAttribute("quizzes", Quiz.findQuizzes(query));
+		
 		RequestDispatcher dispatch = request.getRequestDispatcher("search.jsp");
 		dispatch.forward(request, response);
 	}

@@ -13,7 +13,7 @@
 	</jsp:include>
 	<%
 		// TODO this error message will show up for ANY user
-		String message = (String) getServletContext().getAttribute("error");
+		String message = (String) request.getAttribute("error");
 		if (message != null) {
 	%>
 	<p>

@@ -32,7 +32,7 @@
 				<%
 					} else {
 				%>
-				<a class="nav-item" href="user?uid=<%=user.getUID()%>"><%=user.getUsername()%></a>
+				<a class="nav-item" href="user?uid=<%=user.getID()%>"><%=user.getUsername()%></a>
 				<a class="nav-item" href="logout">Logout</a>
 				<%
 					}
