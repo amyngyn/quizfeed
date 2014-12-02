@@ -163,6 +163,44 @@ for(int i=0; i<topName.size(); i++){
 <tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
 <%}}%>
 </table>
+<br>
+
+<table>
+<tr><td colspan="4"><b>Recent Performances</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td></tr>
+<%
+Vector<Integer> recentuID = new Vector<Integer>();
+Vector<String> recentName = new Vector<String>();
+Vector<Integer> recentScore = new Vector<Integer>();
+Vector<Integer> recentTotal = new Vector<Integer>();
+Vector<Timestamp> recentTimes = new Vector<Timestamp>();
+
+String recentQuery = "Select * from scores where zID=" + zID + " order by time DESC;";
+rs = s.executeQuery(recentQuery);
+while(rs.next()){
+	recentuID.add(rs.getInt("uID"));
+	recentScore.add(rs.getInt("score"));
+	recentTotal.add(rs.getInt("possible"));
+	recentTimes.add(rs.getTimestamp("time"));
+}
+for(int i=0; i< recentuID.size(); i++){
+	int u = recentuID.get(i);
+	recentQuery = "Select username from users where uID =" + u  + ";";
+	rs = s.executeQuery(recentQuery);
+	if(rs.next()){
+		recentName.add(rs.getString("username"));
+	}else{
+		if(u == -1) recentName.add("Anonymous");
+		else recentName.add("Deleted User");
+	}
+}
+
+int totalCount = recentScore.size();
+int displayCount = totalCount > 5 ? 5 : totalCount;
+for(int i=0; i<displayCount ; i++){ %>
+<tr><td><%= recentName.get(i)%></td><td><%= recentScore.get(i)%></td><td><%=recentTotal.get(i)%></td><td><%=recentTimes.get(i)%></td></tr>
+<%}%>
+</table>
 
 
 

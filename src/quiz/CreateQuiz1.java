@@ -59,6 +59,9 @@ public class CreateQuiz1 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
 		name = name.replaceAll("'", "''");
+		
+		Boolean random = false;
+		Boolean multiple = false;
 	
 		String description = request.getParameter("description");
 		int user = -1;
@@ -82,7 +85,9 @@ public class CreateQuiz1 extends HttpServlet {
 			String insertValues= "'" + name + "', '" 
 					+ description + "', "
 					+ user + ", '" + 
-					timestamp + "'";
+					timestamp + "', "+
+					random + ", " +
+					multiple;
 			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues + ");";
 			statement.execute(insertQuery);
 
