@@ -13,11 +13,13 @@
 </head>
 <body>
 <% 
-ArrayList<String> questions = (ArrayList<String>)request.getAttribute("questions");
-ArrayList<Integer> types = (ArrayList<Integer>)request.getAttribute("types");
-ArrayList<String> choices = (ArrayList<String>)request.getAttribute("choices");
-ArrayList<Integer> choicesTo = (ArrayList<Integer>)request.getAttribute("choicesTo");
-int size = questions.size();%>
+
+Integer zID = (Integer)session.getAttribute("zID");
+Quiz q = new Quiz(zID);
+
+int size = q.getQuestionCount();
+
+%>
 
 <form action="GradeQuiz" method="post">
 <%ArrayList<Integer> randomIndices = new ArrayList<Integer>();
@@ -35,9 +37,11 @@ int size = questions.size();%>
 		i = randomIndices.get(k); 
 	   }
 	//Question number and name
-	int type = types.get(i); 
-    if (type != Constants.PICTURE_RESPONSE){  %>
-		<p><%=k + 1%>.<%=questions.get(i) %><br>
+	//int type = types.get(i); 
+	int type = q.getQuestionType(i);
+	
+	if (type != Constants.PICTURE_RESPONSE){  %>
+		<p><%=k + 1%>.<%=q.getQuestion(i) %><br>
 	<% } %>
 
 	
@@ -47,18 +51,23 @@ int size = questions.size();%>
 		<input type="text" value="" name="<%=i%>">	
 	<%}else if (type == Constants.MULT_CHOICE){%>
 		<!--  Cycle through choices and output ones corresponding to the question -->
-		<%int choicesSize = choices.size();
-		for (int j=0; j<choicesSize; j++){ 
-			if(choicesTo.get(j) == i){%>
+		
+		<%
+		ArrayList<String> choices2 = q.getChoices(i);
+		int choicesSize = choices2.size();
+		
+		for (int j=0; j<choicesSize; j++){ %>
 			<!-- Output radio button for multiple choice and choice String-->
 			<br>
-			<input type="radio" name="<%=i %>" value="<%=choices.get(j) %>"><%=choices.get(j)%>
-			<% }
+			<input type="radio" name="<%=i %>" value="<%=choices2.get(j)%>"><%=choices2.get(j)%>
+			<% 
 		}%>
 	<%} else if (type == Constants.PICTURE_RESPONSE){%>
 		<!-- Cycle through choices to find picture URL-->
 		<% 
-		String picture = questions.get(i);
+		//String picture = questions.get(i);
+		String picture = q.getQuestion(i);
+		
 		%>
 		<!-- Output picture and blank text box-->
 		<img src="<%=picture%>" height="300" width="300">
@@ -68,25 +77,29 @@ int size = questions.size();%>
 	<%} else if (type == Constants.MULTI_TEXT_RESPONSE){%>
 		<!-- choices contains inputs the number of inputs-->
 		<!-- each time a corresponding entry is found in choices, output a text box-->
-		<%int choicesSize = choices.size();
+		<%
+		ArrayList<String> choices2 = q.getChoices(i);
+		int choicesSize = choices2.size();
+		
 		int nameNum = 0;
 		for (int j=0; j<choicesSize; j++){ 
-			if(choicesTo.get(j) == i){%>
+		%>
 			<br><input type="text" value="" name="<%=i + "-" + nameNum%>">	
-				<% nameNum++; %>
-		<%	}
+			<% nameNum++; %>
+		<%	
 		}
 		%>
 	<%} else if (type == Constants.MULTI_CHOICE_ANSWER){%>
 		<!-- For each choice, output a checkbox and the name of the choice-->
-		<%int choicesSize = choices.size();
-			int count = 0;
+		<%
+		ArrayList<String> choices2 = q.getChoices(i);
+		int choicesSize = choices2.size();
+		int count = 0;
 		for (int j=0; j<choicesSize; j++){ 
-			if(choicesTo.get(j) == i){%>
-			<br><input type="checkbox" name="<%=i+"-"+count%>" value="<%=choices.get(j)%>"><%=choices.get(j)%>	
+			%>
+			<br><input type="checkbox" name="<%=i+"-"+count%>" value="<%=choices2.get(j)%>"><%=choices2.get(j)%>	
 		<%	
 			count++;
-			}
 		}
 		%>
 	<%} else if (type == Constants.MATCHING){%>
@@ -95,18 +108,18 @@ int size = questions.size();%>
 			Either output a number or a selection box with each question.
 		 -->
 		<%
-		int choicesSize = choices.size();
-		int optionsCount = 0;
-		for (int j=0; j<choicesSize; j++) if(choicesTo.get(j) == i) optionsCount++;
+		ArrayList<String> choices2 = q.getChoices(i);
+		int choicesSize = choices2.size();
+		int optionsCount = choicesSize;
 		int half = optionsCount / 2;
 		int count = 0;
 		int nameCount = 0;
 		
 		for (int j=0; j<choicesSize; j++) {
-			if(choicesTo.get(j) == i){
+			
 				count++;
 				if(count<=half){ %>
-					<br><%=count + ". " + choices.get(j) %>	
+					<br><%=count + ". " + choices2.get(j) %>	
 				<%} else { %>
 					<br>
 					<select name = "<%=i+"-"+nameCount %>">
@@ -115,10 +128,10 @@ int size = questions.size();%>
 						<%} %>
 					</select>
 					
-					<%=choices.get(j) %>
+					<%=choices2.get(j) %>
 				<% nameCount++;
 				} 
-			}
+			
 		}
 		%>
 		
