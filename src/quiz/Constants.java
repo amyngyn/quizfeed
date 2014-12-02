@@ -15,4 +15,8 @@ public class Constants {
     public static final int MULTI_TEXT_RESPONSE = 5;
     public static final int MULTI_CHOICE_ANSWER = 6;
     public static final int MATCHING = 7;
+    
+    public static final int SEND_REQUEST = 1;
+    public static final int ACCEPT_REQUEST = 2;
+    public static final int REJECT_REQUEST = 3;
 }

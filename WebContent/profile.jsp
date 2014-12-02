@@ -4,10 +4,14 @@
 <%@ page import="quiz.Constants"%>
 <%@ page import="java.util.*"%>
 <%
-	User user = (User) request.getAttribute("user");
-	String username = user.getUsername();
-	ArrayList<User> friends = user.getFriends();
-	ArrayList<User> friendRequests = user.getFriendRequests();
+	User userToDisplay = (User) request.getAttribute("user");
+	if (userToDisplay == null) {
+		throw new IllegalAccessError(
+				"Shouldn't be able to access profile without having a user set.");
+	}
+	String username = userToDisplay.getUsername();
+	HashMap<Integer, User> friendsToDisplay = userToDisplay
+			.getFriends();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -18,12 +22,46 @@
 </head>
 <body>
 	<jsp:include page="<%=Constants.HEADER_FILE%>">
-		<jsp:param value="<%=user.getUsername()%>" name="title" />
+		<jsp:param value="<%=userToDisplay.getUsername()%>" name="title" />
 	</jsp:include>
 	<h1><%=username%></h1>
+	<%
+		User loggedInUser = (User) session.getAttribute("user");
+
+		// If you are viewing someone else's profile
+		if (loggedInUser != null) {
+			HashMap<Integer, User> existingFriends = loggedInUser
+					.getFriends();
+			if (loggedInUser.getID() != userToDisplay.getID()) {
+				HashMap<Integer, User> existingRequests = loggedInUser
+						.getFriendRequests();
+				HashMap<Integer, User> displayRequests = userToDisplay
+						.getFriendRequests();
+				// If you are viewing the profile of someone who has already friend requested you
+				if (existingRequests.containsKey(userToDisplay.getID())) {
+	%>
+	<a
+		href="request?request=<%=Constants.ACCEPT_REQUEST%>&friendid=<%=userToDisplay.getID()%>">
+		Accept Friend Request </a>
+	<%
+		// If you are not already friends with the person you're viewing and you have not already requested them
+				} else if (!existingFriends.containsKey(userToDisplay
+						.getID())
+						&& !displayRequests.containsKey(loggedInUser
+								.getID())) {
+	%>
+	<a
+		href="request?request=<%=Constants.SEND_REQUEST%>&friendid=<%=userToDisplay.getID()%>">
+		Add Friend </a>
+	<%
+		}
+			}
+		}
+	%>
+
 	<h2>Friends</h2>
 	<%
-		if (friends.isEmpty()) {
+		if (friendsToDisplay.isEmpty()) {
 	%>
 	<p><%=username%>
 		doesn't have friends.
@@ -33,35 +71,13 @@
 	%>
 	<ul>
 		<%
-			for (User f : friends) {
+			for (Integer fID : friendsToDisplay.keySet()) {
 		%>
-		<li><a href="user?uid=<%=f.getID()%>"><%=f.getUsername()%></a></li>
+		<li><a href="user?uid=<%=fID%>"><%=friendsToDisplay.get(fID).getUsername()%></a></li>
 		<%
 			}
 		%>
-	</ul>
-	<%
-		}
-	%>
 
-	<h2>Friend Requests</h2>
-	<%
-		if (friendRequests.isEmpty()) {
-	%>
-	<p><%=username%>
-		doesn't have friend requests.
-	</p>
-	<%
-		} else {
-	%>
-	<ul>
-		<%
-			for (User f : friendRequests) {
-		%>
-		<li><a href="user?uid=<%=f.getID()%>"><%=f.getUsername()%></a></li>
-		<%
-			}
-		%>
 	</ul>
 	<%
 		}

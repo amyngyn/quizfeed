@@ -3,6 +3,7 @@ package quiz;
 import java.security.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class User {
@@ -212,8 +213,8 @@ public class User {
 		return buff.toString(); 
 	}
 
-	public static ArrayList<User> findUsers(String queryTerm) {
-		ArrayList<User> users = new ArrayList<User>();
+	public static HashMap<Integer, User> findUsers(String queryTerm) {
+		HashMap<Integer, User> users = new HashMap<Integer, User>();
 		String query = "SELECT * FROM users WHERE username like '%" + queryTerm + "%'";
 
 		Connection con = null;
@@ -226,7 +227,7 @@ public class User {
 			while (rs.next()) {
 				int uID = rs.getInt("uID");
 				String username = rs.getString(Constants.USERNAME_KEY);
-				users.add(new User(uID, username));
+				users.put(uID, new User(uID, username));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -236,18 +237,18 @@ public class User {
 		return users;
 	}
 	
-	public ArrayList<User> getFriends() {
+	public HashMap<Integer, User> getFriends() {
 		String query = "SELECT friendID FROM friendships WHERE uID=" + id + ";";
 		return getUsersFromQuery(query, "friendID");
 	}
 	
-	public ArrayList<User> getFriendRequests() {
+	public HashMap<Integer, User> getFriendRequests() {
 		String query = "SELECT fromID FROM friend_requests WHERE toID=" + id + ";";
 		return getUsersFromQuery(query, "fromID");
 	}
 	
-	public ArrayList<User> getUsersFromQuery(String query, String idKey) {
-		ArrayList<User> users = new ArrayList<User>();
+	public HashMap<Integer, User> getUsersFromQuery(String query, String idKey) {
+		HashMap<Integer, User> users = new HashMap<Integer, User>();
 
 		Connection con = null;
 		Statement statement = null;
@@ -258,7 +259,11 @@ public class User {
 			rs = statement.executeQuery(query);
 			while (rs.next()) {
 				int uID = rs.getInt(idKey);
-				users.add(getUser(uID));
+				User user = getUser(uID);
+				if (user == null) {
+					throw new IllegalStateException("There is an inconsistency in the database! Please fix it before moving forward.");
+				}
+				users.put(uID, getUser(uID));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -266,5 +271,48 @@ public class User {
 			Database.closeConnections(con, statement, rs);
 		}
 		return users;
+	}
+	
+	private static void executeSimpleQuery(String query) {
+		Connection con = null;
+		Statement statement = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement);
+		}
+	}
+	
+	private void removeFromFriendRequestTable(int fromID, int toID) {
+		String query = "DELETE FROM friend_requests WHERE fromID=" + fromID + " AND toID=" + toID;
+		executeSimpleQuery(query);
+	}
+	
+	private static void addOneWayFriend(int uID, int friendID) {
+		String query = "INSERT INTO friendships VALUES (" + uID + ", " + friendID + ")";
+		executeSimpleQuery(query);
+	}
+	
+	public void sendFriendRequest(int friendID) {
+		String query = "INSERT INTO friend_requests VALUES (" + id + ", " + friendID + ")";
+		executeSimpleQuery(query);		
+	}
+	
+	public void acceptFriendRequest(int friendID) {
+		removeFromFriendRequestTable(friendID, id);
+		addOneWayFriend(id, friendID);
+		addOneWayFriend(friendID, id);
+	}
+	
+	public void rejectFriendRequest(int friendID) {
+		removeFromFriendRequestTable(friendID, id);
+	}
+	
+	public int getNotificationCount() {
+		return getFriendRequests().size();
 	}
 }
