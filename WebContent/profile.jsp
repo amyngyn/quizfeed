@@ -28,27 +28,36 @@
 	<%
 		User loggedInUser = (User) session.getAttribute("user");
 
-		// If you are viewing someone else's profile
 		if (loggedInUser != null) {
-			HashMap<Integer, User> existingFriends = loggedInUser
-					.getFriends();
+			
+			// If you are viewing someone else's profile
 			if (loggedInUser.getID() != userToDisplay.getID()) {
+
+				HashMap<Integer, User> existingFriends = loggedInUser
+						.getFriends();
 				HashMap<Integer, User> existingRequests = loggedInUser
 						.getFriendRequests();
 				HashMap<Integer, User> displayRequests = userToDisplay
 						.getFriendRequests();
+				
 				// If you are viewing the profile of someone who has already friend requested you
 				if (existingRequests.containsKey(userToDisplay.getID())) {
 	%>
 	<a
 		href="request?request=<%=Constants.ACCEPT_REQUEST%>&friendid=<%=userToDisplay.getID()%>">
 		Accept Friend Request </a>
+
 	<%
-		// If you are not already friends with the person you're viewing and you have not already requested them
-				} else if (!existingFriends.containsKey(userToDisplay
-						.getID())
-						&& !displayRequests.containsKey(loggedInUser
-								.getID())) {
+				// If you are already friends with this person
+				} else if (existingFriends.containsKey(userToDisplay.getID())) {
+				%>
+	<a
+		href="request?request=<%=Constants.DELETE_FRIEND_REQUEST%>&friendid=<%=userToDisplay.getID()%>">
+		Delete Friend </a>
+		
+	<%
+				// If you don't already have a request waiting for this user.
+				} else if (!displayRequests.containsKey(loggedInUser.getID())) {
 	%>
 	<a
 		href="request?request=<%=Constants.SEND_REQUEST%>&friendid=<%=userToDisplay.getID()%>">

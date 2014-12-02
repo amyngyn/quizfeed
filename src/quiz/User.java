@@ -236,17 +236,17 @@ public class User {
 		}
 		return users;
 	}
-	
+
 	public HashMap<Integer, User> getFriends() {
 		String query = "SELECT friendID FROM friendships WHERE uID=" + id + ";";
 		return getUsersFromQuery(query, "friendID");
 	}
-	
+
 	public HashMap<Integer, User> getFriendRequests() {
 		String query = "SELECT fromID FROM friend_requests WHERE toID=" + id + ";";
 		return getUsersFromQuery(query, "fromID");
 	}
-	
+
 	public HashMap<Integer, User> getUsersFromQuery(String query, String idKey) {
 		HashMap<Integer, User> users = new HashMap<Integer, User>();
 
@@ -272,7 +272,7 @@ public class User {
 		}
 		return users;
 	}
-	
+
 	private static void executeSimpleQuery(String query) {
 		Connection con = null;
 		Statement statement = null;
@@ -286,33 +286,40 @@ public class User {
 			Database.closeConnections(con, statement);
 		}
 	}
-	
+
 	private void removeFromFriendRequestTable(int fromID, int toID) {
 		String query = "DELETE FROM friend_requests WHERE fromID=" + fromID + " AND toID=" + toID;
 		executeSimpleQuery(query);
 	}
-	
+
 	private static void addOneWayFriend(int uID, int friendID) {
 		String query = "INSERT INTO friendships VALUES (" + uID + ", " + friendID + ")";
 		executeSimpleQuery(query);
 	}
-	
+
 	public void sendFriendRequest(int friendID) {
 		String query = "INSERT INTO friend_requests VALUES (" + id + ", " + friendID + ")";
 		executeSimpleQuery(query);		
 	}
-	
+
 	public void acceptFriendRequest(int friendID) {
 		removeFromFriendRequestTable(friendID, id);
 		addOneWayFriend(id, friendID);
 		addOneWayFriend(friendID, id);
 	}
-	
+
 	public void rejectFriendRequest(int friendID) {
 		removeFromFriendRequestTable(friendID, id);
 	}
-	
+
 	public int getNotificationCount() {
 		return getFriendRequests().size();
+	}
+
+	public void deleteFriend(int friendID) {
+		String first = "DELETE FROM friendships WHERE uID=" + id + " AND " + "friendID=" + friendID;
+		String second = "DELETE FROM friendships WHERE uID=" + friendID + " AND " + "friendID=" + id;
+		executeSimpleQuery(first);
+		executeSimpleQuery(second);
 	}
 }

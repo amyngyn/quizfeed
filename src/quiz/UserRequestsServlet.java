@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  * Servlet implementation class UserRequestsServlet
  */
@@ -50,6 +49,9 @@ public class UserRequestsServlet extends HttpServlet {
 			break;
 		case Constants.REJECT_REQUEST:
 			currentUser.rejectFriendRequest(friendID);
+			break;
+		case Constants.DELETE_FRIEND_REQUEST:
+			currentUser.deleteFriend(friendID);
 			break;
 		}
 		
