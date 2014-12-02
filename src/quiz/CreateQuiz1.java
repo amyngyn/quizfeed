@@ -98,7 +98,6 @@ public class CreateQuiz1 extends HttpServlet {
 				insertQuery = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
 				statement.execute(insertQuery);
 			}
-
 			request.getSession().setAttribute("quizNumber", quizNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();

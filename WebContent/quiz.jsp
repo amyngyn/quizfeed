@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.Time" %>    
 <%@ page import="java.util.ArrayList" %>    
+<%@ page import="java.util.Collections" %> 
 <%@ page import="quiz.*" %>    
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -19,12 +20,24 @@ ArrayList<Integer> choicesTo = (ArrayList<Integer>)request.getAttribute("choices
 int size = questions.size();%>
 
 <form action="GradeQuiz" method="post">
+<%ArrayList<Integer> randomIndices = new ArrayList<Integer>();
+  for (int i = 0; i < size; i++) {
+	  randomIndices.add(i);
+  }
+  Collections.shuffle(randomIndices);
+%>
 
-<%for (int i=0; i<size; i++){ %>
-	<!-- Question number and name -->
-	<% int type = types.get(i); %>
-	<% if (type != Constants.PICTURE_RESPONSE){  %>
-		<p><%=i + 1%>.<%=questions.get(i) %><br>
+
+
+<%for (int k = 0; k <size; k++){
+	  int i = k; //such hacks I'm sorry
+	  if (Constants.RANDOM) {
+		i = randomIndices.get(k); 
+	   }
+	//Question number and name
+	int type = types.get(i); 
+    if (type != Constants.PICTURE_RESPONSE){  %>
+		<p><%=k + 1%>.<%=questions.get(i) %><br>
 	<% } %>
 
 	
