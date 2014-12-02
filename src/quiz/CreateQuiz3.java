@@ -94,7 +94,7 @@ public class CreateQuiz3 extends HttpServlet {
 			statement.execute(insertQ);
 			statement.execute(insertA);
 
-			String redirectTo = Constants.INDEX;
+			String redirectTo = "index.jsp";
 			if (request.getParameter("status").equals("continue")) {
 				redirectTo = "CreateQuizType.html";
 			}
