@@ -85,7 +85,7 @@ Vector<Integer> yourScores = new Vector<Integer>();
 Vector<Integer> yourTotal = new Vector<Integer>();
 Vector<Timestamp> yourTimes = new Vector<Timestamp>();
 
-String yourQuery = "Select * from scores where uID = " + youruID + " order by time DESC;";
+String yourQuery = "Select * from scores where uID = " + youruID + " and zID=" + zID + " order by time DESC;";
 rs = s.executeQuery(query);
 while(rs.next()){
 	yourScores.add(rs.getInt("score"));
