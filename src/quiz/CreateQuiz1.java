@@ -59,7 +59,14 @@ public class CreateQuiz1 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");
-		int user = 0;
+		int user = -1;
+		
+		Object j = request.getSession().getAttribute("user");
+		if(j != null){
+			User u = (User)j;
+			user = u.getID();
+		}
+		
 		String timestamp = TimeFormat.getTimestamp();
 
 		Connection con = null;

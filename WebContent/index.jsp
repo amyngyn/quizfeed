@@ -329,5 +329,51 @@
 	<a href="login.jsp">Login</a>
 	<%} %>
 
+<%
+	Object b = session.getAttribute("user");
+
+	if(b != null){
+		
+		user = (User) session.getAttribute("user");
+		Integer uID = user.getID();
+
+		
+		query = "Select name, time from quizzes where uID=" + uID + " order by time;";
+		con = Database.openConnection();
+		Statement s = Database.getStatement(con);
+
+		Vector<String> createNames = new Vector<String>();
+		Vector<Timestamp> createTimes = new Vector<Timestamp>();
+
+		rs = s.executeQuery(query);
+		while (rs.next()) {
+			createNames.add(rs.getString("name"));
+			createTimes.add(rs.getTimestamp("time"));
+		}
+%>
+
+	<h4>Quizzes I've Made</h4>
+	<table class="border">
+			<tr class="border">
+				<td class="wider, border"><b>Quiz Name</b></td>
+				<td class="wider, border"><b>Time</b></td>
+			</tr>
+			<%
+				for (int i = 0; i < createTimes.size(); i++) {
+			%>
+			<tr class="border">
+				<td class="border"><%=createNames.get(i)%></td>
+				<td class="border"><%=createTimes.get(i)%></td>
+			</tr>
+			<%
+				}
+			%>
+	</table>
+<%}else{%>
+	<h4>Quizzes I've Made</h4>
+<%}%>
+
+
+
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
