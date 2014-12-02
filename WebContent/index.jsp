@@ -138,7 +138,9 @@
 <h4>Your Achievements</h4>
 <table class="border">
 	<%
-		Integer uID = (Integer) session.getAttribute("uID");
+		user = (User) session.getAttribute("user");
+		
+		Integer uID = user.getID();
 
 		if (uID != null) {
 
