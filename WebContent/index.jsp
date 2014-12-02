@@ -146,7 +146,7 @@
 		Integer uID = user.getID();
 
 		if (uID == null) return;
-		query = "Select zID, score, possible from scores where uID=" + uID + " order by time;";
+		query = "Select zID, score, possible, time from scores where uID=" + uID + " order by time;";
 		con = Database.openConnection();
 		Statement s = Database.getStatement(con);
 
@@ -154,12 +154,14 @@
 		Vector<Integer> scores = new Vector<Integer>();
 		Vector<Integer> possible = new Vector<Integer>();
 		Vector<String> quizNames = new Vector<String>();
+		Vector<Timestamp> scoreTimes = new Vector<Timestamp>();
 
 		rs = s.executeQuery(query);
 		while (rs.next()) {
 			zIDs.add(rs.getInt("zID"));
 			scores.add(rs.getInt("score"));
 			possible.add(rs.getInt("possible"));
+			scoreTimes.add(rs.getTimestamp("time"));
 		}
 	
 		for(int i=0; i<zIDs.size(); i++){
@@ -176,6 +178,7 @@
 				<td class="wider, border"><b>Quiz Name</b></td>
 				<td class="wider, border"><b>Score</b></td>
 				<td class="wider, border"><b>Total</b></td>
+				<td class="wider, border"><b>Time</b></td>
 			</tr>
 			<%
 				for (int i = 0; i < zIDs.size(); i++) {
@@ -184,6 +187,7 @@
 				<td class="border"><%=quizNames.get(i)%></td>
 				<td class="border"><%=scores.get(i)%></td>
 				<td class="border"><%=possible.get(i)%></td>
+				<td class="border"><%=scoreTimes.get(i)%></td>
 			</tr>
 			<%
 				}
