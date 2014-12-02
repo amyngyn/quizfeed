@@ -135,11 +135,72 @@
 		}
 	%>
 </table>
+
+
+<%
+	Object o = session.getAttribute("user");
+
+	if(o != null){
+		
+		user = (User) session.getAttribute("user");
+		Integer uID = user.getID();
+
+		if (uID == null) return;
+		query = "Select zID, score, possible from scores where zID=" + uID + " order by time;";
+		con = Database.openConnection();
+		Statement s = Database.getStatement(con);
+
+		Vector<Integer> zIDs = new Vector<Integer>();
+		Vector<Integer> scores = new Vector<Integer>();
+		Vector<Integer> possible = new Vector<Integer>();
+		Vector<String> quizNames = new Vector<String>();
+
+		rs = s.executeQuery(query);
+		while (rs.next()) {
+			zIDs.add(rs.getInt("zID"));
+			scores.add(rs.getInt("score"));
+			possible.add(rs.getInt("possible"));
+		}
+	
+		for(int i=0; i<zIDs.size(); i++){
+			query = "Select name from quizzes where zID=" + zIDs.get(i) + ";";
+			rs = s.executeQuery(query);
+			rs.next();
+			quizNames.add(rs.getString("name"));
+		}
+%>
+
+	<h4>Your Recent Scores</h4>
+	<table class="border">
+			<tr class="border">
+				<td class="wider, border"><b>Quiz Name</b></td>
+				<td class="wider, border"><b>Score</b></td>
+				<td class="wider, border"><b>Total</b></td>
+			</tr>
+			<%
+				for (int i = 0; i < zIDs.size(); i++) {
+			%>
+			<tr class="border">
+				<td class="border"><%=quizNames.get(i)%></td>
+				<td class="border"><%=scores.get(i)%></td>
+				<td class="border"><%=possible.get(i)%></td>
+			</tr>
+			<%
+				}
+			%>
+	</table>
+<%}else{%>
+	<h4>Your Recent Scores</h4>
+	<p><a href="login.jsp">Login</a></p>
+<%}%>
+
 <h4>Your Achievements</h4>
 <table class="border">
 	<%
+		Object j = session.getAttribute("user");
+	
+		if(j != null){	
 		user = (User) session.getAttribute("user");
-		
 		Integer uID = user.getID();
 
 		if (uID != null) {
@@ -257,12 +318,12 @@
 		<td title="<%=practice%>" class="pointer">Practice Makes Perfect</td>
 	</tr>
 	<%
-		}
+		}}
 	%>
-
 </table>
-<%
-	}
-%>
+	<%}else{ %>
+	<a href="login.jsp">Login</a>
+	<%} %>
+
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
