@@ -77,11 +77,11 @@ public class CreateQuiz1 extends HttpServlet {
 
 			int quizNumber = getNumberOfQuizzes();
 
-			String insertValues= "'" + name + "'" + ", "
-					+ "'" + description + "'" + ", "
-					+ user + ", "
-					+ "'" + timestamp + "'";
-			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues+ ");";
+			String insertValues= "'" + name + "', '" 
+					+ description + "', "
+					+ user + ", '" + 
+					timestamp + "'";
+			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues + ");";
 			statement.execute(insertQuery);
 
 			//add tuple to achievements

@@ -371,6 +371,7 @@
 	</table>
 <%}else{%>
 	<h4>Quizzes I've Made</h4>
+	<a href="login.jsp">Login</a>
 <%}%>
 
 
