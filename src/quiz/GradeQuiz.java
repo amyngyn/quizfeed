@@ -37,6 +37,7 @@ public class GradeQuiz extends HttpServlet {
 		Connection con = null;
 		Statement statement = null;
 		String timestamp = TimeFormat.getTimestamp();
+		long timeTaken = 0L;
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
@@ -45,7 +46,8 @@ public class GradeQuiz extends HttpServlet {
 					+ zID + ", "
 					+ score + ", "
 					+ possible + ", '"
-					+ timestamp + "');";
+					+ timestamp + "', "
+					+ timeTaken + ");";
 			statement.execute(insertQuery);
 		} catch (SQLException e) {
 			e.printStackTrace();
