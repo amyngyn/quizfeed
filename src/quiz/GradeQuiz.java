@@ -37,6 +37,7 @@ public class GradeQuiz extends HttpServlet {
 		Connection con = null;
 		Statement statement = null;
 		String timestamp = TimeFormat.getTimestamp();
+		long timeTaken = 0L;
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
@@ -45,7 +46,8 @@ public class GradeQuiz extends HttpServlet {
 					+ zID + ", "
 					+ score + ", "
 					+ possible + ", '"
-					+ timestamp + "');";
+					+ timestamp + "', "
+					+ timeTaken + ");";
 			statement.execute(insertQuery);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -116,11 +118,19 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<Integer> types = (ArrayList<Integer>) request.getSession().getAttribute("types");
+		int zID = (int)request.getSession().getAttribute("zID");
+		Quiz q = null;
+		ArrayList<Integer> types = null;
+		try {
+			q = new Quiz(zID);
+			types = q.getQuestionTypes();
+		} catch (SQLException e1) {e1.printStackTrace();}
+		
+		//(ArrayList<Integer>) request.getSession().getAttribute("types");
 		request.setAttribute("size", types.size());
-		ArrayList<String> answers = (ArrayList<String>) request.getSession().getAttribute("answers");
-		ArrayList<Integer> answersTo = (ArrayList<Integer>) request.getSession().getAttribute("answersTo");
-		int answersSize = answers.size();
+		//ArrayList<String> answers = (ArrayList<String>) request.getSession().getAttribute("answers");
+		//ArrayList<Integer> answersTo = (ArrayList<Integer>) request.getSession().getAttribute("answersTo");
+		//int answersSize = answers.size();
 
 		int questions = types.size();
 		int score = 0;
@@ -129,45 +139,55 @@ public class GradeQuiz extends HttpServlet {
 		for (int i = 0; i < questions; i++) {
 			if (types.get(i) == 1) { // text
 				String userAnswer = (String) request.getParameter(i + "");
-				int index = answersTo.indexOf(i);
-				String correct = answers.get(index);
-
-				if (correct.equals(userAnswer)) score++;
+				//int index = answersTo.indexOf(i);
+				//String correct = answers.get(index);
+				String correct;
+				
+				try {
+					correct = q.getAnswers(i).get(0);
+					if (correct.equals(userAnswer)) score++;
+				} catch (SQLException e) {e.printStackTrace();}
 				possible++;
 
 			} else if (types.get(i) == 2) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
-				int index = answersTo.indexOf(i);
-				String correct = answers.get(index);
-
-				if(correct.equals(userAnswer)) score++;
+				//int index = answersTo.indexOf(i);
+				//String correct = answers.get(index);
+				String correct;
+				try {
+					correct = q.getAnswers(i).get(0);
+					if (correct.equals(userAnswer)) score++;
+				} catch (SQLException e) {e.printStackTrace();}
+			
 				possible++;
 
 			} else if (types.get(i) == 3) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
-				int index = answersTo.indexOf(i);
-				String correct = answers.get(index);
-
-				if(correct.equals(userAnswer)) score++;
+				String correct;
+				try {
+					correct = q.getAnswers(i).get(0);
+					if (correct.equals(userAnswer)) score++;
+				} catch (SQLException e) {e.printStackTrace();}
+				
 				possible++;
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
-				int index = answersTo.indexOf(i);
-				String correct = answers.get(index);
-
-				if(correct.equals(userAnswer)) score++;
+				String correct;
+				try {
+					correct = q.getAnswers(i).get(0);
+					if (correct.equals(userAnswer)) score++;
+				} catch (SQLException e) {e.printStackTrace();}
+				
 				possible++;
 
 			} else if (types.get(i) == 5) { // multi text
-				ArrayList<String> theAnswers = new ArrayList<String>();
-				answersSize = answers.size();
-				for (int j = 0; j < answersSize; j++) {
-					if (answersTo.get(j) == i) {
-						theAnswers.add(answers.get(j));
-					}
-				}
-
+				ArrayList<String> theAnswers = null; 
+				
+				try {
+					theAnswers = q.getAnswers(i);
+				} catch (SQLException e) {e.printStackTrace();}
+				
 				int count = theAnswers.size();
 				for (int j = 0; j < count; j++) {
 					String name = i + "-" + j;
@@ -177,20 +197,19 @@ public class GradeQuiz extends HttpServlet {
 				}
 
 			} else if (types.get(i) == 6) { // multi answer multi choice
-				ArrayList<String> theAnswers = new ArrayList<String>();
-				answersSize = answers.size();
-
-				for (int j = 0; j < answersSize; j++) {
-					if (answersTo.get(j) == i) {
-						theAnswers.add(answers.get(j));
-						possible++;
-					}
-				}
-
+				
+				ArrayList<String> theAnswers = null; 
+				int count = 0;
+				
+				try {
+					theAnswers = q.getAnswers(i);
+					count = q.getChoicesCount(i);
+				} catch (SQLException e) {e.printStackTrace();}
+				
+				possible += theAnswers.size();
 				//request.setAttribute("test", theAnswers.get(3));
 				// must know choices to precisely get this answer
-				int count = 10;
-
+				
 				for (int j=0; j<count; j++) {
 					String name = i + "-" + j;
 					String userText = request.getParameter(name);	
@@ -199,17 +218,16 @@ public class GradeQuiz extends HttpServlet {
 					}
 				}
 			} else if(types.get(i) == 7) {
-				ArrayList<String> theAnswers = new ArrayList<String>();
-				answersSize = answers.size();
-
-				for (int j = 0; j < answersSize; j++) {
-					if (answersTo.get(j) == i) {
-						theAnswers.add(answers.get(j));
-						possible++;
-					}
-				}
-
+				ArrayList<String> theAnswers= null;// = new ArrayList<String>();
+				
+				
+				try {
+					theAnswers = q.getAnswers(i);
+				} catch (SQLException e) {e.printStackTrace();}
+				
+				possible += theAnswers.size();
 				int count = theAnswers.size();
+				
 				for (int j = 0; j < count; j++) {
 					String name = i + "-" + j;
 					String userText = request.getParameter(name);	
@@ -223,7 +241,7 @@ public class GradeQuiz extends HttpServlet {
 		request.setAttribute("score", score);
 		request.setAttribute("possible", possible);
 		User user = (User) request.getSession().getAttribute("user");
-		Integer zID = (Integer)request.getSession().getAttribute("zID");
+		zID = (Integer)request.getSession().getAttribute("zID");
 
 		if (user != null) {
 			int uID = user.getID();

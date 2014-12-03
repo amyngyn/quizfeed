@@ -36,13 +36,14 @@ public class GetQuiz extends HttpServlet {
 		HttpSession session = request.getSession();
 		int quizNumber = Integer.parseInt(request.getParameter("num"));
 
-		Connection con = null;
+		/*Connection con = null;
 		Statement statement = null;
 		ResultSet rs = null;
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 
+			
 			// Query for questions
 			ArrayList<String> questions = new ArrayList<String>();
 			ArrayList<Integer> types = new ArrayList<Integer>();
@@ -82,15 +83,17 @@ public class GetQuiz extends HttpServlet {
 
 			session.setAttribute("answers", answers);
 			session.setAttribute("answersTo", answersTo);
+			
+			*/
 			session.setAttribute("zID", quizNumber);
 
 			RequestDispatcher dispatch = request.getRequestDispatcher("quiz.jsp");
 			dispatch.forward(request, response);
-		} catch (SQLException e) {
+		/*} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			Database.closeConnections(con, statement, rs);
-		}
+		}*/
 
 	}
 
