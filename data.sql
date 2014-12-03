@@ -9,12 +9,13 @@ CREATE TABLE quizzes (
     uID INT,
     time DateTime,
     random Boolean,
-    multiple Boolean
+    multiple Boolean,
+    immediate Boolean
 );
 INSERT INTO quizzes VALUES
-	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03", false, false),
-	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02", true, false),
-	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01", false, false);
+	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03", false, false, false),
+	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02", true, false, false),
+	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01", false, false, false);
 
 DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (

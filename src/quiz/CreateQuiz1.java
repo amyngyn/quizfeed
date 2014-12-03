@@ -62,6 +62,7 @@ public class CreateQuiz1 extends HttpServlet {
 		
 		Boolean random = false;
 		Boolean multiple = false;
+		Boolean immediate = false;
 	
 		String description = request.getParameter("description");
 		int user = -1;
@@ -87,7 +88,8 @@ public class CreateQuiz1 extends HttpServlet {
 					+ user + ", '" + 
 					timestamp + "', "
 					+ random + ", "
-					+ multiple;
+					+ multiple + ", "
+					+ immediate;
 			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", " + insertValues + ");";
 			statement.execute(insertQuery);
 
