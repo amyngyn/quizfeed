@@ -118,7 +118,7 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int zID = (int)request.getSession().getAttribute("zID");
+		int zID = (Integer)request.getSession().getAttribute("zID");
 		Quiz q = null;
 		ArrayList<Integer> types = null;
 		try {
@@ -139,6 +139,11 @@ public class GradeQuiz extends HttpServlet {
 		for (int i = 0; i < questions; i++) {
 			if (types.get(i) == 1) { // text
 				String userAnswer = (String) request.getParameter(i + "");
+				boolean mPages = true;
+				if (mPages && i != questions - 1) {
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+				}
+				
 				//int index = answersTo.indexOf(i);
 				//String correct = answers.get(index);
 				String correct;
@@ -151,8 +156,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 2) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
-				//int index = answersTo.indexOf(i);
-				//String correct = answers.get(index);
+				boolean mPages = true;
+				if (mPages && i != questions - 1) {
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+				}
 				String correct;
 				try {
 					correct = q.getAnswers(i).get(0);
@@ -163,6 +170,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 3) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
+				boolean mPages = true;
+				if (mPages && i != questions - 1) {
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+				}
 				String correct;
 				try {
 					correct = q.getAnswers(i).get(0);
@@ -173,6 +184,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
+				boolean mPages = true;
+				if (mPages && i != questions - 1) {
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+				}
 				String correct;
 				try {
 					correct = q.getAnswers(i).get(0);

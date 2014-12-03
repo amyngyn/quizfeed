@@ -1,6 +1,7 @@
 package quiz;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,9 +87,19 @@ public class GetQuiz extends HttpServlet {
 			
 			*/
 			session.setAttribute("zID", quizNumber);
-
-			RequestDispatcher dispatch = request.getRequestDispatcher("quiz.jsp");
-			dispatch.forward(request, response);
+			boolean mPages = true;
+			//TODO: use db attribute
+			if (mPages) {
+				ArrayList<String> answers = new ArrayList<String>();
+				session.setAttribute("answers", answers);
+				request.setAttribute("qNumber", 0);
+				RequestDispatcher dispatch = request.getRequestDispatcher("singlePageQuiz.jsp");
+				dispatch.forward(request, response);
+			}
+			else {
+				RequestDispatcher dispatch = request.getRequestDispatcher("quiz.jsp");
+				dispatch.forward(request, response);
+			}
 		/*} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -40,7 +40,9 @@ public class QuizIntro extends HttpServlet {
 		Quiz q = null;
 		try {
 		q = new Quiz(num);
-		} catch (SQLException e1) {e1.printStackTrace();}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 				
 		
 		int zID = q.getID();
