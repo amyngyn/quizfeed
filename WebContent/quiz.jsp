@@ -33,7 +33,7 @@ int size = q.getQuestionCount();
 
 <%for (int k = 0; k <size; k++){
 	  int i = k; //such hacks I'm sorry
-	  if (Constants.RANDOM) {
+	  if (q.getRandom()) {
 		i = randomIndices.get(k); 
 	   }
 	//Question number and name
@@ -131,7 +131,6 @@ int size = q.getQuestionCount();
 					<%=choices2.get(j) %>
 				<% nameCount++;
 				} 
-			
 		}
 		%>
 		

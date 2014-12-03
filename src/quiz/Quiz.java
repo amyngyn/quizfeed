@@ -31,7 +31,15 @@ public class Quiz {
 		Database.closeConnections(c, s, rs);
 		// close database connection
 	}
-
+	
+	public boolean getRandom() {
+		return random;
+	}
+	
+	public boolean getMultiple() {
+		return multiple;
+	}
+	
 	public int getID() {
 		return zID;
 	}

@@ -88,7 +88,7 @@ public class CreateQuiz1 extends HttpServlet {
 					timestamp + "', "
 					+ random + ", "
 					+ multiple;
-			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", "+ insertValues + ");";
+			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", " + insertValues + ");";
 			statement.execute(insertQuery);
 
 			//add tuple to achievements
