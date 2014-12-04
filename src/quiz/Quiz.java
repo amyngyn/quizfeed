@@ -152,6 +152,17 @@ public class Quiz {
 		return answers;
 	}
 	
+	public String getAnswersString(int sID) throws SQLException{
+		ArrayList<String> answerArr = getAnswers(sID);
+		String answers = "";
+		for(int i=0; i<answerArr.size(); i++){
+			answers += answerArr.get(i);
+			if(i != answerArr.size() - 1) answers += ", ";
+		}
+		
+		return answers;
+	}
+	
 	public Integer getChoicesCount(int sID) throws SQLException{
 		String query = "Select count(*) as count from choices where zID =" + zID + " and sID=" + sID + ";";
 		Connection c = Database.openConnection();

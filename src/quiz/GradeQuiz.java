@@ -136,10 +136,12 @@ public class GradeQuiz extends HttpServlet {
 		int score = 0;
 		int possible = 0;
 		boolean mPages = q.getMultiple();
+		ArrayList<Object> allInput = new ArrayList<Object>();
 
 		for (int i = 0; i < questions; i++) {
 			if (types.get(i) == 1) { // text
 				String userAnswer = (String) request.getParameter(i + "");
+				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -156,6 +158,7 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 2) { // fill in blank
 				String userAnswer = (String) request.getParameter(i + "");
+				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -169,6 +172,7 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 3) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
+				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -182,6 +186,7 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
+				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -200,13 +205,17 @@ public class GradeQuiz extends HttpServlet {
 					theAnswers = q.getAnswers(i);
 				} catch (SQLException e) {e.printStackTrace();}
 				
+				
+				ArrayList<String> textInputs = new ArrayList<String>(); 
 				int count = theAnswers.size();
 				for (int j = 0; j < count; j++) {
 					String name = i + "-" + j;
 					String userText = request.getParameter(name);
+					if(userText != null) textInputs.add(userText);
 					if (theAnswers.contains(userText)) score++;
 					possible++;
 				}
+				allInput.add(textInputs);
 
 			} else if (types.get(i) == 6) { // multi answer multi choice
 				
@@ -222,13 +231,16 @@ public class GradeQuiz extends HttpServlet {
 				//request.setAttribute("test", theAnswers.get(3));
 				// must know choices to precisely get this answer
 				
+				ArrayList<String> inputs = new ArrayList<String>();
 				for (int j=0; j<count; j++) {
 					String name = i + "-" + j;
 					String userText = request.getParameter(name);	
+					if(userText != null) inputs.add(userText);
 					if (theAnswers.contains(userText)) {
 						score++;
 					}
 				}
+				allInput.add(inputs);
 			} else if(types.get(i) == 7) {
 				ArrayList<String> theAnswers= null;// = new ArrayList<String>();
 				
@@ -240,16 +252,21 @@ public class GradeQuiz extends HttpServlet {
 				possible += theAnswers.size();
 				int count = theAnswers.size();
 				
+				ArrayList<String> inputs = new ArrayList<String>();
 				for (int j = 0; j < count; j++) {
 					String name = i + "-" + j;
 					String userText = request.getParameter(name);	
+					inputs.add(userText);
 					if (theAnswers.get(j).equals(userText)) {
 						score++;
 					}
 				}
+				allInput.add(inputs);
 			}
 		}
 
+		request.getSession().setAttribute("allInput", allInput);
+		
 		request.setAttribute("score", score);
 		request.setAttribute("possible", possible);
 		User user = (User) request.getSession().getAttribute("user");
