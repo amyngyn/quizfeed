@@ -112,7 +112,7 @@ for(int i=0; i<uIDs.size(); i++){
 int size = uIDs.size();
 int number = size > 5 ? 5: size;
 for(int i=0; i<number; i++){ %>
-<tr><td><%= usernames.get(i)%></td><td><%=scores.get(i)%></td>
+<tr><td><a href="user?uid=<%=uIDs.get(i)%>"><%= usernames.get(i)%></a></td><td><%=scores.get(i)%></td>
 <td><%=total.get(i)%></td><td><%=highPace.get(i)%></td><td><%=highTimes.get(i)%></td></tr>
 <%} %>
 </table>
@@ -166,7 +166,7 @@ for(int i=0; i<friends.size(); i++){
 <tr><td colspan="5"><b>Your Friends' Scores</b></td></tr>
 <tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
 <%for(int i=0; i<friendScores.size(); i++){ %>
-<tr><td><%= friendNames.get(i)%></td><td><%=friendScores.get(i)%></td>
+<tr><td><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td><td><%=friendScores.get(i)%></td>
 <td><%=friendPossible.get(i)%></td><td><%=friendTimes.get(i)%></td><td><%=friendDates.get(i)%></td></tr>
 <%} %>
 
