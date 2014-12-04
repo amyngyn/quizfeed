@@ -12,6 +12,7 @@ public class Quiz {
 	private Timestamp time;
 	private boolean random;
 	private boolean multiple;
+	private boolean immediate;
 
 
 	public Quiz(int inputzID) throws SQLException {
@@ -27,6 +28,7 @@ public class Quiz {
 		time = rs.getTimestamp("time");
 		random = rs.getBoolean("random");
 		multiple = rs.getBoolean("multiple");
+		immediate = rs.getBoolean("immediate");
 		
 		Database.closeConnections(c, s, rs);
 		// close database connection
@@ -38,6 +40,10 @@ public class Quiz {
 	
 	public boolean getMultiple() {
 		return multiple;
+	}
+	
+	public boolean getImmediate() {
+		return immediate;
 	}
 	
 	public int getID() {

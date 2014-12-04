@@ -135,11 +135,11 @@ public class GradeQuiz extends HttpServlet {
 		int questions = types.size();
 		int score = 0;
 		int possible = 0;
+		boolean mPages = q.getMultiple();
 
 		for (int i = 0; i < questions; i++) {
 			if (types.get(i) == 1) { // text
 				String userAnswer = (String) request.getParameter(i + "");
-				boolean mPages = true;
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -154,9 +154,8 @@ public class GradeQuiz extends HttpServlet {
 				} catch (SQLException e) {e.printStackTrace();}
 				possible++;
 
-			} else if (types.get(i) == 2) { // multiple choice
+			} else if (types.get(i) == 2) { // fill in blank
 				String userAnswer = (String) request.getParameter(i + "");
-				boolean mPages = true;
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -170,7 +169,6 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 3) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
-				boolean mPages = true;
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
@@ -184,7 +182,6 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
-				boolean mPages = true;
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}

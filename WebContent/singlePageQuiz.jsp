@@ -125,7 +125,7 @@ if (i == q.getQuestionCount() - 1) {
 <input type="submit" value="Submit">
 </form>
 
-<script><!--
+<script>
 checkAnswer = function() {
 	var corrAnswer = [];
 	<% for (String s : q.getAnswers(i)) { %>
@@ -133,18 +133,29 @@ checkAnswer = function() {
 	<%}%>
 	console.log(document.getElementsByName("<%=i%>"));
 	var userAnswer = document.getElementsByName("<%=i%>")[0].value;
-	//var userAnswer = document.forms[0].elements["<%=i%>"].value;
+	<%
+	if (type == Constants.MULT_CHOICE) { %>
+		for (var i = 0; i < document.getElementsByName("<%=i%>").length; i++)  {
+			if (document.getElementsByName("<%=i%>")[i].checked) {
+				userAnswer = document.getElementsByName("<%=i%>")[i].value;
+			}
+		}
+	<%}%>
+
+	console.log(userAnswer);
 	if (corrAnswer[0] === userAnswer) {
 		alert("Correct!");
 	}
 	else {
 		alert("Incorrect.");
 	}
-	
 };
 
---></script>
-<button onclick="checkAnswer()">Check Answer</button>
+</script>
+<%//TODO: only do this if immediate feedback%>
+<%if(q.getImmediate()) { %>
+	<button onclick="checkAnswer()">Check Answer</button>
+<%} %>
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
 
