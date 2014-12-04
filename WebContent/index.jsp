@@ -384,9 +384,8 @@
 		<%
 			for (int i = 0; i < createTimes.size(); i++) {
 		%>
-		<tr class="border">
-			<td class="border">
-			<a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></td></a>
+		<tr>
+			<td class="border"><a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></a></td>
 			<td class="border"><%=createTimes.get(i)%></td>
 		</tr>
 		<%
@@ -406,9 +405,11 @@ Vector<Integer> friendScores = new Vector<Integer>();
 Vector<Integer> friendPossible = new Vector<Integer>();
 Vector<Double> friendTimes = new Vector<Double>();
 Vector<Timestamp> friendDates = new Vector<Timestamp>();
-
 Vector<Integer> friends = new Vector<Integer>();
-int uID = user.getID();
+
+Object a = session.getAttribute("user");
+if(a != null){
+int uID = ((User)a).getID();
 
 // get all of friends uIDs
 String friendQuery = "Select * from friendships where uID=" + uID + ";";
@@ -421,6 +422,8 @@ while(r.next()){
 for(int i=0; i<friends.size(); i++){
 	query = "Select * from scores where uID=" + friends.get(i) + " order by time DESC;";
 	rs = statement.executeQuery(query);
+	
+	
 	while(rs.next()){
 		int frienduID = rs.getInt("uID");
 		frienduIDs.add(frienduID);
@@ -429,15 +432,17 @@ for(int i=0; i<friends.size(); i++){
 		friendTimes.add(Double.parseDouble((Long.toString(rs.getLong("timeTaken"))))/1000);
 		friendDates.add(rs.getTimestamp("time"));
 		// query for friends name
-		query ="select * from users where uID=" + frienduID + ";";
-		rs = statement.executeQuery(query);
-		if(rs.next()){
-			friendNames.add(rs.getString("username"));
+	}
+	
+	for(int x=0; x<frienduIDs.size(); x++){
+		query ="select * from users where uID=" + frienduIDs.get(x) + ";";
+		ResultSet result = statement.executeQuery(query);
+		if(result.next()){
+			friendNames.add(result.getString("username"));
 		}else{
 			friendNames.add("Former User");
 		}
-	
-	}
+	}	
 }
 %>
 <br>
@@ -449,7 +454,8 @@ int friendSize = friendScores.size() > 6 ? 6 : friendScores.size();
 for(int i=0; i<friendSize; i++){ %>
 <tr><td  class="border"><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td><td  class="border"><%=friendScores.get(i)%></td>
 <td  class="border"><%=friendPossible.get(i)%></td><td  class="border"><%=friendTimes.get(i)%></td><td  class="border"><%=friendDates.get(i)%></td></tr>
-<%} %>
+<%} 
+}%>
 </table>
 
 
