@@ -219,6 +219,7 @@
 
 <br>
 <table class="border">
+<tr><td class="border"><b>Your Achievements</b></td></tr>
 	<%
 		Object j = session.getAttribute("user");
 	
@@ -245,7 +246,6 @@
 						title += ", ";
 				}
 	%>
-	<tr><td class="border"><b>Your Achievements</b></td></tr>
 	<tr class="border">
 		<td title="<%=title%>" class="pointer">Amateur Author</td>
 	</tr>
