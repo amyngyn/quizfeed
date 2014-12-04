@@ -42,7 +42,7 @@
 	Vector<String> recentNames = new Vector<String>();
 	Vector<Timestamp> recentTimes = new Vector<Timestamp>();
 	Vector<Integer> recentIDs = new Vector<Integer>();
-	query = "Select name, time, zID From quizzes Order By time ASC";
+	query = "Select name, time, zID From quizzes Order By time DESC";
 	rs = statement.executeQuery(query);
 	int count = 0;
 	while (rs.next()) {
@@ -75,24 +75,26 @@
 			break;
 	}
 %>
-
-<table>
+<br>
+<table class="border">
 	<tr>
-		<th>Quiz Name</th>
+		<th class="border">Quiz Name</th>
 	</tr>
 	<%
 		for (int i = 0; i < names.size(); i++) {
 	%>
 	<tr>
-		<td><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></td>
+		<td class="border"><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></td>
 	</tr>
 	<%
 		}
 	%>
 </table>
-<p>
-	<a href="CreateQuizBegin.html">Create a New Quiz</a>
-</p>
+
+<br>
+<a href="CreateQuizBegin.html">Create a Quiz</a>
+<br>
+<br>
 
 <table>
 	<tr>
@@ -110,8 +112,9 @@
 	%>
 </table>
 
-<h4>Recently Created Quizzes</h4>
+<br>
 <table class="border">
+	<tr><td colspan="2"><b>Recently Created Quizzes</b></td></tr>
 	<tr>
 		<th class="border"><b>Name</b></th>
 		<th class="border"><b>Time Created</b></th>
@@ -127,8 +130,11 @@
 		}
 	%>
 </table>
-<h4>Popular Quizzes</h4>
+<br>
+
+
 <table class="border">
+	<tr><td colspan="4"><b>Popular Quizzes</b></td></tr>
 	<tr>
 		<th class="border"><b>Name</b></th>
 		<th class="border"><b>Attempts</b></th>
@@ -155,7 +161,7 @@
 		Integer uID = user.getID();
 
 		if (uID == null) return;
-		query = "Select zID, score, possible, time, timeTaken from scores where uID=" + uID + " order by time;";
+		query = "Select zID, score, possible, time, timeTaken from scores where uID=" + uID + " order by time DESC;";
 		con = Database.openConnection();
 		Statement s = Database.getStatement(con);
 
@@ -182,9 +188,9 @@
 			quizNames.add(rs.getString("name"));
 		}
 %>
-
-	<h4>Your Recent Scores</h4>
+	<br>
 	<table class="border">
+		<tr><td colspan="5"><b>Your Recent Score, <a href="history.jsp">Scores Summary Page</a></b></td></tr>
 			<tr class="border">
 				<td class="wider, border"><b>Quiz Name</b></td>
 				<td class="wider, border"><b>Score</b></td>
@@ -193,7 +199,8 @@
 				<td class="wider, border"><b>TimeTaken</b></td>
 			</tr>
 			<%
-				for (int i = 0; i < zIDs.size(); i++) {
+				int max = zIDs.size() > 6 ? 6 : zIDs.size();
+				for (int i = 0; i < max; i++) {
 			%>
 			<tr class="border">
 				<td class="border"><a href="QuizIntro?num=<%=zIDs.get(i)%>"><%=quizNames.get(i)%></a></td>
@@ -211,7 +218,7 @@
 	<p><a href="login.jsp">Login</a></p>
 <%}%>
 
-<h4>Your Achievements</h4>
+<br>
 <table class="border">
 	<%
 		Object j = session.getAttribute("user");
@@ -239,7 +246,7 @@
 						title += ", ";
 				}
 	%>
-
+	<tr><td class="border"><b>Your Achievements</b></td></tr>
 	<tr class="border">
 		<td title="<%=title%>" class="pointer">Amateur Author</td>
 	</tr>
@@ -367,30 +374,83 @@
 		}
 %>
 
-	<h4>Quizzes I've Made</h4>
+	<br>
 	<table class="border">
-			<tr class="border">
-				<td class="wider, border"><b>Quiz Name</b></td>
-				<td class="wider, border"><b>Time</b></td>
-			</tr>
-			<%
-				for (int i = 0; i < createTimes.size(); i++) {
-			%>
-			<tr class="border">
-				<td class="border">
-				<a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></td></a>
-				<td class="border"><%=createTimes.get(i)%></td>
-			</tr>
-			<%
-				}
-			%>
+		<tr><td class="border" colspan="2"><b>Quizzes I've Made</b></td></tr>
+		<tr class="border">
+			<td class="wider, border"><b>Quiz Name</b></td>
+			<td class="wider, border"><b>Time</b></td>
+		</tr>
+		<%
+			for (int i = 0; i < createTimes.size(); i++) {
+		%>
+		<tr class="border">
+			<td class="border">
+			<a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></td></a>
+			<td class="border"><%=createTimes.get(i)%></td>
+		</tr>
+		<%
+			}
+		%>
 	</table>
 <%}else{%>
 	<h4>Quizzes I've Made</h4>
 	<a href="login.jsp">Login</a>
 <%}%>
 
+<%
+// YOUR FRIENDS' SCORES
+Vector<Integer> frienduIDs = new Vector<Integer>();
+Vector<String> friendNames = new Vector<String>();
+Vector<Integer> friendScores = new Vector<Integer>();
+Vector<Integer> friendPossible = new Vector<Integer>();
+Vector<Double> friendTimes = new Vector<Double>();
+Vector<Timestamp> friendDates = new Vector<Timestamp>();
 
+Vector<Integer> friends = new Vector<Integer>();
+int uID = user.getID();
+
+// get all of friends uIDs
+String friendQuery = "Select * from friendships where uID=" + uID + ";";
+ResultSet r = statement.executeQuery(friendQuery);
+while(r.next()){
+	friends.add(r.getInt("friendID"));
+}
+
+// query for friend's scores 
+for(int i=0; i<friends.size(); i++){
+	query = "Select * from scores where uID=" + friends.get(i) + " order by time DESC;";
+	rs = statement.executeQuery(query);
+	while(rs.next()){
+		int frienduID = rs.getInt("uID");
+		frienduIDs.add(frienduID);
+		friendScores.add(rs.getInt("score"));
+		friendPossible.add(rs.getInt("possible"));
+		friendTimes.add(Double.parseDouble((Long.toString(rs.getLong("timeTaken"))))/1000);
+		friendDates.add(rs.getTimestamp("time"));
+		// query for friends name
+		query ="select * from users where uID=" + frienduID + ";";
+		rs = statement.executeQuery(query);
+		if(rs.next()){
+			friendNames.add(rs.getString("username"));
+		}else{
+			friendNames.add("Former User");
+		}
+	
+	}
+}
+%>
+<br>
+<table class="border">
+<tr><td  class="border" colspan="5"><b>Your Friends' Scores</b></td></tr>
+<tr><td  class="border"><b>User</b></td><td  class="border"><b>Score</b></td><td  class="border"><b>Possible</b></td><td  class="border"><b>Time</b></td><td  class="border"><b>Date</b></td></tr>
+<%
+int friendSize = friendScores.size() > 6 ? 6 : friendScores.size();
+for(int i=0; i<friendSize; i++){ %>
+<tr><td  class="border"><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td><td  class="border"><%=friendScores.get(i)%></td>
+<td  class="border"><%=friendPossible.get(i)%></td><td  class="border"><%=friendTimes.get(i)%></td><td  class="border"><%=friendDates.get(i)%></td></tr>
+<%} %>
+</table>
 
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
