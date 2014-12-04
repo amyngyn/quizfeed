@@ -46,35 +46,52 @@ Timestamp time = (Timestamp)request.getAttribute("time");
 </form>
 <br>
 <table>
-<tr><td colspan="3"><b>High Scores</b></td></tr>
-<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td></tr>
+<tr><td colspan="5"><b>High Scores</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
 <%
 ArrayList<Integer> uIDs = new ArrayList<Integer>();
+ArrayList<String> usernames = new ArrayList<String>();
 ArrayList<Integer> scores = new ArrayList<Integer>();
 ArrayList<Integer> total = new ArrayList<Integer>();
+ArrayList<Timestamp> highTimes = new ArrayList<Timestamp>();
+ArrayList<Double> highPace = new ArrayList<Double>();
+
 Connection con = Database.openConnection();
 Statement s = Database.getStatement(con);
-String query = "Select * from scores where zID = " + zID + " order by score ASC;";
+String query = "Select * from scores where zID = " + zID + " order by score DESC;";
 ResultSet rs = s.executeQuery(query);
 while(rs.next()){
 	uIDs.add(rs.getInt("uID"));
 	scores.add(rs.getInt("score"));
 	total.add(rs.getInt("possible"));
+	highTimes.add(rs.getTimestamp("time"));
+	highPace.add(((double)rs.getLong("timeTaken"))/1000);
+}
+
+for(int i=0; i<uIDs.size(); i++){
+	String q = "Select username from users where uID=" + uIDs.get(i) + ";";
+	rs = s.executeQuery(q);
+	if(rs.next()){
+		usernames.add(rs.getString("username"));
+	}else{
+		usernames.add("Deleted User");	
+	}
 }
 
 int size = uIDs.size();
 int count = size > 5 ? 5: size;
 
 for(int i=0; i<count; i++){ %>
-<tr><td><%= uIDs.get(i)%></td><td><%=scores.get(i)%></td><td><%=total.get(i)%></td></tr>
+<tr><td><%= usernames.get(i)%></td><td><%=scores.get(i)%></td>
+<td><%=total.get(i)%></td><td><%=highPace.get(i)%></td><td><%=highTimes.get(i)%></td></tr>
 <%} %>
 </table>
 <br>
 
 
 <table>
-<tr><td colspan="3"><b>Your Past Performances</b></td></tr>
-<tr><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td></tr>
+<tr><td colspan="4"><b>Your Past Performances</b></td></tr>
+<tr><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
 <%
 Object o = session.getAttribute("user");
 if(o != null){
@@ -83,6 +100,7 @@ Integer youruID = user.getID();
 
 Vector<Integer> yourScores = new Vector<Integer>();
 Vector<Integer> yourTotal = new Vector<Integer>();
+Vector<Double> yourPace = new Vector<Double>();
 Vector<Timestamp> yourTimes = new Vector<Timestamp>();
 
 String yourQuery = "Select * from scores where uID = " + youruID + " and zID=" + zID + " order by time DESC;";
@@ -91,10 +109,11 @@ while(rs.next()){
 	yourScores.add(rs.getInt("score"));
 	yourTotal.add(rs.getInt("possible"));
 	yourTimes.add(rs.getTimestamp("time"));
+	yourPace.add(((double)rs.getLong("timeTaken"))/1000);
 }
 
 for(int i=0; i<yourScores.size(); i++){ %>
-<tr><td><%= yourScores.get(i)%></td><td><%=yourTotal.get(i)%></td><td><%=yourTimes.get(i)%></td></tr>
+<tr><td><%= yourScores.get(i)%></td><td><%=yourTotal.get(i)%></td><td><%=yourPace.get(i)%></td><td><%=yourTimes.get(i)%></td></tr>
 <%}}else{ %>
 <tr><td><a href="login.jsp">Login</a></td></tr>
 <%} %>
@@ -103,23 +122,26 @@ for(int i=0; i<yourScores.size(); i++){ %>
 <br>
 
 <table>
-<tr><td colspan="4"><b>Top Performances</b></td></tr>
-<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td></tr>
+<tr><td colspan="5"><b>Top Performers</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
 <%
 Vector<Integer> topuID = new Vector<Integer>();
 Vector<String> topName = new Vector<String>();
 Vector<Integer> topScore = new Vector<Integer>();
 Vector<Integer> topTotal = new Vector<Integer>();
 Vector<Timestamp> topTimes = new Vector<Timestamp>();
+Vector<Double> topPace = new Vector<Double>();
 
-String topQuery = "Select * from scores where zID=" + zID + " order by score DESC;";
+String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC;";
 rs = s.executeQuery(topQuery);
 while(rs.next()){
 	topuID.add(rs.getInt("uID"));
 	topScore.add(rs.getInt("score"));
 	topTotal.add(rs.getInt("possible"));
 	topTimes.add(rs.getTimestamp("time"));
+	topPace.add(((double)rs.getLong("timeTaken"))/1000);
 }
+
 
 for(int i=0; i< topuID.size(); i++){
 	int u = topuID.get(i);
@@ -133,7 +155,7 @@ for(int i=0; i< topuID.size(); i++){
 	}
 }
 for(int i=0; i<topName.size(); i++){ %>
-<tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
+<tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topPace.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
 <%}%>
 </table>
 <br>
