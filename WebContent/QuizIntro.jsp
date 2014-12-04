@@ -78,7 +78,7 @@ int possible = rs.getInt("possible");
 %>
 <br>
 <table>
-<tr><td colspan="3">Summary Statistics</td></tr>
+<tr><td colspan="3"><b>Summary Statistics</b></td></tr>
 <tr><td><b>Avg. Score</b></td><td><b>Possible</b></td><td><b>Avg. Time</b></td></tr>
 <tr><td><%=avgScore %></td><td><%=possible %></td><td><%=timeTaken %></td></tr>
 </table>
@@ -229,6 +229,47 @@ for(int i=0; i<scores.size(); i++){
 <%}}%>
 </table>
 
+
+<br>
+<table>
+<tr><td colspan="5"><b>Recent Scores (Good & Bad)</b></td></tr>
+<tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
+<%
+ArrayList<Integer> neutraluIDs = new ArrayList<Integer>();
+ArrayList<String> neutralNames = new ArrayList<String>();
+ArrayList<Integer> neutralScores = new ArrayList<Integer>();
+ArrayList<Integer> neutralPossible = new ArrayList<Integer>();
+ArrayList<Timestamp> neutralTimes = new ArrayList<Timestamp>();
+ArrayList<Double> neutralPace = new ArrayList<Double>();
+
+query = "Select * from scores where zID = " + zID + " order by time DESC;";
+rs = s.executeQuery(query);
+while(rs.next()){
+	neutraluIDs.add(rs.getInt("uID"));
+	neutralScores.add(rs.getInt("score"));
+	neutralPossible.add(rs.getInt("possible"));
+	neutralTimes.add(rs.getTimestamp("time"));
+	neutralPace.add((rs.getDouble("timeTaken"))/1000);
+}
+
+for(int i=0; i<neutraluIDs.size(); i++){
+	String q = "Select username from users where uID=" + neutraluIDs.get(i) + ";";
+	rs = s.executeQuery(q);
+	if(rs.next()){
+		neutralNames.add(rs.getString("username"));
+	}else{
+		neutralNames.add("Deleted User");	
+	}
+}
+
+size = neutraluIDs.size();
+count = size > 6 ? 6: size;
+
+for(int i=0; i<size; i++){%>
+<tr><td><a href="user?uid=<%=neutraluIDs.get(i)%>"><%= neutralNames.get(i)%></a></td><td><%= neutralScores.get(i)%></td><td><%=neutralPossible.get(i)%></td>
+<td><%=neutralPace.get(i)%></td><td><%=neutralTimes.get(i)%></td></tr>
+<%}%>
+</table>
 
 
 </body>
