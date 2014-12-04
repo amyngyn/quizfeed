@@ -66,6 +66,16 @@ if(cs.next()){
 <input type="submit" value="Begin">
 </form>
 
+<%
+
+String avgQuery = "Select avg(score) as score, possible, avg(timeTaken) as timeTaken from scores where zID=" + zID + ";";
+ResultSet rs = s.executeQuery(avgQuery);
+rs.next();
+int avgScore = rs.getInt("score");
+int avgTime = rs.getInt("timeTaken");
+%>
+
+
 
 <br>
 <table>
@@ -83,7 +93,7 @@ if(o != null){
 	Vector<Timestamp> yourTimes = new Vector<Timestamp>();
 
 	String yourQuery = "Select * from scores where uID = " + youruID + " and zID=" + zID + " order by time DESC;";
-	ResultSet rs = s.executeQuery(yourQuery);
+	rs = s.executeQuery(yourQuery);
 	while(rs.next()){
 		yourScores.add(rs.getInt("score"));
 		yourTotal.add(rs.getInt("possible"));
@@ -113,7 +123,7 @@ Vector<Timestamp> topTimes = new Vector<Timestamp>();
 Vector<Double> topPace = new Vector<Double>();
 
 String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC;";
-ResultSet rs = s.executeQuery(topQuery);
+rs = s.executeQuery(topQuery);
 while(rs.next()){
 	topuID.add(rs.getInt("uID"));
 	topScore.add(rs.getInt("score"));
