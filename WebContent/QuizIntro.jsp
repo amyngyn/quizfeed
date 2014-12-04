@@ -68,14 +68,20 @@ if(cs.next()){
 
 <%
 
-String avgQuery = "Select avg(score) as score, possible, avg(timeTaken) as timeTaken from scores where zID=" + zID + ";";
+String avgQuery = "Select avg(score) as score, max(possible) as possible, avg(timeTaken) as timeTaken from scores where zID=" + zID + ";";
 ResultSet rs = s.executeQuery(avgQuery);
 rs.next();
-int avgScore = rs.getInt("score");
-int avgTime = rs.getInt("timeTaken");
+double avgScore = rs.getDouble("score");
+double timeTaken = rs.getDouble("timeTaken");
+timeTaken = timeTaken/1000;
+int possible = rs.getInt("possible");
 %>
-
-
+<br>
+<table>
+<tr><td colspan="3">Summary Statistics</td></tr>
+<tr><td><b>Avg. Score</b></td><td><b>Possible</b></td><td><b>Avg. Time</b></td></tr>
+<tr><td><%=avgScore %></td><td><%=possible %></td><td><%=timeTaken %></td></tr>
+</table>
 
 <br>
 <table>
