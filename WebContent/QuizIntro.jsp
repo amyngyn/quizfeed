@@ -24,6 +24,9 @@
 <body>
 
 <%
+Connection con = Database.openConnection();
+Statement s = Database.getStatement(con);
+
 User user = (User) session.getAttribute("user");
 if(user == null){
 	String redirectURL = "login.jsp";
@@ -36,13 +39,26 @@ String name = (String)request.getAttribute("name");
 String description = (String)request.getAttribute("description");
 int uID = (Integer)request.getAttribute("uID");
 Timestamp time = (Timestamp)request.getAttribute("time");
-%>
 
+// query for quiz creater's name
+String createQuery = "Select * from users where uID =" + uID + ";";
+ResultSet cs = s.executeQuery(createQuery);
+String createName = "Former User";
+Boolean formerUser = true;
+if(cs.next()){
+	createName = cs.getString("username");
+	formerUser= false;
+}
+%>
 
 <p><b>Quiz ID: </b> <%=zID %></p>
 <p><b>Quiz Name: </b> <%=name %></p>
 <p><b>Quiz Description: </b> <%= description %></p>
-<p><b>Quiz Creator: </b> <%=uID %></p>
+<%if(formerUser){ %>
+<p><b>Quiz Creator: </b><%=createName %></p>
+<%}else{ %>
+<p><b>Quiz Creator: </b><a href="user?uid=<%=uID%>"><%=createName %></a></p>
+<%} %>
 <p><b>Quiz Time Created: </b> <%=time %></p>
 
 <form action="GetQuiz">
@@ -50,10 +66,6 @@ Timestamp time = (Timestamp)request.getAttribute("time");
 <input type="submit" value="Begin">
 </form>
 
-<%
-Connection con = Database.openConnection();
-Statement s = Database.getStatement(con);
-%>
 
 <br>
 <table>
@@ -125,7 +137,7 @@ for(int i=0; i< topuID.size(); i++){
 
 int nameSize = topName.size() < 6 ? topName.size() : 6;
 for(int i=0; i<nameSize; i++){ %>
-<tr><td><%= topName.get(i)%></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topPace.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
+<tr><td><a href="user?uid=<%=topuID.get(i)%>"><%= topName.get(i)%></a></td><td><%= topScore.get(i)%></td><td><%=topTotal.get(i)%></td><td><%=topPace.get(i)%></td><td><%=topTimes.get(i)%></td></tr>
 <%}%>
 </table>
 <br>
@@ -165,7 +177,7 @@ int size = uIDs.size();
 int count = size > 6 ? 6: size;
 
 for(int i=0; i<count; i++){ %>
-<tr><td><%= usernames.get(i)%></td><td><%=scores.get(i)%></td>
+<tr><td><a href="user?uid=<%=uIDs.get(i)%>"><%= usernames.get(i)%></a></td><td><%=scores.get(i)%></td>
 <td><%=total.get(i)%></td><td><%=highPace.get(i)%></td><td><%=highTimes.get(i)%></td></tr>
 <%} %>
 </table>
@@ -196,7 +208,7 @@ int fifteenSize = 0;
 for(int i=0; i<scores.size(); i++){
 	if(recent.get(i) && fifteenSize < 6){
 		fifteenSize += 1;%>
-<tr><td><%= usernames.get(i)%></td><td><%= scores.get(i)%></td><td><%=total.get(i)%></td>
+<tr><td><a href="user?uid=<%=uIDs.get(i)%>"><%= usernames.get(i)%></a></td><td><%= scores.get(i)%></td><td><%=total.get(i)%></td>
 <td><%=highPace.get(i)%></td><td><%=highTimes.get(i)%></td></tr>
 <%}}%>
 </table>
