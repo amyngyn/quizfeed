@@ -13,8 +13,13 @@
 </jsp:include>
 
 <%
+	
 	User user = (User) session.getAttribute("user");
-
+	if(user == null){
+		String redirectURL = "login.jsp";
+		response.sendRedirect(redirectURL);
+	}
+	
 	ArrayList<String> names = new ArrayList<String>();
 	Connection con = null;
 	Statement statement = null;
@@ -150,7 +155,7 @@
 		Integer uID = user.getID();
 
 		if (uID == null) return;
-		query = "Select zID, score, possible, time from scores where uID=" + uID + " order by time;";
+		query = "Select zID, score, possible, time, timeTaken from scores where uID=" + uID + " order by time;";
 		con = Database.openConnection();
 		Statement s = Database.getStatement(con);
 
@@ -159,6 +164,7 @@
 		Vector<Integer> possible = new Vector<Integer>();
 		Vector<String> quizNames = new Vector<String>();
 		Vector<Timestamp> scoreTimes = new Vector<Timestamp>();
+		Vector<Long> timeTaken = new Vector<Long>();
 
 		rs = s.executeQuery(query);
 		while (rs.next()) {
@@ -166,6 +172,7 @@
 			scores.add(rs.getInt("score"));
 			possible.add(rs.getInt("possible"));
 			scoreTimes.add(rs.getTimestamp("time"));
+			timeTaken.add(rs.getLong("timeTaken"));
 		}
 	
 		for(int i=0; i<zIDs.size(); i++){
@@ -183,6 +190,7 @@
 				<td class="wider, border"><b>Score</b></td>
 				<td class="wider, border"><b>Total</b></td>
 				<td class="wider, border"><b>Time</b></td>
+				<td class="wider, border"><b>TimeTaken</b></td>
 			</tr>
 			<%
 				for (int i = 0; i < zIDs.size(); i++) {
@@ -192,6 +200,7 @@
 				<td class="border"><%=scores.get(i)%></td>
 				<td class="border"><%=possible.get(i)%></td>
 				<td class="border"><%=scoreTimes.get(i)%></td>
+				<td class="border"><%=((double)timeTaken.get(i))/1000%></td>
 			</tr>
 			<%
 				}

@@ -1,12 +1,12 @@
 package quiz;
 
 import java.io.IOException;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,6 +35,7 @@ public class GetQuiz extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		session.setAttribute("timeTaken",new Date().getTime());
 		int quizNumber = Integer.parseInt(request.getParameter("num"));
 		session.setAttribute("zID", quizNumber);
 		Quiz q = null;

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,11 +34,10 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
 
-	private void recordScore(int uID, int zID, int score, int possible){
+	private void recordScore(int uID, int zID, int score, int possible, long timeTaken){
 		Connection con = null;
 		Statement statement = null;
 		String timestamp = TimeFormat.getTimestamp();
-		long timeTaken = 0L;
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
@@ -118,6 +118,9 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Long timeTaken = new Date().getTime() - (long)request.getSession().getAttribute("timeTaken");
+		request.getSession().setAttribute("timeTaken", timeTaken.toString());
+		
 		int zID = (Integer)request.getSession().getAttribute("zID");
 		Quiz q = null;
 		ArrayList<Integer> types = null;
@@ -274,7 +277,7 @@ public class GradeQuiz extends HttpServlet {
 
 		if (user != null) {
 			int uID = user.getID();
-			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible);
+			recordScore(uID, (Integer)request.getSession().getAttribute("zID"), score, possible, timeTaken);
 			addQuizMachineAchievement(uID, zID);
 			addHighScoreAchievement(score, uID, (Integer)request.getSession().getAttribute("zID"));
 		} else {

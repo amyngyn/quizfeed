@@ -10,11 +10,18 @@
 <title>Your Quiz Score</title>
 </head>
 <body>
+	<%
+	Double timeTaken = Double.parseDouble((String)session.getAttribute("timeTaken"));
+	timeTaken = timeTaken/1000;
+	%>
 
+	<p>
 	Your Score: <%= request.getAttribute("score") %>
 	<br>
 	Total Points Possible: <%= request.getAttribute("possible") %>
 	<br>
+	Time Taken: <%=timeTaken %>
+	</p>
 	<form action="index.jsp" method="post">
 		<input type="submit" value="Back to Homepage">
 	</form>
