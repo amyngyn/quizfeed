@@ -79,6 +79,45 @@ Connection con = Database.openConnection();
 Statement s = Database.getStatement(con);
 %>
 
+
+
+
+
+
+<table>
+<tr><td colspan="4"><b>Your Past Scores</b></td></tr>
+<tr><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
+<%
+ArrayList<Integer> yourScores = new ArrayList<Integer>();
+ArrayList<Integer> yourTotal = new ArrayList<Integer>();
+ArrayList<Timestamp> yourTimes = new ArrayList<Timestamp>();
+ArrayList<Double> yourPace = new ArrayList<Double>();
+
+String query = "Select * from scores where zID = " + zID + " and uID=" +user.getID()+ " order by time DESC;";
+ResultSet rs = s.executeQuery(query);
+while(rs.next()){
+	yourScores.add(rs.getInt("score"));
+	yourTotal.add(rs.getInt("possible"));
+	yourTimes.add(rs.getTimestamp("time"));
+	yourPace.add(((double)rs.getLong("timeTaken"))/1000);
+}
+
+int size = yourScores.size();
+int number = size > 6 ? 6: size;
+for(int i=0; i<number; i++){ %>
+<tr><td><%= yourScores.get(i)%></td><td><%=yourTotal.get(i)%></td><td><%=yourPace.get(i)%></td><td><%=yourTimes.get(i)%></td></tr>
+<%} %>
+</table>
+<br>
+
+
+
+
+
+
+
+
+
 <table>
 <tr><td colspan="5"><b>High Scores</b></td></tr>
 <tr><td><b>User</b></td><td><b>Score</b></td><td><b>Possible</b></td><td><b>Time</b></td><td><b>Date</b></td></tr>
@@ -90,8 +129,8 @@ ArrayList<Integer> total = new ArrayList<Integer>();
 ArrayList<Timestamp> highTimes = new ArrayList<Timestamp>();
 ArrayList<Double> highPace = new ArrayList<Double>();
 
-String query = "Select * from scores where zID = " + zID + " order by score DESC;";
-ResultSet rs = s.executeQuery(query);
+query = "Select * from scores where zID = " + zID + " order by score DESC;";
+rs = s.executeQuery(query);
 while(rs.next()){
 	uIDs.add(rs.getInt("uID"));
 	scores.add(rs.getInt("score"));
@@ -109,8 +148,8 @@ for(int i=0; i<uIDs.size(); i++){
 		usernames.add("Deleted User");	
 	}
 }
-int size = uIDs.size();
-int number = size > 5 ? 5: size;
+size = uIDs.size();
+number = size > 5 ? 5: size;
 for(int i=0; i<number; i++){ %>
 <tr><td><a href="user?uid=<%=uIDs.get(i)%>"><%= usernames.get(i)%></a></td><td><%=scores.get(i)%></td>
 <td><%=total.get(i)%></td><td><%=highPace.get(i)%></td><td><%=highTimes.get(i)%></td></tr>

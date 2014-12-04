@@ -118,7 +118,8 @@ public class GradeQuiz extends HttpServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long timeTaken = new Date().getTime() - (long)request.getSession().getAttribute("timeTaken");
+		
+		Long timeTaken = new Date().getTime() - (Long)request.getSession().getAttribute("timeTaken");
 		request.getSession().setAttribute("timeTaken", timeTaken.toString());
 		
 		int zID = (Integer)request.getSession().getAttribute("zID");
