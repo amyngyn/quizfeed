@@ -74,6 +74,7 @@
 		if (count == 5)
 			break;
 	}
+	Database.closeConnections(statementTwo);
 %>
 <br>
 <table class="border">
@@ -162,8 +163,6 @@
 
 		if (uID == null) return;
 		query = "Select zID, score, possible, time, timeTaken from scores where uID=" + uID + " order by time DESC;";
-		con = Database.openConnection();
-		Statement s = Database.getStatement(con);
 
 		Vector<Integer> zIDs = new Vector<Integer>();
 		Vector<Integer> scores = new Vector<Integer>();
@@ -172,7 +171,7 @@
 		Vector<Timestamp> scoreTimes = new Vector<Timestamp>();
 		Vector<Long> timeTaken = new Vector<Long>();
 
-		rs = s.executeQuery(query);
+		rs = statement.executeQuery(query);
 		while (rs.next()) {
 			zIDs.add(rs.getInt("zID"));
 			scores.add(rs.getInt("score"));
@@ -183,7 +182,7 @@
 	
 		for(int i=0; i<zIDs.size(); i++){
 			query = "Select name from quizzes where zID=" + zIDs.get(i) + ";";
-			rs = s.executeQuery(query);
+			rs = statement.executeQuery(query);
 			rs.next();
 			quizNames.add(rs.getString("name"));
 		}
@@ -359,8 +358,7 @@
 
 		
 		query = "Select name, time, zID from quizzes where uID=" + uID + " order by time;";
-		con = Database.openConnection();
-		Statement s = Database.getStatement(con);
+		Statement s = statement;
 
 		Vector<Integer> createID = new Vector<Integer>();
 		Vector<String> createNames = new Vector<String>();
@@ -459,4 +457,6 @@ for(int i=0; i<friendSize; i++){ %>
 </table>
 
 
+
+<% Database.closeConnections(con, statement); %>
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
