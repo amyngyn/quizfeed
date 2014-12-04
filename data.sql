@@ -106,6 +106,8 @@ INSERT INTO answers VALUES
 	(2, 1, "SQL"),
 	(2, 2, "Investment banking");
 
+
+-- Not being used? Delete this table
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends (
 	id1 INT,
