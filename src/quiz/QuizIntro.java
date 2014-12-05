@@ -36,28 +36,21 @@ public class QuizIntro extends HttpServlet {
 		ResultSet rs = null;
 		
 		int num = Integer.parseInt(request.getParameter("num"));
-				
-		int zID = -1;
-		String name = "";
-		String description = "";
-		int uID = -1;
-		Timestamp time = null;
-			    
+		
+		Quiz q = null;
 		try {
-			con = Database.openConnection();
-			statement = Database.getStatement(con);
-			rs = statement.executeQuery("SELECT * FROM quizzes WHERE zID='" + num + "'");
-			rs.next();
-			zID = rs.getInt("zID");
-			name = rs.getString("name");
-			description = rs.getString("description");
-			uID = rs.getInt("uID");
-			time = rs.getTimestamp("time");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			Database.closeConnections(con, statement, rs);
+		q = new Quiz(num);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
+				
+		
+		int zID = q.getID();
+		String name = q.getName();
+		String description = q.getDescription();
+		int uID = q.getuID();
+		Timestamp time = q.getTime();
+		
 				
 		request.setAttribute("zID", zID);
 		request.setAttribute("name", name);

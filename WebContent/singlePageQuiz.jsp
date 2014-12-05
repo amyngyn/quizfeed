@@ -3,8 +3,7 @@
 <%@ page import="java.sql.Time" %>    
 <%@ page import="java.util.ArrayList" %>    
 <%@ page import="java.util.Collections" %> 
-<%@ page import="quiz.*" %>    
-    
+<%@ page import="quiz.*" %>   
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,31 +13,22 @@
 <body>
 <% 
 
+int i = (Integer)request.getAttribute("qNumber");
 Integer zID = (Integer)session.getAttribute("zID");
 Quiz q = new Quiz(zID);
-
-int size = q.getQuestionCount();
-
+String nextPage = "NextPageServlet"; 
+if (i == q.getQuestionCount() - 1) {
+	nextPage = "GradeQuiz";	
+}
 %>
 
-<form action="GradeQuiz" method="post">
-<%ArrayList<Integer> randomIndices = new ArrayList<Integer>();
-  for (int i = 0; i < size; i++) {
-	  randomIndices.add(i);
-  }
-  Collections.shuffle(randomIndices);
-%>
-
-<%for (int k = 0; k <size; k++){
-	int i = k; //such hacks I'm sorry
-	if (q.getRandom()) {
-		i = randomIndices.get(k); 
-	}
-	//Question number and name
+<form action = <%=nextPage%> method="post">
+	<input type="hidden" name="qNumber" value=<%=i%>>
+<%	
 	int type = q.getQuestionType(i);
 	
 	if (type != Constants.PICTURE_RESPONSE){  %>
-		<p><%=k + 1%>.<%=q.getQuestion(i) %><br>
+		<p><%=i + 1%>.<%=q.getQuestion(i) %><br>
 	<% } %>
 
 	
@@ -61,7 +51,6 @@ int size = q.getQuestionCount();
 	<%} else if (type == Constants.PICTURE_RESPONSE){%>
 		<!-- Cycle through choices to find picture URL-->
 		<% 
-		//String picture = questions.get(i);
 		String picture = q.getQuestion(i);
 		
 		%>
@@ -133,8 +122,46 @@ int size = q.getQuestionCount();
 		%>
 		
 	 </p>
-<%}%>
 <input type="submit" value="Submit">
 </form>
 
+<script>
+checkAnswer = function() {
+	var corrAnswer = [];
+	<% for (String s : q.getAnswers(i)) { %>
+		corrAnswer.push("<%=s%>");
+	<%}%>
+	console.log(document.getElementsByName("<%=i%>"));
+	var userAnswer = document.getElementsByName("<%=i%>")[0].value;
+	<%
+	if (type == Constants.MULT_CHOICE) { %>
+		for (var i = 0; i < document.getElementsByName("<%=i%>").length; i++)  {
+			if (document.getElementsByName("<%=i%>")[i].checked) {
+				userAnswer = document.getElementsByName("<%=i%>")[i].value;
+			}
+		}
+	<%}%>
+
+	console.log(userAnswer);
+	if (corrAnswer[0] === userAnswer) {
+		alert("Correct!");
+	}
+	else {
+		alert("Incorrect.");
+	}
+};
+
+</script>
+<%//TODO: only do this if immediate feedback%>
+<%if(q.getImmediate()) { %>
+	<button onclick="checkAnswer()">Check Answer</button>
+<%} %>
+
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
+
+
+
+
+
+</body>
+</html>

@@ -7,6 +7,7 @@ public class Constants {
     public static final String FOOTER_FILE = "footer.jsp";
     public static final String USERNAME_KEY = "username";
 	public static final String SIGNUP_PAGE = "signup.jsp";
+	public static final boolean RANDOM = false;
 
     public static final int TEXT_RESPONSE = 1;
     public static final int FILL_IN_BLANK = 2;

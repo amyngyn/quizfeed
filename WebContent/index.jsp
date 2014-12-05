@@ -13,8 +13,13 @@
 </jsp:include>
 
 <%
+	
 	User user = (User) session.getAttribute("user");
-
+	if(user == null){
+		String redirectURL = "login.jsp";
+		response.sendRedirect(redirectURL);
+	}
+	
 	ArrayList<String> names = new ArrayList<String>();
 	Connection con = null;
 	Statement statement = null;
@@ -36,18 +41,21 @@
 
 	Vector<String> recentNames = new Vector<String>();
 	Vector<Timestamp> recentTimes = new Vector<Timestamp>();
-	query = "Select name, time From quizzes Order By time ASC";
+	Vector<Integer> recentIDs = new Vector<Integer>();
+	query = "Select name, time, zID From quizzes Order By time DESC";
 	rs = statement.executeQuery(query);
 	int count = 0;
 	while (rs.next()) {
 		count++;
 		recentNames.add(rs.getString("name"));
 		recentTimes.add(rs.getTimestamp("time"));
+		recentIDs.add(rs.getInt("zID"));
 		if (count == 5)
 			break;
 	}
 	Statement statementTwo = Database.getStatement(con);
 	Vector<String> popularNames = new Vector<String>();
+	Vector<Integer> popularID = new Vector<Integer>();
 	Vector<Integer> popularCounts = new Vector<Integer>();
 	query = "Select zID,count(*) as Count From scores Group By zID Order By Count DESC";
 	rs = statement.executeQuery(query);
@@ -55,6 +63,7 @@
 	while (rs.next()) {
 		count++;
 		int z = rs.getInt("zID");
+		popularID.add(z);
 		String queryTwo = "Select name From quizzes Where zID =" + z
 				+ ";";
 		ResultSet rsTwo = statementTwo.executeQuery(queryTwo);
@@ -65,25 +74,28 @@
 		if (count == 5)
 			break;
 	}
+	Database.closeConnections(statementTwo);
 %>
-
-<table>
+<br>
+<table class="border">
 	<tr>
-		<th>Quiz Name</th>
+		<th class="border">Quiz Name</th>
 	</tr>
 	<%
 		for (int i = 0; i < names.size(); i++) {
 	%>
 	<tr>
-		<td><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></td>
+		<td class="border"><a href="<%="QuizIntro?num=" + i%>"><%=names.get(i)%></a></td>
 	</tr>
 	<%
 		}
 	%>
 </table>
-<p>
-	<a href="CreateQuizBegin.html">Create a New Quiz</a>
-</p>
+
+<br>
+<a href="CreateQuizBegin.html">Create a Quiz</a>
+<br>
+<br>
 
 <table>
 	<tr>
@@ -101,8 +113,9 @@
 	%>
 </table>
 
-<h4>Recently Created Quizzes</h4>
+<br>
 <table class="border">
+	<tr><td colspan="2"><b>Recently Created Quizzes</b></td></tr>
 	<tr>
 		<th class="border"><b>Name</b></th>
 		<th class="border"><b>Time Created</b></th>
@@ -111,15 +124,18 @@
 		for (int i = 0; i < recentNames.size(); i++) {
 	%>
 	<tr>
-		<td class="border"><%=recentNames.get(i)%></td>
+		<td class="border"><a href="QuizIntro?num=<%=recentIDs.get(i)%>"><%=recentNames.get(i)%></a></td>
 		<td class="border"><%=recentTimes.get(i)%></td>
 	</tr>
 	<%
 		}
 	%>
 </table>
-<h4>Popular Quizzes</h4>
+<br>
+
+
 <table class="border">
+	<tr><td colspan="4"><b>Popular Quizzes</b></td></tr>
 	<tr>
 		<th class="border"><b>Name</b></th>
 		<th class="border"><b>Attempts</b></th>
@@ -128,7 +144,7 @@
 		for (int i = 0; i < popularNames.size(); i++) {
 	%>
 	<tr>
-		<td class="border"><%=popularNames.get(i)%></td>
+		<td class="border"><a href="QuizIntro?num=<%=popularID.get(i)%>"><%=popularNames.get(i)%></a></td>
 		<td class="border"><%=popularCounts.get(i)%></td>
 	</tr>
 	<%
@@ -146,48 +162,51 @@
 		Integer uID = user.getID();
 
 		if (uID == null) return;
-		query = "Select zID, score, possible, time from scores where uID=" + uID + " order by time;";
-		con = Database.openConnection();
-		Statement s = Database.getStatement(con);
+		query = "Select zID, score, possible, time, timeTaken from scores where uID=" + uID + " order by time DESC;";
 
 		Vector<Integer> zIDs = new Vector<Integer>();
 		Vector<Integer> scores = new Vector<Integer>();
 		Vector<Integer> possible = new Vector<Integer>();
 		Vector<String> quizNames = new Vector<String>();
 		Vector<Timestamp> scoreTimes = new Vector<Timestamp>();
+		Vector<Long> timeTaken = new Vector<Long>();
 
-		rs = s.executeQuery(query);
+		rs = statement.executeQuery(query);
 		while (rs.next()) {
 			zIDs.add(rs.getInt("zID"));
 			scores.add(rs.getInt("score"));
 			possible.add(rs.getInt("possible"));
 			scoreTimes.add(rs.getTimestamp("time"));
+			timeTaken.add(rs.getLong("timeTaken"));
 		}
 	
 		for(int i=0; i<zIDs.size(); i++){
 			query = "Select name from quizzes where zID=" + zIDs.get(i) + ";";
-			rs = s.executeQuery(query);
+			rs = statement.executeQuery(query);
 			rs.next();
 			quizNames.add(rs.getString("name"));
 		}
 %>
-
-	<h4>Your Recent Scores</h4>
+	<br>
 	<table class="border">
+		<tr><td colspan="5"><b>Your Recent Score, <a href="history.jsp">Scores Summary Page</a></b></td></tr>
 			<tr class="border">
 				<td class="wider, border"><b>Quiz Name</b></td>
 				<td class="wider, border"><b>Score</b></td>
 				<td class="wider, border"><b>Total</b></td>
 				<td class="wider, border"><b>Time</b></td>
+				<td class="wider, border"><b>TimeTaken</b></td>
 			</tr>
 			<%
-				for (int i = 0; i < zIDs.size(); i++) {
+				int max = zIDs.size() > 6 ? 6 : zIDs.size();
+				for (int i = 0; i < max; i++) {
 			%>
 			<tr class="border">
-				<td class="border"><%=quizNames.get(i)%></td>
+				<td class="border"><a href="QuizIntro?num=<%=zIDs.get(i)%>"><%=quizNames.get(i)%></a></td>
 				<td class="border"><%=scores.get(i)%></td>
 				<td class="border"><%=possible.get(i)%></td>
 				<td class="border"><%=scoreTimes.get(i)%></td>
+				<td class="border"><%=((double)timeTaken.get(i))/1000%></td>
 			</tr>
 			<%
 				}
@@ -198,8 +217,9 @@
 	<p><a href="login.jsp">Login</a></p>
 <%}%>
 
-<h4>Your Achievements</h4>
+<br>
 <table class="border">
+<tr><td class="border"><b>Your Achievements</b></td></tr>
 	<%
 		Object j = session.getAttribute("user");
 	
@@ -226,7 +246,6 @@
 						title += ", ";
 				}
 	%>
-
 	<tr class="border">
 		<td title="<%=title%>" class="pointer">Amateur Author</td>
 	</tr>
@@ -338,43 +357,106 @@
 		Integer uID = user.getID();
 
 		
-		query = "Select name, time from quizzes where uID=" + uID + " order by time;";
-		con = Database.openConnection();
-		Statement s = Database.getStatement(con);
+		query = "Select name, time, zID from quizzes where uID=" + uID + " order by time;";
+		Statement s = statement;
 
+		Vector<Integer> createID = new Vector<Integer>();
 		Vector<String> createNames = new Vector<String>();
 		Vector<Timestamp> createTimes = new Vector<Timestamp>();
 
 		rs = s.executeQuery(query);
 		while (rs.next()) {
+			createID.add(rs.getInt("zID"));
 			createNames.add(rs.getString("name"));
 			createTimes.add(rs.getTimestamp("time"));
 		}
 %>
 
-	<h4>Quizzes I've Made</h4>
+	<br>
 	<table class="border">
-			<tr class="border">
-				<td class="wider, border"><b>Quiz Name</b></td>
-				<td class="wider, border"><b>Time</b></td>
-			</tr>
-			<%
-				for (int i = 0; i < createTimes.size(); i++) {
-			%>
-			<tr class="border">
-				<td class="border"><%=createNames.get(i)%></td>
-				<td class="border"><%=createTimes.get(i)%></td>
-			</tr>
-			<%
-				}
-			%>
+		<tr><td class="border" colspan="2"><b>Quizzes I've Made</b></td></tr>
+		<tr class="border">
+			<td class="wider, border"><b>Quiz Name</b></td>
+			<td class="wider, border"><b>Time</b></td>
+		</tr>
+		<%
+			for (int i = 0; i < createTimes.size(); i++) {
+		%>
+		<tr>
+			<td class="border"><a href="QuizIntro?num=<%=createID.get(i) %>"><%=createNames.get(i)%></a></td>
+			<td class="border"><%=createTimes.get(i)%></td>
+		</tr>
+		<%
+			}
+		%>
 	</table>
 <%}else{%>
 	<h4>Quizzes I've Made</h4>
 	<a href="login.jsp">Login</a>
 <%}%>
 
+<%
+// YOUR FRIENDS' SCORES
+Vector<Integer> frienduIDs = new Vector<Integer>();
+Vector<String> friendNames = new Vector<String>();
+Vector<Integer> friendScores = new Vector<Integer>();
+Vector<Integer> friendPossible = new Vector<Integer>();
+Vector<Double> friendTimes = new Vector<Double>();
+Vector<Timestamp> friendDates = new Vector<Timestamp>();
+Vector<Integer> friends = new Vector<Integer>();
+
+Object a = session.getAttribute("user");
+if(a != null){
+int uID = ((User)a).getID();
+
+// get all of friends uIDs
+String friendQuery = "Select * from friendships where uID=" + uID + ";";
+ResultSet r = statement.executeQuery(friendQuery);
+while(r.next()){
+	friends.add(r.getInt("friendID"));
+}
+
+// query for friend's scores 
+for(int i=0; i<friends.size(); i++){
+	query = "Select * from scores where uID=" + friends.get(i) + " order by time DESC;";
+	rs = statement.executeQuery(query);
+	
+	
+	while(rs.next()){
+		int frienduID = rs.getInt("uID");
+		frienduIDs.add(frienduID);
+		friendScores.add(rs.getInt("score"));
+		friendPossible.add(rs.getInt("possible"));
+		friendTimes.add(Double.parseDouble((Long.toString(rs.getLong("timeTaken"))))/1000);
+		friendDates.add(rs.getTimestamp("time"));
+		// query for friends name
+	}
+	
+	for(int x=0; x<frienduIDs.size(); x++){
+		query ="select * from users where uID=" + frienduIDs.get(x) + ";";
+		ResultSet result = statement.executeQuery(query);
+		if(result.next()){
+			friendNames.add(result.getString("username"));
+		}else{
+			friendNames.add("Former User");
+		}
+	}	
+}
+%>
+<br>
+<table class="border">
+<tr><td  class="border" colspan="5"><b>Your Friends' Scores</b></td></tr>
+<tr><td  class="border"><b>User</b></td><td  class="border"><b>Score</b></td><td  class="border"><b>Possible</b></td><td  class="border"><b>Time</b></td><td  class="border"><b>Date</b></td></tr>
+<%
+int friendSize = friendScores.size() > 6 ? 6 : friendScores.size();
+for(int i=0; i<friendSize; i++){ %>
+<tr><td  class="border"><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td><td  class="border"><%=friendScores.get(i)%></td>
+<td  class="border"><%=friendPossible.get(i)%></td><td  class="border"><%=friendTimes.get(i)%></td><td  class="border"><%=friendDates.get(i)%></td></tr>
+<%} 
+}%>
+</table>
 
 
 
+<% Database.closeConnections(con, statement); %>
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>

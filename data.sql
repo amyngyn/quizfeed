@@ -7,12 +7,15 @@ CREATE TABLE quizzes (
     name text,
     description TEXT,
     uID INT,
-    time DateTime
+    time DateTime,
+    random Boolean,
+    multiple Boolean,
+    immediate Boolean
 );
 INSERT INTO quizzes VALUES
-	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03"),
-	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02"),
-	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01");
+	(0,"Test Quiz","First test quiz. One math question.", 0, "2014-11-10 00:00:03", false, false, false),
+	(1,"Stanford Quiz","Test quiz about Stanford info.", 0, "2014-11-10 00:00:02", true, false, false),
+	(2,"CS quiz","Quiz on basic CS.", 0, "2014-11-10 00:00:01", false, false, false);
 
 DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
@@ -103,6 +106,8 @@ INSERT INTO answers VALUES
 	(2, 1, "SQL"),
 	(2, 2, "Investment banking");
 
+
+-- Not being used? Delete this table
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends (
 	id1 INT,
@@ -147,10 +152,11 @@ CREATE TABLE scores (
 	zID INT,
 	score INT,
 	possible INT,
-	time DateTime
+	time DateTime,
+	timeTaken LONG
 );
 INSERT INTO scores VALUES
-	(0, 0, 0, 0, "1980-11-10 00:00:01");
+	(0, 0, 0, 0, "1980-11-10 00:00:01", 0);
 	
 DROP TABLE IF EXISTS friendships;
 CREATE TABLE friendships (
