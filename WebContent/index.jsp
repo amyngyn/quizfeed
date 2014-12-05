@@ -404,6 +404,8 @@ Vector<Integer> friendPossible = new Vector<Integer>();
 Vector<Double> friendTimes = new Vector<Double>();
 Vector<Timestamp> friendDates = new Vector<Timestamp>();
 Vector<Integer> friends = new Vector<Integer>();
+Vector<Integer> friendzIDs = new Vector<Integer>();
+Vector<String> friendQNames = new Vector<String>();
 
 Object a = session.getAttribute("user");
 if(a != null){
@@ -418,9 +420,8 @@ while(r.next()){
 
 // query for friend's scores 
 for(int i=0; i<friends.size(); i++){
-	query = "Select * from scores where uID=" + friends.get(i) + " order by time DESC;";
+	query = "Select max(score) as score, uID, zID, possible, time, timeTaken from scores where uID=" + friends.get(i) + " group by zID order by time DESC;";
 	rs = statement.executeQuery(query);
-	
 	
 	while(rs.next()){
 		int frienduID = rs.getInt("uID");
@@ -429,6 +430,7 @@ for(int i=0; i<friends.size(); i++){
 		friendPossible.add(rs.getInt("possible"));
 		friendTimes.add(Double.parseDouble((Long.toString(rs.getLong("timeTaken"))))/1000);
 		friendDates.add(rs.getTimestamp("time"));
+		friendzIDs.add(rs.getInt("zID"));
 		// query for friends name
 	}
 	
@@ -442,16 +444,30 @@ for(int i=0; i<friends.size(); i++){
 		}
 	}	
 }
+for(int x=0; x<friendzIDs.size(); x++){
+	query ="select * from quizzes where zID=" + friendzIDs.get(x) + ";";
+	ResultSet result = statement.executeQuery(query);
+	if(result.next()){
+		friendQNames.add(result.getString("name"));
+	}else{
+		friendQNames.add("Deleted Quiz");
+	}
+}	
 %>
 <br>
 <table class="border">
 <tr><td  class="border" colspan="5"><b>Your Friends' Scores</b></td></tr>
-<tr><td  class="border"><b>User</b></td><td  class="border"><b>Score</b></td><td  class="border"><b>Possible</b></td><td  class="border"><b>Time</b></td><td  class="border"><b>Date</b></td></tr>
+<tr><td  class="border"><b>User</b></td><td  class="border"><b>Quiz</b></td><td  class="border"><b>Score</b></td><td  class="border"><b>Possible</b></td><td  class="border"><b>Time</b></td><td  class="border"><b>Date</b></td></tr>
 <%
 int friendSize = friendScores.size() > 6 ? 6 : friendScores.size();
 for(int i=0; i<friendSize; i++){ %>
-<tr><td  class="border"><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td><td  class="border"><%=friendScores.get(i)%></td>
-<td  class="border"><%=friendPossible.get(i)%></td><td  class="border"><%=friendTimes.get(i)%></td><td  class="border"><%=friendDates.get(i)%></td></tr>
+<tr>
+	<td  class="border"><a href="user?uid=<%=frienduIDs.get(i)%>"><%= friendNames.get(i)%></a></td>
+	<td  class="border"><a href="QuizIntro?num=<%=friendzIDs.get(i)%>"><%= friendQNames.get(i)%></a></td>
+	<td  class="border"><%=friendScores.get(i)%></td>
+	<td  class="border"><%=friendPossible.get(i)%></td>
+	<td  class="border"><%=friendTimes.get(i)%></td>
+	<td  class="border"><%=friendDates.get(i)%></td></tr>
 <%} 
 }%>
 </table>
