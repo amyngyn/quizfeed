@@ -8,20 +8,11 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="quiz.Database" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="quiz.User" %>
+<%@ page import="quiz.*" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Your Quiz Score</title>
-<style>
-	table, td, tr {
-	 	border: 1px solid black;
-    	border-collapse: collapse;
-	}
-</style>
-</head>
+<jsp:include page="<%=Constants.HEADER_FILE%>">
+	<jsp:param value="Your Quiz Grade" name="title" />
+</jsp:include>
 <body>
 	<%
 	
