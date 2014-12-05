@@ -25,6 +25,29 @@ public class User {
 		this.id = uID;
 		this.username = username;	
 	}
+	
+	public boolean isAdmin(){
+		String query = "Select uID from administrators where uID=" + this.id + ";";
+		
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		boolean admin = false;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			if(rs.next()){
+				admin = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return admin;
+		
+	}
 
 	public int getID() {
 		return id;

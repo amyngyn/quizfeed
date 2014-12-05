@@ -135,6 +135,17 @@ INSERT INTO users (username, password, salt) VALUES
 	("test7", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
 	("test8", "c88e9c67041a74e0357befdff93f87dde0904214", "salt"),
 	("test9", "c88e9c67041a74e0357befdff93f87dde0904214", "salt");
+
+DROP TABLE IF EXISTS administrators;
+CREATE TABLE administrators (
+	uID INT
+);
+insert into administrators (uID) VALUES
+	(0),
+	(1),
+	(2);
+
+
 	
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
