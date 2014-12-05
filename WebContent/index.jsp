@@ -310,10 +310,10 @@
 	%>
 
 	<%
-		uID = (Integer) session.getAttribute("uID");
-			query = "Select name From achievements Where type = 2 AND uID="
-					+ uID + ";";
-			rs = statement.executeQuery(query);
+		user = (User) session.getAttribute("user");
+		uID = user.getID();
+		query = "Select name From achievements Where type = 2 AND uID=" + uID + ";";
+		rs = statement.executeQuery(query);
 	%>
 	<%
 		if (rs.next()) {

@@ -61,13 +61,12 @@ public class CreateQuiz1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
-		name = "asdfas'asfdas' asdf";
+		name = name.replaceAll("'", "''");
 		Boolean random = request.getParameter("random").equals("yes");
 		Boolean multiple = request.getParameter("multiple").equals("yes");
 		Boolean immediate = request.getParameter("immediate").equals("yes");
 		String description = request.getParameter("description");
-		description = "asf' asdf' asf";
-		//description = description.replaceAll("\\'", "''");
+		description = description.replaceAll("'", "''");
 		int user = -1;
 		
 		Object j = request.getSession().getAttribute("user");
@@ -112,11 +111,9 @@ public class CreateQuiz1 extends HttpServlet {
 
 			//add tuple to achievements
 			int AUTHOR_TYPE = 0;
-			Integer uID = (Integer) request.getSession().getAttribute("uID");
-			if (uID != null) {
-				String insertQuery = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
-				statement.execute(insertQuery);
-			}
+			
+			String insertQuery = "INSERT INTO achievements VALUES (" + user + ", " + AUTHOR_TYPE + ", '" + name + "');";
+			statement.execute(insertQuery);
 			request.getSession().setAttribute("quizNumber", quizNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();
