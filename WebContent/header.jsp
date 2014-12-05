@@ -10,37 +10,36 @@
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-	<div class="page-container"
-		style="margin-top: 50px; margin-bottom: 5px;">
+	<div class="page-container" style="margin-top: 50px; margin-bottom: 5px;">
 		<a class="header-title" href="<%=Constants.INDEX%>">QuizFeed</a>
 	</div>
 	<div class="navbar">
 		<div class="page-container">
 			<div class="nav-left">
 				<form action="search" method="get">
-					<input type="text" name="query" placeholder="Search"
-						class="search-field"></input>
+					<input type="text" name="query" placeholder="Search" class="search-field"></input>
 				</form>
 			</div>
 			<div class="nav-right">
 				<%
 					User user = (User) session.getAttribute("user");
 					if (user == null) {
-						
-						
 				%>
-				<a class="nav-item" href="login">Login</a> <a class="nav-item"
-					href="signup">Sign Up</a>
+				<a class="nav-item" href="login">Login</a> <a class="nav-item" href="signup">Sign
+					Up</a>
 				<%
 					} else {
-				
-						if(user.isAdmin()){
 				%>
-				<a class="nav-item" href="AdminPage.jsp">Administrator</a>
-					<%	} %>
 				<a class="nav-item" href="user?uid=<%=user.getID()%>"><%=user.getUsername()%></a>
-				<a class="nav-item" href="inbox.jsp">Inbox (<%=user.getNotificationCount() %>)</a>
-				<a class="nav-item" href="logout">Logout</a>
+				<%
+					if (user.isAdmin()) {
+				%>
+				<a class="nav-item" href="AdminPage.jsp">Administration</a>
+				<%
+					}
+				%>
+				<a class="nav-item" href="inbox.jsp">Inbox (<%=user.getNotificationCount()%>)
+				</a> <a class="nav-item" href="logout">Logout</a>
 				<%
 					}
 				%>

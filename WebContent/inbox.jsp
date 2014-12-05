@@ -1,7 +1,7 @@
 <%@ page import="quiz.*"%>
 <%@ page import="java.util.*"%>
 <jsp:include page="<%=Constants.HEADER_FILE%>">
-	<jsp:param value="Home" name="title" />
+	<jsp:param value="Inbox" name="title" />
 </jsp:include>
 <%
 	String responseMessage = (String) session.getAttribute("message");
@@ -24,33 +24,7 @@
 		HashMap<Integer, User> friendRequests = user
 				.getFriendRequests();
 		ArrayList<Message> messages = user.getMessages();
-		ArrayList<Challenge> challenges = user.getChallenges();
-%>
-<h1>Challenges</h1>
-<%
-	if (challenges.isEmpty()) {
-%>
-<p>You have no challenges right now.</p>
-<%
-	} else {
-			for (Challenge challenge : challenges) {
-%>
-<div class="message-container">
-	<p>
-		<a href="user?uid=<%=challenge.getSender().getID()%>"> <%=challenge.getSender().getUsername()%></a>
-		has challenged you to beat their highest score of SCORE on <a
-			href="QuizIntro?num=<%=challenge.getQuiz().getID()%>"><%=challenge.getQuiz().getName()%></a>.
-	</p>
-	<div class="message-content"><%=challenge.getMessage()%></div>
-	<p>
-		<a href="QuizIntro?num=<%=challenge.getQuiz().getID()%>">Take the quiz!</a>
-		<span style="margin-left: 7px; margin-right: 7px;"> | </span>
-		<a href="message?request=<%=Constants.IGNORE_CHALLENGE%>&cID=<%=challenge.getID()%>">Ignore</a>
-	</p>
-</div>
-<%
-	}
-		}
+		//ArrayList<Challenge> challenges = user.getChallenges();
 %>
 <h1 style="margin-bottom: 5px;">Messages</h1>
 <a href="compose.jsp">Compose</a>
