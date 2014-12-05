@@ -102,7 +102,7 @@ public class CreateQuiz3 extends HttpServlet {
 
 			String redirectTo = "index.jsp";
 			if (request.getParameter("status").equals("continue")) {
-				redirectTo = "CreateQuizType.html";
+				redirectTo = "CreateQuizType.jsp";
 			}
 
 			RequestDispatcher dispatch = request.getRequestDispatcher(redirectTo);

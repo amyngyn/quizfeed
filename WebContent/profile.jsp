@@ -3,6 +3,11 @@
 <%@ page import="quiz.User"%>
 <%@ page import="quiz.Constants"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="quiz.Database"%>
+<%@ page import="quiz.Constants"%>
+<%@ page import="quiz.TimeFormat"%>
+<%@ page import="quiz.User"%>
 <%
 	User userToDisplay = (User) request.getAttribute("user");
 	if (userToDisplay == null) {
