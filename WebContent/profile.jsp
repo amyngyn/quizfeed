@@ -3,6 +3,11 @@
 <%@ page import="quiz.User"%>
 <%@ page import="quiz.Constants"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="quiz.Database"%>
+<%@ page import="quiz.Constants"%>
+<%@ page import="quiz.TimeFormat"%>
+<%@ page import="quiz.User"%>
 <%
 	User userToDisplay = (User) request.getAttribute("user");
 	if (userToDisplay == null) {
@@ -84,4 +89,61 @@
 <%
 		}
 	%>
+
+<%
+Connection con = Database.openConnection();
+Statement statement = Database.getStatement(con);
+
+Vector<Integer> friendScores = new Vector<Integer>();
+Vector<Integer> friendPossible = new Vector<Integer>();
+Vector<Double> friendTimes = new Vector<Double>();
+Vector<Timestamp> friendDates = new Vector<Timestamp>();
+Vector<Integer> friendzIDs = new Vector<Integer>();
+Vector<String> friendQNames = new Vector<String>();
+
+// query for friend's scores 
+
+	String query = "Select max(score) as score, zID, possible, time, timeTaken from scores where uID=" + userToDisplay.getID() + " group by zID order by time DESC;";
+	ResultSet rs = statement.executeQuery(query);
+	
+	while(rs.next()){
+		friendScores.add(rs.getInt("score"));
+		friendPossible.add(rs.getInt("possible"));
+		friendTimes.add(Double.parseDouble((Long.toString(rs.getLong("timeTaken"))))/1000);
+		friendDates.add(rs.getTimestamp("time"));
+		friendzIDs.add(rs.getInt("zID"));
+		// query for friends name
+	}
+
+for(int x=0; x<friendzIDs.size(); x++){
+	query ="select * from quizzes where zID=" + friendzIDs.get(x) + ";";
+	ResultSet result = statement.executeQuery(query);
+	if(result.next()){
+		friendQNames.add(result.getString("name"));
+	}else{
+		friendQNames.add("Deleted Quiz");
+	}
+}	
+%>
+<br>
+<table class="border">
+<tr><td  class="border" colspan="5"><b>Best Scores By Quiz</b></td></tr>
+<tr><td  class="border"><b>Quiz</b></td><td  class="border"><b>Score</b></td><td  class="border"><b>Possible</b></td><td  class="border"><b>Time</b></td><td  class="border"><b>Date</b></td></tr>
+<%
+
+for(int i=0; i<friendScores.size(); i++){ %>
+<tr>
+	<td  class="border"><a href="QuizIntro?num=<%=friendzIDs.get(i)%>"><%= friendQNames.get(i)%></a></td>
+	<td  class="border"><%=friendScores.get(i)%></td>
+	<td  class="border"><%=friendPossible.get(i)%></td>
+	<td  class="border"><%=friendTimes.get(i)%></td>
+	<td  class="border"><%=friendDates.get(i)%></td></tr>
+<%} 
+%>
+</table>
+	
+	
+	
+	
+	
 <jsp:include page="<%=Constants.FOOTER_FILE%>" />
