@@ -85,7 +85,10 @@ public class CreateQuiz3 extends HttpServlet {
 				int answerIndex = Integer.parseInt(request.getParameter("correctAnswer"));
 				for (int i = 1; i < 5; i++) {
 					String choice = request.getParameter("answer" + i);
-					String insertC = "INSERT INTO choices VALUES (" + zID + ", " + sID + ", " + choice + ");";
+					if (choice.equals("") || choice == null) {
+						choice = " ";
+					}
+					String insertC = "INSERT INTO choices VALUES (" + zID + ", " + sID + ", \"" + choice + "\");";
 					statement.execute(insertC);
 					if (i == answerIndex) {
 						answer = choice;
