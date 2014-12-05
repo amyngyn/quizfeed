@@ -61,13 +61,12 @@ public class CreateQuiz1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
-		name = "asdfas'asfdas' asdf";
+		name = name.replaceAll("'", "''");
 		Boolean random = request.getParameter("random").equals("yes");
 		Boolean multiple = request.getParameter("multiple").equals("yes");
 		Boolean immediate = request.getParameter("immediate").equals("yes");
 		String description = request.getParameter("description");
-		description = "asf' asdf' asf";
-		//description = description.replaceAll("\\'", "''");
+		description = description.replaceAll("'", "''");
 		int user = -1;
 		
 		Object j = request.getSession().getAttribute("user");
