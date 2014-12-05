@@ -2,9 +2,12 @@ package quiz;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,11 +61,13 @@ public class CreateQuiz1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
-		name = name.replaceAll("'", "''");
+		name = "asdfas'asfdas' asdf";
 		Boolean random = request.getParameter("random").equals("yes");
 		Boolean multiple = request.getParameter("multiple").equals("yes");
 		Boolean immediate = request.getParameter("immediate").equals("yes");
 		String description = request.getParameter("description");
+		description = "asf' asdf' asf";
+		//description = description.replaceAll("\\'", "''");
 		int user = -1;
 		
 		Object j = request.getSession().getAttribute("user");
@@ -71,7 +76,7 @@ public class CreateQuiz1 extends HttpServlet {
 			user = u.getID();
 		}
 		
-		String timestamp = TimeFormat.getTimestamp();
+		String ts = TimeFormat.getTimestamp();
 
 		Connection con = null;
 		Statement statement = null;
@@ -80,6 +85,20 @@ public class CreateQuiz1 extends HttpServlet {
 			statement = Database.getStatement(con);
 
 			int quizNumber = getNumberOfQuizzes();
+			
+			
+			PreparedStatement s = con.prepareStatement("INSERT INTO quizzes (zID, name, description, uID, time, random, multiple, immediate) values (?, ?, ?, ?, ?, ?, ?, ?)");
+		    s.setInt(1, quizNumber);
+			s.setString(2, name);
+		    s.setString(3, description);
+		    s.setInt(4, user);
+		    s.setString(5, ts);
+		    s.setBoolean(6, random);
+		    s.setBoolean(7, multiple);
+		    s.setBoolean(8, immediate);
+		    s.executeUpdate();
+			
+			/*
 			String insertValues= "'" + name + "', '" 
 					+ description + "', "
 					+ user + ", '" + 
@@ -89,12 +108,13 @@ public class CreateQuiz1 extends HttpServlet {
 					+ immediate;
 			String insertQuery = "INSERT INTO quizzes VALUES (" +  quizNumber + ", " + insertValues + ");";
 			statement.execute(insertQuery);
+			*/
 
 			//add tuple to achievements
 			int AUTHOR_TYPE = 0;
 			Integer uID = (Integer) request.getSession().getAttribute("uID");
 			if (uID != null) {
-				insertQuery = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
+				String insertQuery = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
 				statement.execute(insertQuery);
 			}
 			request.getSession().setAttribute("quizNumber", quizNumber);
