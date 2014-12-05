@@ -8,6 +8,15 @@
 <%
 	HashMap<Integer, User> users = (HashMap<Integer, User>) request
 			.getAttribute("users");
+	ArrayList<Quiz> quizzes = (ArrayList<Quiz>) request
+			.getAttribute("quizzes");
+
+	if (users != null && users.isEmpty() && quizzes != null
+			&& quizzes.isEmpty()) {
+%>
+<h1>No results found.</h1>
+<%
+	}
 	if (users != null && !users.isEmpty()) {
 %>
 <h1>Users</h1>
@@ -23,8 +32,6 @@
 </ul>
 
 <%
-	ArrayList<Quiz> quizzes = (ArrayList<Quiz>) request
-			.getAttribute("quizzes");
 	if (quizzes != null && !quizzes.isEmpty()) {
 %>
 <h1>Quizzes</h1>

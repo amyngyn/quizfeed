@@ -1,6 +1,9 @@
 .page-container {
 	width: 1050px;
 	margin: 0 auto;
+	font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial,
+		sans-serif;
+	font-size: 14px;
 }
 
 .header-title {
@@ -65,4 +68,18 @@ td {
 
 .pointer {
 	cursor: pointer;
+}
+
+.message-container {
+	padding-bottom: 20px;
+	padding-left: 15px;
+}
+
+.message-content {
+	border-left: 3px solid gray;
+	padding-left: 11px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 7px;
+	font-family: inherit;
 }

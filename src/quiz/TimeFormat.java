@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeFormat {
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEEE, MMMM F, yyyy");
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
 
 	public static String getTimestamp() {
 		Date date = new Date();
