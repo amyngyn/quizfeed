@@ -210,7 +210,7 @@ public class Quiz {
 	public static ArrayList<Quiz> findQuizzes(String queryTerm) {
 		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 
-		String query = "SELECT * FROM quizzes WHERE " 
+		String query = "SELECT zID FROM quizzes WHERE " 
 				+ "name like '%" + queryTerm + "%'" 
 				+ "OR description like '%" + queryTerm + "%'";
 
@@ -223,9 +223,7 @@ public class Quiz {
 			rs = statement.executeQuery(query);
 			while (rs.next()) {
 				int zID = rs.getInt("zID");
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				//quizzes.add(new Quiz(zID, name, description));
+				quizzes.add(new Quiz(zID));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

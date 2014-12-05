@@ -14,6 +14,7 @@
 		}
 	%>
 
+<h1>Login</h1>
 
 <form action="login" method="post">
 	<p>
@@ -26,9 +27,5 @@
 		<input type="submit" name="Enter">
 	</p>
 </form>
-
-<p>
-	<a href="LoginCreate.jsp">Create Username</a>
-</p>
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>" />

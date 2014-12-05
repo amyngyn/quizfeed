@@ -49,10 +49,12 @@ public class UserRequestsServlet extends HttpServlet {
 			break;
 		case Constants.REJECT_REQUEST:
 			currentUser.rejectFriendRequest(friendID);
-			break;
+			response.sendRedirect("inbox.jsp");
+			return;
 		case Constants.DELETE_FRIEND_REQUEST:
 			currentUser.deleteFriend(friendID);
-			break;
+			response.sendRedirect("user?uid=" + currentUser.getID());
+			return;
 		}
 		
 		response.sendRedirect("user?uid=" + friendID);

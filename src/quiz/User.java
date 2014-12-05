@@ -4,6 +4,7 @@ import java.security.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 public class User {
@@ -79,6 +80,7 @@ public class User {
 	public static User addUserToDatabase(String username, String passwordText) throws Exception {
 		Connection con = null;
 		Statement insertStatement = null;
+		ResultSet rs = null;
 		username = username.toLowerCase();
 		try {
 			con = Database.openConnection();
@@ -88,7 +90,7 @@ public class User {
 				throw new Exception("User already exists.");
 			}
 
-			validatePassword(passwordText);
+			//validatePassword(passwordText);
 
 			String salt = generateSalt();
 			String passwordHash = generateSaltedHash(passwordText, salt);
@@ -101,9 +103,14 @@ public class User {
 					+ "'" + passwordHash + "', "
 					+ "'" + salt + "');";
 			insertStatement = Database.getStatement(con);
-			insertStatement.execute(insertQuery);
-
-			return getUser(username);
+			insertStatement.execute(insertQuery, Statement.RETURN_GENERATED_KEYS);
+			rs = insertStatement.getGeneratedKeys();
+			if (rs.next()) {
+				int id = rs.getInt("GENERATED_KEY");
+				return new User(id, username);
+			} else {
+				throw new Exception("An error occurred. Please try again later.");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("An error occurred while accessing the database. Please try again later.");
@@ -204,7 +211,7 @@ public class User {
 	 */ 
 	private static String hexToString(byte[] bytes) { 
 		StringBuffer buff = new StringBuffer(); 
-		for (int i=0; i<bytes.length; i++) { 
+		for (int i = 0; i < bytes.length; i++) { 
 			int val = bytes[i]; 
 			val = val & 0xff;  // remove higher bits, sign 
 			if (val<16) buff.append('0'); // leading 0 
@@ -312,8 +319,8 @@ public class User {
 		removeFromFriendRequestTable(friendID, id);
 	}
 
-	public int getNotificationCount() {
-		return getFriendRequests().size();
+	public int getNotificationCount() throws Exception {
+		return getMessages().size() +  getFriendRequests().size();
 	}
 
 	public void deleteFriend(int friendID) {
@@ -322,4 +329,18 @@ public class User {
 		executeSimpleQuery(first);
 		executeSimpleQuery(second);
 	}
+	
+	public ArrayList<Message> getMessages() throws Exception {
+		ArrayList<Message> messages = Message.getMessages(id);
+		Iterator<Message> it = messages.iterator();
+		while (it.hasNext()) {
+			Message m = it.next();
+			if (m.isRead()) it.remove();
+		}
+		return messages;
+	}
+
+	// TODO: getAchievements, Achievement class
+
+
 }
