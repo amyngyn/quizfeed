@@ -23,4 +23,5 @@ public class Constants {
     public static final int ACCEPT_REQUEST = 2;
     public static final int REJECT_REQUEST = 3;
     public static final int DELETE_FRIEND_REQUEST = 4;
+    public static final int IGNORE_CHALLENGE = 5;
 }

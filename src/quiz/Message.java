@@ -51,7 +51,7 @@ public class Message {
 	}
 
 	public static void markAsRead(int mID) {
-		setStateColumn("is_read", mID, true);
+		setStateColumn("messages", "is_read", mID, true);
 	}
 
 	public static ArrayList<Message> getMessages(int uID) {
@@ -162,14 +162,14 @@ public class Message {
 		return false;
 	}
 
-	private static void setStateColumn(String column, int mID, boolean value) {
+	protected static void setStateColumn(String table, String column, int mID, boolean value) {
 		Connection con = null;
 		Statement statement = null;
 
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
-			String query = "UPDATE messages SET " + column + "=" + value + " WHERE mID=" + mID; 
+			String query = "UPDATE " + table + " SET " + column + "=" + value + " WHERE mID=" + mID; 
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -178,7 +178,6 @@ public class Quiz {
 	}
 	
 	
-	
 	// TODO use skip and amount params in query!
 	public static ArrayList<Quiz> getQuizzes() {
 		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();

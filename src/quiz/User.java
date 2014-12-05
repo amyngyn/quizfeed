@@ -343,7 +343,7 @@ public class User {
 	}
 
 	public int getNotificationCount() throws Exception {
-		return getMessages().size() +  getFriendRequests().size();
+		return getChallenges().size() + getMessages().size() +  getFriendRequests().size();
 	}
 
 	public void deleteFriend(int friendID) {
@@ -362,8 +362,8 @@ public class User {
 		}
 		return messages;
 	}
-
-	// TODO: getAchievements, Achievement class
-
-
+	
+	public ArrayList<Challenge> getChallenges() {
+		return Challenge.getChallenges(id);
+	}
 }
