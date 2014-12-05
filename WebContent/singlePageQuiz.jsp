@@ -164,16 +164,11 @@ checkAnswer = function() {
 };
 
 </script>
-<%//TODO: only do this if immediate feedback%>
 <%if(q.getImmediate()) { %>
 	<button onclick="checkAnswer()">Check Answer</button>
 <%} %>
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
-
-
-
-
 
 </body>
 </html>
