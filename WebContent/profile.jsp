@@ -142,8 +142,7 @@ for(int i=0; i<friendScores.size(); i++){ %>
 %>
 </table>
 	
-	
-	
+<% Database.closeConnections(con, statement, rs); %>
 	
 	
 <jsp:include page="<%=Constants.FOOTER_FILE%>" />
