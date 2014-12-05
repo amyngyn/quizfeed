@@ -28,14 +28,14 @@ INSERT INTO questions VALUES
 	(0, 0, "What is 2+2?", 3),
 	(0, 1, "Where is Stanford?", 3),
 	(1, 0, "What's the most popular major at Stanford?", 1),
-	(1, 1, "Axe'n'", 2),
+	(1, 1, "Axe'n'###", 2),
 	(1, 2, "What was Leland Stanford Jr.'s father's first name?", 3),
 	(1, 3, "", 4),
 	(1, 4, "Name the 4 cardinal directions.", 5),
 	(1, 5, "Who are Stanford Alumni?", 6),
 	(1, 6, "Can you match the rivals?", 7),
 	(2, 0, "What's the main languages from CS107 and CS108? (with the ++)", 5),
-	(2, 1, "The most popular open-source database is My", 2),
+	(2, 1, "The most popular open-source database is My###", 2),
 	(2, 2, "Which one isn't cool?", 3);
 
 

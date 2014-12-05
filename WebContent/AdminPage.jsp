@@ -19,14 +19,6 @@ input#input {
 
 
 	<h1>Administrative Page</h1>
-
-	<p>Add an announcement:
-	<form action="AdminAnnouncement" method="post">
-		<input type="text" id="input" name="announcement"> <input
-			type="submit" name="Post">
-	</form>
-	
-	
 	<%
 	Connection con = null;
 	Statement statement = null;
@@ -37,11 +29,66 @@ input#input {
 		e.printStackTrace();
 		return;
 	}
-		
-	String query = "Select uID, username from users";
+	
+	String queryUsers = "Select count(*) as count from users;";
+	String queryTaken = "Select count(*) as count from scores;";
+	int totalUsers = 0;
+	int totalTaken = 0;
+
+	try {
+		ResultSet rs = statement.executeQuery(queryUsers);
+		rs.next();
+		totalUsers = rs.getInt("count");
+		rs = statement.executeQuery(queryTaken);
+		rs.next();
+		totalTaken = rs.getInt("count");
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return;
+	}
+	
+	%>
+	<p><b>Site Statistics:</b>
+		<br>&nbsp;&nbsp;Total Users: <b><%=totalUsers %></b>
+		<br>&nbsp;&nbsp;Total Quiz Attempts: <b><%=totalTaken %></b>
+	</p>	
+	
+	<p>Add an announcement:
+	<form action="AdminAnnouncement" method="post">
+		<input type="text" id="input" name="announcement"> <input
+			type="submit" name="Post">
+	</form>
+	</p>
+	
+	
+	<%
+	String query = "Select username, uID from users;";
 	ResultSet rs = statement.executeQuery(query);
+	Vector<String>names = new Vector<String>();
+	Vector<Integer>uIDs = new Vector<Integer>();
+	
+	while(rs.next()){
+		names.add(rs.getString("username"));
+		uIDs.add(rs.getInt("uID"));
+	}
+	%>
+	<p>Remove a user:
+	<form action="AdminUser" method="post">
+		<select name="removeUser">
+		<%for(int i=0; i<uIDs.size(); i++){ %>
+ 	 		<option value="<%=uIDs.get(i)%>"><%=names.get(i) %></option>
+ 	 	<%} %>
+		</select>
+		<input type="submit" name="Remove">
+	</form>
+	</p>
+	
+
+	<%
+	query = "Select uID, username from users";
+	rs = statement.executeQuery(query);
 	Vector<String> everyone = new Vector<String>();
-	Vector<Integer> uIDs = new Vector<Integer>();
+	uIDs = new Vector<Integer>();
 	while(rs.next()){
 		everyone.add(rs.getString("username"));
 		uIDs.add(rs.getInt("uID"));
@@ -55,9 +102,9 @@ input#input {
  	 		<option value="<%=uIDs.get(i)%>"><%=everyone.get(i) %></option>
  	 	<%} %>
 		</select>
-		<input type="submit" name="Post">
+		<input type="submit" name="Add">
 	</form>
-
+	</p>
 	
 	<%
 	
@@ -68,7 +115,7 @@ input#input {
 		uIDs.add(rs.getInt("uID"));
 	}
 	
-	Vector<String> names = new Vector<String>();
+	names = new Vector<String>();
 	for(int i=0; i<uIDs.size(); i++){
 		int uID = uIDs.get(i);
 		query = "Select username from users where uID=" + uID + ";";
@@ -89,20 +136,67 @@ input#input {
  	 		<option value="<%=uIDs.get(i)%>"><%=names.get(i) %></option>
  	 	<%} %>
 		</select>
-		<input type="submit" name="Post">
+		<input type="submit" name="Remove">
 	</form>
-
-	
-	
-	
-	
-
-
-
-
-	<p>
-		<a href="DeleteQuiz.jsp">Delete Quiz</a>
 	</p>
+	
+	
+	
+	
+	
+	<%
+	
+	query = "Select name, zID from quizzes;";
+	rs = statement.executeQuery(query);
+	Vector<String>quizzes = new Vector<String>();
+	Vector<Integer>zIDs = new Vector<Integer>();
+	
+	while(rs.next()){
+		quizzes.add(rs.getString("name"));
+		zIDs.add(rs.getInt("zID"));
+	}
+	
+	%>
+	
+	<p>Remove quiz history:
+	<form action="AdminQuiz" method="post">
+		<select name="removeQuiz">
+		<%for(int i=0; i<zIDs.size(); i++){ %>
+ 	 		<option value="<%=zIDs.get(i)%>"><%=quizzes.get(i) %></option>
+ 	 	<%} %>
+		</select>
+		<input type="submit" name="Remove">
+	</form>
+	</p>
+
+
+<%
+	query = "Select name, zID from quizzes;";
+	rs = statement.executeQuery(query);
+	quizzes = new Vector<String>();
+	zIDs = new Vector<Integer>();
+	
+	while(rs.next()){
+		quizzes.add(rs.getString("name"));
+		zIDs.add(rs.getInt("zID"));
+	}
+	
+	%>
+	<p>Remove a quiz and all its components:
+	<form action="AdminEntireQuiz" method="post">
+		<select name="removeQuiz">
+		<%for(int i=0; i<zIDs.size(); i++){ %>
+ 	 		<option value="<%=zIDs.get(i)%>"><%=quizzes.get(i) %></option>
+ 	 	<%} %>
+		</select>
+		<input type="submit" name="Remove">
+	</form>
+	</p>
+
+
+
+
+
 	<p>
 		<a href="<%=Constants.INDEX%>">Home</a>
 	</p>
