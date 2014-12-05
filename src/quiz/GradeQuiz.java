@@ -129,33 +129,29 @@ public class GradeQuiz extends HttpServlet {
 			q = new Quiz(zID);
 			types = q.getQuestionTypes();
 		} catch (SQLException e1) {e1.printStackTrace();}
-		
-		//(ArrayList<Integer>) request.getSession().getAttribute("types");
 		request.setAttribute("size", types.size());
-		//ArrayList<String> answers = (ArrayList<String>) request.getSession().getAttribute("answers");
-		//ArrayList<Integer> answersTo = (ArrayList<Integer>) request.getSession().getAttribute("answersTo");
-		//int answersSize = answers.size();
-
 		int questions = types.size();
 		int score = 0;
 		int possible = 0;
+		boolean random = q.getRandom();
 		boolean mPages = q.getMultiple();
 		ArrayList<Object> allInput = new ArrayList<Object>();
+		ArrayList<Integer> randomIndices = (ArrayList<Integer>)request.getSession().getAttribute("randomIndices");
 
 		for (int i = 0; i < questions; i++) {
 			if (types.get(i) == 1) { // text
 				String userAnswer = (String) request.getParameter(i + "");
-				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
-				
-				//int index = answersTo.indexOf(i);
-				//String correct = answers.get(index);
-				String correct;
-				
+				allInput.add(userAnswer);
+				String correct;				
 				try {
-					correct = q.getAnswers(i).get(0);
+					if (random && mPages) {
+						correct = q.getAnswers(randomIndices.get(i)).get(0);
+					} else {
+						correct = q.getAnswers(i).get(0);
+					}
 					if (correct.equals(userAnswer)) score++;
 				} catch (SQLException e) {e.printStackTrace();}
 				possible++;
@@ -164,7 +160,7 @@ public class GradeQuiz extends HttpServlet {
 				String userAnswer = (String) request.getParameter(i + "");
 				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
 				}
 				String correct;
 				try {
@@ -178,7 +174,7 @@ public class GradeQuiz extends HttpServlet {
 				String userAnswer = (String) request.getParameter(i + "");
 				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
 				}
 				String correct;
 				try {
@@ -192,7 +188,7 @@ public class GradeQuiz extends HttpServlet {
 				String userAnswer = (String) request.getParameter(i + "");
 				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
 				}
 				String correct;
 				try {

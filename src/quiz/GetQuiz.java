@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Collections;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,17 +40,28 @@ public class GetQuiz extends HttpServlet {
 		int quizNumber = Integer.parseInt(request.getParameter("num"));
 		session.setAttribute("zID", quizNumber);
 		Quiz q = null;
+		int size = 0;
 		try {
 			q = new Quiz(quizNumber);
+			size = q.getQuestionCount();
 		}
 		catch (SQLException e){
 			//bad news
 		}
 		boolean multiple = q.getMultiple(); 
+		boolean random = q.getRandom();
 		if (multiple) {
 			ArrayList<String> answers = new ArrayList<String>();
 			session.setAttribute("answers", answers);
 			request.setAttribute("qNumber", 0);
+			ArrayList<Integer> randomIndices = new ArrayList<Integer>();
+			for (int i = 0; i < size; i++) {
+				  randomIndices.add(i);
+			}
+			if (random) {
+				Collections.shuffle(randomIndices);
+			}
+			session.setAttribute("randomIndices", randomIndices);
 			RequestDispatcher dispatch = request.getRequestDispatcher("singlePageQuiz.jsp");
 			dispatch.forward(request, response);
 		}

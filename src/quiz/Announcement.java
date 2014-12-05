@@ -37,7 +37,7 @@ public class Announcement {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 			
-			String query = "Select announcement, timestamp From announcements";
+			String query = "Select announcement, timestamp From announcements order by timestamp DESC";
 			rs = statement.executeQuery(query);
 			
 			ArrayList<Announcement> announcements = new ArrayList<Announcement>();

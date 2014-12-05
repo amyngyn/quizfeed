@@ -28,14 +28,14 @@ INSERT INTO questions VALUES
 	(0, 0, "What is 2+2?", 3),
 	(0, 1, "Where is Stanford?", 3),
 	(1, 0, "What's the most popular major at Stanford?", 1),
-	(1, 1, "Axe'n'", 2),
+	(1, 1, "Axe'n'###", 2),
 	(1, 2, "What was Leland Stanford Jr.'s father's first name?", 3),
 	(1, 3, "", 4),
 	(1, 4, "Name the 4 cardinal directions.", 5),
 	(1, 5, "Who are Stanford Alumni?", 6),
 	(1, 6, "Can you match the rivals?", 7),
 	(2, 0, "What's the main languages from CS107 and CS108? (with the ++)", 5),
-	(2, 1, "The most popular open-source database is My", 2),
+	(2, 1, "The most popular open-source database is My###", 2),
 	(2, 2, "Which one isn't cool?", 3);
 
 
@@ -123,7 +123,16 @@ INSERT INTO users (username, password, salt) VALUES
 	("test7", "650de3de201bbee056f35357043e12805a6406db", "4f9784d417002b81e4068a382d42b7874907cc2b"),
 	("test8", "7d63e727ee2cd55a082eccf016cac0d283891383", "58e386bec0ef76809dbc3563f96084aceac8cc32"),
 	("test9", "678e9eccaefcff6b3a18ad1b8ccabc781db204a7", "a8766d94ba4e403969112881b12b4a52a563adef");
-	
+
+DROP TABLE IF EXISTS administrators;
+CREATE TABLE administrators (
+	uID INT
+);
+insert into administrators (uID) VALUES
+	(0),
+	(1),
+	(2);
+
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (
 	uID INT,

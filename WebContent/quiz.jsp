@@ -36,11 +36,20 @@ int size = q.getQuestionCount();
 	}
 	//Question number and name
 	int type = q.getQuestionType(i);
-	
-	if (type != Constants.PICTURE_RESPONSE){  %>
+	String beforeBlank = "";
+	String afterBlank = "";
+	if (type != Constants.PICTURE_RESPONSE && type != Constants.FILL_IN_BLANK){  %>
 		<p><%=k + 1%>.<%=q.getQuestion(i) %><br>
-	<% } %>
+	<% }
+	else if (type == Constants.FILL_IN_BLANK) {
+		String question = q.getQuestion(i);
+		int blankIndex = question.indexOf(Constants.DELIM);
+		beforeBlank = question.substring(0, blankIndex);
+		afterBlank = question.substring(blankIndex + Constants.DELIM.length()); %>
+		<p><%=k + 1%>.<%=beforeBlank%>
+	<%}%>
 
+	
 	
 	<% if(type == Constants.TEXT_RESPONSE){ %>
 		<br><input type="text" value="" name="<%=i%>">			
@@ -130,8 +139,9 @@ int size = q.getQuestionCount();
 		
 		<%
 		}
-		%>
-		
+		if (type == Constants.FILL_IN_BLANK) { %>
+			<%=afterBlank%>
+		<%}%>
 	 </p>
 <%}%>
 <input type="submit" value="Submit">
