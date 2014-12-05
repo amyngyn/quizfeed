@@ -104,7 +104,7 @@ public class CreateQuiz1 extends HttpServlet {
 			Database.closeConnections(con, statement, null);
 		}
 
-		RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizType.html");
+		RequestDispatcher dispatch = request.getRequestDispatcher("CreateQuizType.jsp");
 		dispatch.forward(request, response);
 	}
 

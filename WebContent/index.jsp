@@ -93,7 +93,7 @@
 </table>
 
 <br>
-<a href="CreateQuizBegin.html">Create a Quiz</a>
+<a href="CreateQuizBegin.jsp">Create a Quiz</a>
 <br>
 <br>
 

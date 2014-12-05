@@ -1,9 +1,8 @@
 <%@ page import="quiz.*" %>    
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
 <jsp:include page="<%=Constants.HEADER_FILE%>">
 	<jsp:param value="Create a Quiz Question" name="title" />
 </jsp:include>
+<html>
 <body>
 
 <% int zID = (Integer)request.getSession().getAttribute("quizNumber"); %>
@@ -59,3 +58,4 @@
 
 </body>
 </html>
+<jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
