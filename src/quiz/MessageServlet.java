@@ -1,10 +1,7 @@
 package quiz;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +46,9 @@ public class MessageServlet extends HttpServlet {
 		switch(requestType) {
 		case Message.MARK_AS_READ:
 			Message.markAsRead(mID);
+			break;
+		case Constants.IGNORE_CHALLENGE:
+			Challenge.ignoreChallenge(Integer.parseInt(getParameter(request, "cID")));
 			break;
 		}
 

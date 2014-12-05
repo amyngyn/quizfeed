@@ -273,3 +273,19 @@ INSERT INTO messages (fromID, toID, content) VALUES
 (2, 1, "hi ryan, message from danielle!"),
 (3, 1, "hi ryan, message from amy!"),
 (3, 2, "hi danielle, message from amy!");
+
+DROP TABLE IF EXISTS challenges;
+CREATE TABLE challenges (
+	cID INT AUTO_INCREMENT PRIMARY KEY,
+	fromID INT,
+	toID INT,
+	zID INT,
+	content TEXT,
+	timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	completed BOOLEAN DEFAULT FALSE
+);
+
+INSERT INTO challenges (fromID, toID, zID, content) VALUES
+	(1, 2, 1, "hey danielle, try this quiz! -ryan"),
+	(2, 3, 1, "hey amy, try this quiz! -danielle"),
+	(3, 1, 1, "hey ryan, try this quiz! -amy");

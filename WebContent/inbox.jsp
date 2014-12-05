@@ -20,14 +20,42 @@
 <h1>You must be logged in to view this page!</h1>
 <%
 	} else {
-%>
-<h1 style="display: inline-block; padding-right: 10px; margin-bottom: 5px;">Messages</h1>
-<a href="compose.jsp">Compose</a>
-<%
-	HashMap<Integer, User> friendRequests = user
+
+		HashMap<Integer, User> friendRequests = user
 				.getFriendRequests();
 		ArrayList<Message> messages = user.getMessages();
-		if (messages.isEmpty()) {
+		ArrayList<Challenge> challenges = user.getChallenges();
+%>
+<h1>Challenges</h1>
+<%
+	if (challenges.isEmpty()) {
+%>
+<p>You have no challenges right now.</p>
+<%
+	} else {
+			for (Challenge challenge : challenges) {
+%>
+<div class="message-container">
+	<p>
+		<a href="user?uid=<%=challenge.getSender().getID()%>"> <%=challenge.getSender().getUsername()%></a>
+		has challenged you to beat their highest score of SCORE on <a
+			href="QuizIntro?num=<%=challenge.getQuiz().getID()%>"><%=challenge.getQuiz().getName()%></a>.
+	</p>
+	<div class="message-content"><%=challenge.getMessage()%></div>
+	<p>
+		<a href="QuizIntro?num=<%=challenge.getQuiz().getID()%>">Take the quiz!</a>
+		<span style="margin-left: 7px; margin-right: 7px;"> | </span>
+		<a href="message?request=<%=Constants.IGNORE_CHALLENGE%>&cID=<%=challenge.getID()%>">Ignore</a>
+	</p>
+</div>
+<%
+	}
+		}
+%>
+<h1 style="margin-bottom: 5px;">Messages</h1>
+<a href="compose.jsp">Compose</a>
+<%
+	if (messages.isEmpty()) {
 %>
 <p>You have no messages right now.</p>
 <%
