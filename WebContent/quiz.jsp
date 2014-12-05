@@ -53,6 +53,7 @@ int size = q.getQuestionCount();
 		<br><input type="text" value="" name="<%=i%>">			
 	<%}else if(type == Constants.FILL_IN_BLANK){ %>
 		<input type="text" value="" name="<%=i%>">	
+		<%=afterBlank %>
 	<%}else if (type == Constants.MULT_CHOICE){%>
 		<!--  Cycle through choices and output ones corresponding to the question -->
 		<%
@@ -137,9 +138,7 @@ int size = q.getQuestionCount();
 		
 		<%
 		}
-		if (type == Constants.FILL_IN_BLANK) { %>
-			<%=afterBlank%>
-		<%}%>
+		%>
 	 </p>
 <%}%>
 <input type="submit" value="Submit">

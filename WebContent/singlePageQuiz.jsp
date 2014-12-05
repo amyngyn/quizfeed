@@ -47,6 +47,7 @@ int randomIndex = randomIndices.get(i);
 		<br><input type="text" value="" name="<%=prevIndex%>">			
 	<%}else if(type == Constants.FILL_IN_BLANK){ %>
 		<input type="text" value="" name="<%=prevIndex%>">	
+			<%=afterBlank%>
 	<%}else if (type == Constants.MULT_CHOICE){%>
 		<!--  Cycle through choices and output ones corresponding to the question -->
 		<%
@@ -126,10 +127,6 @@ int randomIndex = randomIndices.get(i);
 				<% nameCount++;
 				} 
 		}
-		if (type == Constants.FILL_IN_BLANK) { %>
-			<%=afterBlank%>
-		<%}%>
-		<%
 		}
 		%>
 		
@@ -169,6 +166,7 @@ checkAnswer = function() {
 <%} %>
 
 <jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>
+
 
 </body>
 </html>
