@@ -5,21 +5,12 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="quiz.Database" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="quiz.User" %>
+<%@ page import="quiz.*" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<jsp:include page="<%=Constants.HEADER_FILE%>">
+	<jsp:param value="Making a Quiz" name="title" />
+</jsp:include>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Quiz Time</title>
-</head>
-
-<style>
-	table, td, tr {
-	 	border: 1px solid black;
-    	border-collapse: collapse;
-	}
-</style>
 
 <body>
 
@@ -274,3 +265,4 @@ for(int i=0; i<size; i++){%>
 
 </body>
 </html>
+<jsp:include page="<%=Constants.FOOTER_FILE%>"></jsp:include>

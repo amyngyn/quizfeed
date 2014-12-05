@@ -18,7 +18,7 @@
 	<p>Fill in the Blank</p>
 	<p>Question before blank: <input type="text" name="question"></p>
 	<p>Blank/Answer: <input type="text" name="answer"></p>
-	<p>Question after blank blank: <input type="text" name="question*"></p>
+	<p>Question after blank: <input type="text" name="question*"></p>
 <%} %>
 <%if(type == Constants.MULT_CHOICE){ %>
 	<p>Multiple Choice</p>
