@@ -111,11 +111,9 @@ public class CreateQuiz1 extends HttpServlet {
 
 			//add tuple to achievements
 			int AUTHOR_TYPE = 0;
-			Integer uID = (Integer) request.getSession().getAttribute("uID");
-			if (uID != null) {
-				String insertQuery = "INSERT INTO achievements VALUES (" + uID + ", " + AUTHOR_TYPE + ", '" + name + "');";
-				statement.execute(insertQuery);
-			}
+			
+			String insertQuery = "INSERT INTO achievements VALUES (" + user + ", " + AUTHOR_TYPE + ", '" + name + "');";
+			statement.execute(insertQuery);
 			request.getSession().setAttribute("quizNumber", quizNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();
