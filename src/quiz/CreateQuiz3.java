@@ -74,7 +74,10 @@ public class CreateQuiz3 extends HttpServlet {
 			ArrayList<String> choices = new ArrayList<String>();
 			String answer = "";
 			int type = (Integer)request.getSession().getAttribute("type");
-
+			if (type == Constants.FILL_IN_BLANK) {
+				question = request.getParameter("question") + Constants.DELIM + request.getParameter("question*");
+			}
+			
 			if (type == Constants.TEXT_RESPONSE 
 					|| type == Constants.FILL_IN_BLANK || type == Constants.PICTURE_RESPONSE) {
 				answer = request.getParameter("answer");

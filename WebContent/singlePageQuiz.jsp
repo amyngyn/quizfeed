@@ -12,30 +12,42 @@
 </head>
 <body>
 <% 
-
 int i = (Integer)request.getAttribute("qNumber");
 Integer zID = (Integer)session.getAttribute("zID");
 Quiz q = new Quiz(zID);
+ArrayList<Integer> randomIndices = (ArrayList<Integer>)session.getAttribute("randomIndices");
 String nextPage = "NextPageServlet"; 
 if (i == q.getQuestionCount() - 1) {
 	nextPage = "GradeQuiz";	
 }
+int randomIndex = randomIndices.get(i);
+
 %>
 
 <form action = <%=nextPage%> method="post">
 	<input type="hidden" name="qNumber" value=<%=i%>>
-<%	
+<%	int prevIndex = i;
+	i = randomIndex;
+	int k = i;
 	int type = q.getQuestionType(i);
-	
-	if (type != Constants.PICTURE_RESPONSE){  %>
-		<p><%=i + 1%>.<%=q.getQuestion(i) %><br>
-	<% } %>
+	String beforeBlank = "";
+	String afterBlank = "";
+	if (type != Constants.PICTURE_RESPONSE && type != Constants.FILL_IN_BLANK){  %>
+		<p><%=prevIndex + 1%>.<%=q.getQuestion(i) %><br>
+	<% }
+	else if (type == Constants.FILL_IN_BLANK) {
+		String question = q.getQuestion(i);
+		int blankIndex = question.indexOf(Constants.DELIM);
+		beforeBlank = question.substring(0, blankIndex);
+		afterBlank = question.substring(blankIndex + Constants.DELIM.length()); %>
+		<p><%=k + 1%>.<%=beforeBlank%>
+	<%}%>
 
 	
 	<% if(type == Constants.TEXT_RESPONSE){ %>
-		<br><input type="text" value="" name="<%=i%>">			
+		<br><input type="text" value="" name="<%=prevIndex%>">			
 	<%}else if(type == Constants.FILL_IN_BLANK){ %>
-		<input type="text" value="" name="<%=i%>">	
+		<input type="text" value="" name="<%=prevIndex%>">	
 	<%}else if (type == Constants.MULT_CHOICE){%>
 		<!--  Cycle through choices and output ones corresponding to the question -->
 		<%
@@ -45,7 +57,7 @@ if (i == q.getQuestionCount() - 1) {
 		for (int j=0; j<choicesSize; j++){ %>
 			<!-- Output radio button for multiple choice and choice String-->
 			<br>
-			<input type="radio" name="<%=i %>" value="<%=choices2.get(j)%>"><%=choices2.get(j)%>
+			<input type="radio" name="<%=prevIndex %>" value="<%=choices2.get(j)%>"><%=choices2.get(j)%>
 			<% 
 		}%>
 	<%} else if (type == Constants.PICTURE_RESPONSE){%>
@@ -56,7 +68,7 @@ if (i == q.getQuestionCount() - 1) {
 		%>
 		<!-- Output picture and blank text box-->
 		<img src="<%=picture%>" height="300" width="300">
-		<br><input type="text" value="" name="<%=i%>">
+		<br><input type="text" value="" name="<%=prevIndex%>">
 		
 	<!-- Question type 5 multi text response -->	
 	<%} else if (type == Constants.MULTI_TEXT_RESPONSE){%>
@@ -115,8 +127,9 @@ if (i == q.getQuestionCount() - 1) {
 				<% nameCount++;
 				} 
 		}
-		%>
-		
+		if (type == Constants.FILL_IN_BLANK) { %>
+			<%=afterBlank%>
+		<%}%>
 		<%
 		}
 		%>
@@ -131,13 +144,13 @@ checkAnswer = function() {
 	<% for (String s : q.getAnswers(i)) { %>
 		corrAnswer.push("<%=s%>");
 	<%}%>
-	console.log(document.getElementsByName("<%=i%>"));
-	var userAnswer = document.getElementsByName("<%=i%>")[0].value;
+	console.log(document.getElementsByName("<%=prevIndex%>"));
+	var userAnswer = document.getElementsByName("<%=prevIndex%>")[0].value;
 	<%
 	if (type == Constants.MULT_CHOICE) { %>
-		for (var i = 0; i < document.getElementsByName("<%=i%>").length; i++)  {
-			if (document.getElementsByName("<%=i%>")[i].checked) {
-				userAnswer = document.getElementsByName("<%=i%>")[i].value;
+		for (var i = 0; i < document.getElementsByName("<%=prevIndex%>").length; i++)  {
+			if (document.getElementsByName("<%=prevIndex%>")[i].checked) {
+				userAnswer = document.getElementsByName("<%=prevIndex%>")[i].value;
 			}
 		}
 	<%}%>
