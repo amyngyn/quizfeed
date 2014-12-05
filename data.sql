@@ -251,3 +251,14 @@ INSERT INTO achievements VALUES
 	(5, 1, "Fake Take 10"),
 	(5, 2, "Fake Greatest"),
 	(5, 3, "Fake Practice");
+	
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages (
+	mID INT AUTO_INCREMENT PRIMARY KEY,
+	fromID INT,
+	toID INT,
+	message TEXT,
+	timestamp DateTime DEFAULT CURRENT_TIMESTAMP,
+	read BOOLEAN,
+	archived BOOLEAN
+);
