@@ -466,4 +466,43 @@ public class User {
 		}
 		return quizzes;
 	}
+	
+	public HashMap<Integer, ArrayList<Quiz>> getFriendActivities() {
+		HashMap<Integer, ArrayList<Quiz>> activities = new HashMap<Integer, ArrayList<Quiz>>();
+		Iterator<Integer> friends = getFriends().keySet().iterator();
+		
+		if (!friends.hasNext())
+			return activities;
+		
+		String friendIDs = "(";
+		friendIDs += friends.next();
+		while (friends.hasNext()) {
+			friendIDs += ", " + friends.next();
+		}
+		friendIDs += ")";
+		
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			String query = "Select uID, zID from scores where uID IN " + friendIDs + " order by timeTaken DESC;";
+			
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int uID = rs.getInt("uID");
+				int zID = rs.getInt("zID");
+				if (!activities.containsKey(uID)) {
+					activities.put(uID, new ArrayList<Quiz>());
+				}
+				activities.get(uID).add(new Quiz(zID));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return activities;
+	}
 }

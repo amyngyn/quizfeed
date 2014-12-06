@@ -45,22 +45,25 @@
 	<ul>
 		<%
 			boolean showMore = false;
-			int count = achievements.size();
-			if (achievements.size() > 5) {
-				count = 5;
-				showMore = true;
-			}
-			for (int i = 0; i < count; i++) {
+				int count = achievements.size();
+				if (achievements.size() > 5) {
+					count = 5;
+					showMore = true;
+				}
+				for (int i = 0; i < count; i++) {
 		%>
-				<li><%=achievements.get(i)%></li>
+		<li><%=achievements.get(i)%></li>
 		<%
-			}			
+			}
 		%>
 	</ul>
 	<%
 		if (showMore) {
 	%>
-		<p>See the rest of your achivements on <a href="user?uid=<%=user.getID()%>">your profile</a>!</p>
+	<p>
+		See the rest of your achivements on <a href="user?uid=<%=user.getID()%>">your
+			profile</a>!
+	</p>
 	<%
 		}
 		}
@@ -89,14 +92,43 @@
 	</ul>
 
 	<h1>Your Friends' Recent Activities</h1>
-	<p>TODO</p>
+	<%
+		HashMap<Integer, ArrayList<Quiz>> activities = user
+				.getFriendActivities();
+		if (activities.isEmpty()) {
+	%>
+	<p>Your friends haven't done anything.</p>
+	<%
+		} else {
+	%>
+	<ul>
+		<%
+			for (Integer uID : activities.keySet()) {
+					User friend = User.getUser(uID);
+
+					ArrayList<Quiz> friendQuizzes = activities.get(uID);
+					for (Quiz quiz : friendQuizzes) {
+		%>
+		<li><a href="user?uid=<%=friend.getID()%>"><%=friend.getUsername()%></a> took
+			<a href="QuizIntro?num=%<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
+
+		<%
+					}
+			}
+			
+		%>
+	</ul>
+	<%
+		}
+	%>
 </div>
 
 <div style="float: right; margin-right: 75px;">
 	<h1>Your Quizzes</h1>
 	<ul>
 		<%
-			ArrayList<Quiz> userRecentlyCreatedQuizzes = user.getRecentlyCreatedQuizzes(5);
+			ArrayList<Quiz> userRecentlyCreatedQuizzes = user
+					.getRecentlyCreatedQuizzes(5);
 
 			for (int i = 0; i < userRecentlyCreatedQuizzes.size(); i++) {
 				Quiz quiz = userRecentlyCreatedQuizzes.get(i);
