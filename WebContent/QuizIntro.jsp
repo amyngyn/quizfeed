@@ -119,7 +119,7 @@ Vector<Integer> topTotal = new Vector<Integer>();
 Vector<Timestamp> topTimes = new Vector<Timestamp>();
 Vector<Double> topPace = new Vector<Double>();
 
-String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC, timeTaken ASC;";
+String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC;";
 rs = s.executeQuery(topQuery);
 while(rs.next()){
 	topuID.add(rs.getInt("uID"));
@@ -160,7 +160,7 @@ ArrayList<Integer> total = new ArrayList<Integer>();
 ArrayList<Timestamp> highTimes = new ArrayList<Timestamp>();
 ArrayList<Double> highPace = new ArrayList<Double>();
 
-String query = "Select * from scores where zID = " + zID + " order by score DESC;";
+String query = "Select * from scores where zID = " + zID + " order by score DESC, timeTaken ASC;";
 rs = s.executeQuery(query);
 while(rs.next()){
 	uIDs.add(rs.getInt("uID"));
