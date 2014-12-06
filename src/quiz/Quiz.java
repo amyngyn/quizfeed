@@ -254,4 +254,26 @@ public class Quiz {
 
 		return quizzes;
 	}
+
+	public int getNumAttempts() {
+
+		String query = "SELECT COUNT(*) as Count FROM scores WHERE zID=" + zID; 
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			if (rs.next()) {
+				return rs.getInt("Count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return -1;
+	}
 }

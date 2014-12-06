@@ -322,7 +322,7 @@ for(int i=0; i<friendSize; i++){ %>
 			for (int i = 0; i < recentQuizzes.size(); i++) {
 				Quiz quiz = recentQuizzes.get(i);
 		%>
-		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
+		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a> (<%=TimeFormat.prettify(quiz.getTime().getTime())%>)</li>
 		<%
 			}
 		%>
@@ -335,7 +335,7 @@ for(int i=0; i<friendSize; i++){ %>
 			for (int i = 0; i < popularQuizzes.size(); i++) {
 				Quiz quiz = popularQuizzes.get(i);
 		%>
-		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
+		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a> (<%=quiz.getNumAttempts()%>)</li>
 		<%
 			}
 		%>
