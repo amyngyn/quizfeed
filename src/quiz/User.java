@@ -407,7 +407,7 @@ public class User {
 			e.printStackTrace();
 		} finally {
 			Database.closeConnections(con, statement, rs);
-		}		
+		}
 		return achievements;
 	}
 

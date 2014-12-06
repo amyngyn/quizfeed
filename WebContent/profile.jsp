@@ -92,24 +92,128 @@
 	}
 %>
 <h2>Achievements</h2>
-<%
-	ArrayList<String> achievements = userToDisplay.getAchievements();
-	if (achievements.isEmpty()) {
-%>
-You have no achievements!
-<%
-	} else {
-%>
-<ol>
+<table class="border">
+<tr><td class="border"><b>Your Achievements</b></td></tr>
 	<%
-		for (String achievement : achievements) {
+	{
+		Integer uID = userToDisplay.getID();
+	Connection con = Database.openConnection();
+	Statement statement = Database.getStatement(con);
+	ResultSet rs = null;
+		if (uID != null) {
+			String query = "Select name From achievements Where type = 0 AND uID="
+					+ uID + ";";
+			rs = statement.executeQuery(query);
+			Vector<String> created = new Vector<String>();
+			while (rs.next()) {
+				created.add(rs.getString("name"));
+			}
+			int size = created.size();
+			int AMATEUR_AUTHOR = 1;
+			if (size >= AMATEUR_AUTHOR) {
+				String title = "";
+				for (int i = 0; i < AMATEUR_AUTHOR; i++) {
+					title += created.get(i);
+					if (i != AMATEUR_AUTHOR - 1)
+						title += ", ";
+				}
 	%>
-	<li><%=achievement%></li>
-</ol>
-<%
+	<tr class="border">
+		<td title="<%=title%>" class="pointer">Amateur Author</td>
+	</tr>
+	<%
 		}
-%>
-<%
-	}
-%>
+			int PROLIFIC_AUTHOR = 5;
+			if (size >= PROLIFIC_AUTHOR) {
+				String title = "";
+				for (int i = 0; i < PROLIFIC_AUTHOR; i++) {
+					title += created.get(i);
+					if (i != PROLIFIC_AUTHOR - 1)
+						title += ", ";
+				}
+	%>
+	<tr class="border">
+		<td title="<%=title%>" class="pointer">Prolific Author</td>
+	</tr>
+	<%
+		}
+	%>
+
+	<%
+		int PRODIGIOUS_AUTHOR = 10;
+			if (size >= PRODIGIOUS_AUTHOR) {
+				String title = "";
+				for (int i = 0; i < PRODIGIOUS_AUTHOR; i++) {
+					title += created.get(i);
+					if (i != PRODIGIOUS_AUTHOR - 1)
+						title += ", ";
+				}
+	%>
+	<tr class="border">
+		<td title="<%=title%>" class="pointer">Prodigious Author</td>
+	</tr>
+	<%
+		}
+	%>
+
+	<%
+		query = "Select name From achievements Where type = 1 AND uID="
+					+ uID + ";";
+			rs = statement.executeQuery(query);
+			Vector<String> taken = new Vector<String>();
+			while (rs.next()) {
+				taken.add(rs.getString("name"));
+			}
+			size = taken.size();
+			int QUIZ_MACHINE = 10;
+			if (size >= QUIZ_MACHINE) {
+				String title = "";
+				for (int i = 0; i < QUIZ_MACHINE; i++) {
+					title += taken.get(i);
+					if (i != QUIZ_MACHINE - 1)
+						title += ", ";
+				}
+	%>
+	<tr class="border">
+		<td title="<%=title%>" class="pointer">Quiz Machine</td>
+	</tr>
+	<%
+		}
+	%>
+
+	<%
+		uID = userToDisplay.getID();
+		query = "Select name From achievements Where type = 2 AND uID=" + uID + ";";
+		rs = statement.executeQuery(query);
+	%>
+	<%
+		if (rs.next()) {
+				String high = rs.getString("name");
+	%>
+	<tr class="border">
+		<td title="<%=high%>" class="pointer">I am the Greatest</td>
+	</tr>
+	<%
+		}
+	%>
+
+	<%
+		// TO-DO: award this achievement when practice mode works
+			// For achievements, finished all but this last step. Figured we'd find this while testing.
+			query = "Select name From achievements Where type = 3 AND uID="
+					+ uID + ";";
+			rs = statement.executeQuery(query);
+	%>
+	<%
+		if (rs.next()) {
+				String practice = rs.getString("name");
+	%>
+	<tr class="border">
+		<td title="<%=practice%>" class="pointer">Practice Makes Perfect</td>
+	</tr>
+	<%
+		}}
+	%>
+</table>
+<% } %>
 <jsp:include page="<%=Constants.FOOTER_FILE%>" />
