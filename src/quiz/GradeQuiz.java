@@ -164,7 +164,11 @@ public class GradeQuiz extends HttpServlet {
 				}
 				String correct;
 				try {
-					correct = q.getAnswers(i).get(0);
+					if (random && mPages) {
+						correct = q.getAnswers(randomIndices.get(i)).get(0);
+					} else {
+						correct = q.getAnswers(i).get(0);
+					}
 					if (correct.equals(userAnswer)) score++;
 				} catch (SQLException e) {e.printStackTrace();}
 			
@@ -178,7 +182,11 @@ public class GradeQuiz extends HttpServlet {
 				}
 				String correct;
 				try {
-					correct = q.getAnswers(i).get(0);
+					if (random && mPages) {
+						correct = q.getAnswers(randomIndices.get(i)).get(0);
+					} else {
+						correct = q.getAnswers(i).get(0);
+					}
 					if (correct.equals(userAnswer)) score++;
 				} catch (SQLException e) {e.printStackTrace();}
 				
@@ -192,7 +200,11 @@ public class GradeQuiz extends HttpServlet {
 				}
 				String correct;
 				try {
-					correct = q.getAnswers(i).get(0);
+					if (random && mPages) {
+						correct = q.getAnswers(randomIndices.get(i)).get(0);
+					} else {
+						correct = q.getAnswers(i).get(0);
+					}
 					if (correct.equals(userAnswer)) score++;
 				} catch (SQLException e) {e.printStackTrace();}
 				
