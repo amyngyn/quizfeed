@@ -187,7 +187,7 @@ public class Quiz {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 
-			String query = "Select zID From quizzes Order by zID LIMIT " + limit + ";";
+			String query = "Select zID From quizzes ORDER BY time DESC LIMIT " + limit + ";";
 			rs = statement.executeQuery(query);
 
 			while (rs.next()) {
