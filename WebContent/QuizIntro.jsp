@@ -119,7 +119,7 @@ Vector<Integer> topTotal = new Vector<Integer>();
 Vector<Timestamp> topTimes = new Vector<Timestamp>();
 Vector<Double> topPace = new Vector<Double>();
 
-String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC;";
+String topQuery = "Select uID, max(score) as score, max(possible) as possible, time, timeTaken from scores where zID=" + zID + " group by uID order by score DESC, ABS(timeTaken) ASC;";
 rs = s.executeQuery(topQuery);
 while(rs.next()){
 	topuID.add(rs.getInt("uID"));

@@ -29,23 +29,23 @@ public class Quiz {
 		random = rs.getBoolean("random");
 		multiple = rs.getBoolean("multiple");
 		immediate = rs.getBoolean("immediate");
-		
+
 		Database.closeConnections(c, s, rs);
 		// close database connection
 	}
-	
+
 	public boolean getRandom() {
 		return random;
 	}
-	
+
 	public boolean getMultiple() {
 		return multiple;
 	}
-	
+
 	public boolean getImmediate() {
 		return immediate;
 	}
-	
+
 	public int getID() {
 		return zID;
 	}
@@ -57,15 +57,15 @@ public class Quiz {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public int getuID() {
 		return uID;
 	}
-	
+
 	public Timestamp getTime() {
 		return time;
 	}
-	
+
 	public int getQuestionCount() throws SQLException{
 		String query = "Select count(*) as count from questions where zID =" + zID + ";";
 		Connection c = Database.openConnection();
@@ -74,10 +74,10 @@ public class Quiz {
 		rs.next();
 		int count = rs.getInt("count");
 		Database.closeConnections(c, s, rs);
-		
+
 		return count;
 	}
-	
+
 	public String getQuestion(int sID) throws SQLException{
 		String query = "Select * from questions where zID =" + zID + " and sID=" + sID + ";";
 		Connection c = Database.openConnection();
@@ -86,7 +86,7 @@ public class Quiz {
 		rs.next();
 		String question = rs.getString("question");
 		Database.closeConnections(c, s, rs);
-		
+
 		return question;
 	}
 
@@ -98,7 +98,7 @@ public class Quiz {
 		rs.next();
 		int type = rs.getInt("type");
 		Database.closeConnections(c, s, rs);
-		
+
 		return type;
 	}
 
@@ -107,51 +107,51 @@ public class Quiz {
 		Connection c = Database.openConnection();
 		Statement s = Database.getStatement(c);
 		ResultSet rs = s.executeQuery(query);
-		
+
 		ArrayList<Integer> types = new ArrayList<Integer>();
 		while(rs.next()){
 			types.add(rs.getInt("type"));
 		}
 		Database.closeConnections(c, s, rs);
-		
+
 		return types;
 	}
-	
-	
+
+
 	public ArrayList<String> getChoices(int sID) throws SQLException{
 		String query = "Select * from choices where zID =" + zID + " and sID=" + sID + ";";
 		Connection c = Database.openConnection();
 		Statement s = Database.getStatement(c);
 		ResultSet rs = s.executeQuery(query);
 		ArrayList<String> choices = new ArrayList<String>();
-		
-		
+
+
 		while(rs.next()){
 			choices.add(rs.getString("choice"));
-		
+
 		}
 		Database.closeConnections(c, s, rs);
-		
+
 		return choices;
 	}
-	
+
 	public ArrayList<String> getAnswers(int sID) throws SQLException{
 		String query = "Select * from answers where zID =" + zID + " and sID=" + sID + ";";
 		Connection c = Database.openConnection();
 		Statement s = Database.getStatement(c);
 		ResultSet rs = s.executeQuery(query);
-		
-		ArrayList<String> answers = new ArrayList();
-		
+
+		ArrayList<String> answers = new ArrayList<String>();
+
 		while(rs.next()){
 			answers.add(rs.getString("answer"));
 		}
 
 		Database.closeConnections(c, s, rs);
-		
+
 		return answers;
 	}
-	
+
 	public String getAnswersString(int sID) throws SQLException{
 		ArrayList<String> answerArr = getAnswers(sID);
 		String answers = "";
@@ -159,24 +159,24 @@ public class Quiz {
 			answers += answerArr.get(i);
 			if(i != answerArr.size() - 1) answers += ", ";
 		}
-		
+
 		return answers;
 	}
-	
+
 	public Integer getChoicesCount(int sID) throws SQLException{
 		String query = "Select count(*) as count from choices where zID =" + zID + " and sID=" + sID + ";";
 		Connection c = Database.openConnection();
 		Statement s = Database.getStatement(c);
 		ResultSet rs = s.executeQuery(query);
 		rs.next();
-		
+
 		int count = rs.getInt("count");
-		
+
 		Database.closeConnections(c, s, rs);
-		
+
 		return count;
 	}
-	
+
 	public static ArrayList<Quiz> getRecentQuizzes(int limit) {
 		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 
@@ -201,7 +201,7 @@ public class Quiz {
 		}
 		return quizzes;
 	}
-	
+
 	public static ArrayList<Quiz> getPopularQuizzes(int limit) {
 		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 
@@ -211,7 +211,7 @@ public class Quiz {
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
-			
+
 			String query = "Select zID, count(*) as Count From scores Group By zID Order By Count DESC LIMIT " + limit + ";";
 			rs = statement.executeQuery(query);
 
@@ -253,5 +253,27 @@ public class Quiz {
 
 
 		return quizzes;
+	}
+
+	public int getNumAttempts() {
+
+		String query = "SELECT COUNT(*) as Count FROM scores WHERE zID=" + zID; 
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			rs = statement.executeQuery(query);
+			if (rs.next()) {
+				return rs.getInt("Count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return -1;
 	}
 }
