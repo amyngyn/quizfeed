@@ -39,7 +39,7 @@ int randomIndex = randomIndices.get(i);
 		int blankIndex = question.indexOf(Constants.DELIM);
 		beforeBlank = question.substring(0, blankIndex);
 		afterBlank = question.substring(blankIndex + Constants.DELIM.length()); %>
-		<p><%=k + 1%>.<%=beforeBlank%>
+		<p><%=prevIndex + 1%>.<%=beforeBlank%>
 	<%}%>
 
 	

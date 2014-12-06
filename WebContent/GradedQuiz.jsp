@@ -42,8 +42,9 @@
 	<% Integer zID = (Integer)session.getAttribute("zID");
 	Quiz q = new Quiz(zID);
 	int count = q.getQuestionCount();
+	ArrayList<Integer> randomIndices = (ArrayList<Integer>)session.getAttribute("randomIndices");
 	for(int i=0; i<count; i++){
-		String answers = q.getAnswersString(i);
+		String answers = q.getAnswersString(randomIndices.get(i));
 		
 		Object inputs = allInput.get(i);
 		int type = q.getQuestionType(i);
