@@ -160,7 +160,7 @@ ArrayList<Integer> total = new ArrayList<Integer>();
 ArrayList<Timestamp> highTimes = new ArrayList<Timestamp>();
 ArrayList<Double> highPace = new ArrayList<Double>();
 
-String query = "Select * from scores where zID = " + zID + " order by score DESC, timeTaken ASC;";
+String query = "Select * from scores where zID = " + zID + " order by score DESC, abs(timeTaken) ASC;";
 rs = s.executeQuery(query);
 while(rs.next()){
 	uIDs.add(rs.getInt("uID"));
