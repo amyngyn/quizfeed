@@ -84,7 +84,7 @@
 			for (int i = 0; i < recentlyTakenQuizzes.size(); i++) {
 					Quiz quiz = recentlyTakenQuizzes.get(i);
 		%>
-		<li><a href="QuizIntro?num=%<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
+		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
 		<%
 			}
 			}
