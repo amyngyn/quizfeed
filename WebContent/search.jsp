@@ -39,7 +39,7 @@
 	<%
 		for (Quiz quiz : quizzes) {
 	%>
-	<li><a href="quiz?uid=<%=quiz.getID()%>"><b> <%=quiz.getName()%>
+	<li><a href="QuizIntro?num=<%=quiz.getID()%>"><b> <%=quiz.getName()%>
 		</b></a> - <%=quiz.getDescription()%></li>
 	<%
 		}

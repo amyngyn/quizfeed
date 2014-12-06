@@ -38,7 +38,7 @@
 <div class="message-container">
 	<p>
 		<a href="user?uid=<%=challenge.getSender().getID()%>"> <%=challenge.getSender().getUsername()%></a>
-		has challenged you to beat their highest score of SCORE on <a
+		has challenged you to beat their highest score on <a
 			href="QuizIntro?num=<%=challenge.getQuiz().getID()%>"><%=challenge.getQuiz().getName()%></a>.
 	</p>
 	<div class="message-content"><%=challenge.getMessage()%></div>

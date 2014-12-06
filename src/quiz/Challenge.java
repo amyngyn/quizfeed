@@ -12,7 +12,7 @@ public class Challenge {
 	private Quiz quiz;
 	private String content;
 
-	public Challenge(int cID, User sender, User recipient, Quiz zID,	String content, boolean completed) {
+	public Challenge(int cID, User sender, User recipient, Quiz zID, String content, boolean completed) {
 		this.id = cID;
 		this.sender = sender;
 		this.quiz = zID;
@@ -51,7 +51,12 @@ public class Challenge {
 				int cID = rs.getInt("cID");
 				User sender = User.getUser(rs.getInt("fromID"));
 				User recipient = User.getUser(rs.getInt("toID"));
-				Quiz quiz= new Quiz(rs.getInt("zID"));
+				Quiz quiz;
+				try {
+					quiz = new Quiz(rs.getInt("zID"));
+				} catch (SQLException ex) {
+					continue; // quiz no longer exists
+				}
 				String content = rs.getString("content");
 				boolean completed = rs.getBoolean("completed");
 				if (!completed) {
@@ -59,7 +64,7 @@ public class Challenge {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		} finally {
 			Database.closeConnections(con, statement, rs);
 		}
@@ -67,7 +72,24 @@ public class Challenge {
 	}
 
 	public static void sendChallenge(int fromID, int toID, int zID, String content) {
+		Connection con = null;
+		Statement statement = null;
 
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			String query = "INSERT INTO challenges (fromID, toID, zID, content) VALUES("
+					+ fromID + ", "
+					+ toID + ", "
+					+ zID + ", "
+					+ "'" + content + "');";
+
+			statement.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement);
+		}
 	}
 
 	public static void markAsCompleted(int id) {

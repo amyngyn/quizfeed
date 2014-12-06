@@ -186,7 +186,7 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
-				allInput.add(userAnswer);
+				
 				if (mPages && i != questions - 1) {
 					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
 				}
@@ -194,6 +194,8 @@ public class GradeQuiz extends HttpServlet {
 				try {
 					correct = q.getAnswers(i).get(0);
 					if (correct.equals(userAnswer)) score++;
+					allInput.add(userAnswer);
+					
 				} catch (SQLException e) {e.printStackTrace();}
 				
 				possible++;

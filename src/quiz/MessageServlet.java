@@ -25,7 +25,7 @@ public class MessageServlet extends HttpServlet {
 	private String getParameter(HttpServletRequest request, String param) {
 		String[] valueParam = request.getParameterValues(param);
 		if (valueParam == null || valueParam.length != 1) {
-			return "0";
+			return "" + Constants.SEND_CHALLENGE;
 		}
 		return valueParam[0];
 	}
@@ -61,19 +61,36 @@ public class MessageServlet extends HttpServlet {
 		if (currentUser == null) {
 			throw new IllegalAccessError("Must be logged in to do this.");
 		}
-		
+
 		int fromID = currentUser.getID();
+		int requestType = Integer.parseInt(getParameter(request, "request"));
 		int toID = Integer.parseInt(getParameter(request, "toID"));
 		String content = getParameter(request, "content");
-
-		try {
-			Message.sendMessage(fromID, toID, content);
-			session.setAttribute("message", "Message sent successfully!");
-		} catch (Exception e) {
-			e.printStackTrace();
-			session.setAttribute("message", e.getMessage());
-		}
 		
-		response.sendRedirect("inbox.jsp");
+		if (requestType == Constants.SEND_CHALLENGE) {
+			System.out.println("to: " + toID);
+			System.out.println("from: " + fromID);
+			int zID = Integer.parseInt(getParameter(request, "zID"));
+			System.out.println("zID: " + zID);
+			try {
+				Challenge.sendChallenge(fromID, toID, zID, content);
+				System.out.println(zID);
+			} catch (Exception e) {
+				e.printStackTrace();
+				session.setAttribute("message", e.getMessage());
+			}
+
+			response.sendRedirect("index.jsp");
+		} else {
+			try {
+				Message.sendMessage(fromID, toID, content);
+			} catch (Exception e) {
+				e.printStackTrace();
+				session.setAttribute("message", e.getMessage());
+			}
+
+			response.sendRedirect("inbox.jsp");
+		}
+
 	}
 }

@@ -8,7 +8,7 @@
 <%@ page import="quiz.User"%>
 
 <jsp:include page="<%=Constants.HEADER_FILE%>">
-	<jsp:param value="Home" name="title" />
+	<jsp:param value="History" name="title" />
 </jsp:include>
 
 <%
@@ -78,8 +78,7 @@
 				<td class="wider, border"><b>TimeTaken</b></td>
 			</tr>
 			<%
-				int max = zIDs.size() > 6 ? 6 : zIDs.size();
-				for (int i = 0; i < max; i++) {
+				for (int i = 0; i < zIDs.size(); i++) {
 			%>
 			<tr class="border">
 				<td class="border"><a href="QuizIntro?num=<%=zIDs.get(i)%>"><%=quizNames.get(i)%></a></td>

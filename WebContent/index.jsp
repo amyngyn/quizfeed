@@ -160,7 +160,7 @@
 </table>
 <% } %>
 	<h1>Your Recent Activities</h1>
-	<a href="history.jsp">Scores Summary Page</a>
+	<p><a href="history.jsp">Scores Summary Page</a></p>
 <%
 {
 		Integer uID = user.getID();
@@ -257,17 +257,20 @@ for(int i=0; i<friends.size(); i++){
 		// query for friends name
 	}
 	
-	for(int x=0; x<frienduIDs.size(); x++){
-		query ="select * from users where uID=" + frienduIDs.get(x) + ";";
-		ResultSet result = statement.executeQuery(query);
-		if(result.next()){
-			friendNames.add(result.getString("username"));
-		}else{
-			friendNames.add("Former User");
-		}
-		result.close();
-	}	
+	
 }
+
+for(int x=0; x<frienduIDs.size(); x++){
+	String query ="select * from users where uID=" + frienduIDs.get(x) + ";";
+	ResultSet result = statement.executeQuery(query);
+	if(result.next()){
+		friendNames.add(result.getString("username"));
+	}else{
+		friendNames.add("Former User");
+	}
+	result.close();
+}	
+
 for(int x=0; x<friendzIDs.size(); x++){
 	String query ="select * from quizzes where zID=" + friendzIDs.get(x) + ";";
 	ResultSet result = statement.executeQuery(query);
@@ -335,7 +338,7 @@ for(int i=0; i<friendSize; i++){ %>
 			for (int i = 0; i < popularQuizzes.size(); i++) {
 				Quiz quiz = popularQuizzes.get(i);
 		%>
-		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a> (<%=quiz.getNumAttempts()%>)</li>
+		<li><a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a> (<%=quiz.getNumAttempts()%> attempts)</li>
 		<%
 			}
 		%>
