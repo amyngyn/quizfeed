@@ -158,10 +158,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 2) { // fill in blank
 				String userAnswer = (String) request.getParameter(i + "");
-				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
+				allInput.add(userAnswer);
 				String correct;
 				try {
 					if (random && mPages) {
@@ -176,10 +176,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 3) { // multiple choice
 				String userAnswer = (String) request.getParameter(i + "");
-				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
+				allInput.add(userAnswer);
 				String correct;
 				try {
 					if (random && mPages) {
@@ -194,10 +194,10 @@ public class GradeQuiz extends HttpServlet {
 
 			} else if (types.get(i) == 4) { // picture response
 				String userAnswer = (String) request.getParameter(i + "");
-				allInput.add(userAnswer);
 				if (mPages && i != questions - 1) {
-					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(randomIndices.get(i));
+					userAnswer = ((ArrayList<String>)request.getSession().getAttribute("answers")).get(i);
 				}
+				allInput.add(userAnswer);
 				String correct;
 				try {
 					if (random && mPages) {
