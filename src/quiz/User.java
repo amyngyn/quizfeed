@@ -487,7 +487,7 @@ public class User {
 		try {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
-			String query = "Select uID, zID from scores where uID IN " + friendIDs + " order by timeTaken DESC;";
+			String query = "Select uID, zID from scores where uID IN " + friendIDs + " order by timeTaken DESC LIMIT 5;";
 			
 			rs = statement.executeQuery(query);
 			while (rs.next()) {

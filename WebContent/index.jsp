@@ -110,7 +110,7 @@
 					for (Quiz quiz : friendQuizzes) {
 		%>
 		<li><a href="user?uid=<%=friend.getID()%>"><%=friend.getUsername()%></a> took
-			<a href="QuizIntro?num=%<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
+			<a href="QuizIntro?num=<%=quiz.getID()%>"><%=quiz.getName()%></a></li>
 
 		<%
 					}
