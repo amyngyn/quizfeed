@@ -161,7 +161,12 @@ checkAnswer = function() {
 };
 
 </script>
-<%if(q.getImmediate()) { %>
+<%
+/*
+ * giving the user the option to try the question again
+ * like flashcards you should be able to try again
+ */
+if(q.getImmediate()) { %>
 	<button onclick="checkAnswer()">Check Answer</button>
 <%} %>
 
