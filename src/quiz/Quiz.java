@@ -177,9 +177,7 @@ public class Quiz {
 		return count;
 	}
 	
-	
-	// TODO use skip and amount params in query!
-	public static ArrayList<Quiz> getQuizzes() {
+	public static ArrayList<Quiz> getRecentQuizzes(int limit) {
 		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 
 		Connection con = null;
@@ -189,21 +187,44 @@ public class Quiz {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 
-			String query = "Select zID, name, description From quizzes Order by zID;";
+			String query = "Select zID From quizzes Order by zID LIMIT " + limit + ";";
 			rs = statement.executeQuery(query);
 
 			while (rs.next()) {
-				String name = rs.getString("name");
-				String description = rs.getString("description");
 				int zID = rs.getInt("zID");
-				//quizzes.add(new Quiz(zID, name, description));
+				quizzes.add(new Quiz(zID));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			Database.closeConnections(con, statement, rs);
 		}
-		return null;
+		return quizzes;
+	}
+	
+	public static ArrayList<Quiz> getPopularQuizzes(int limit) {
+		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			
+			String query = "Select zID, count(*) as Count From scores Group By zID Order By Count DESC LIMIT " + limit + ";";
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				int zID = rs.getInt("zID");
+				quizzes.add(new Quiz(zID));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return quizzes;
 	}
 
 	public static ArrayList<Quiz> findQuizzes(String queryTerm) {

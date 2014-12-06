@@ -10,6 +10,10 @@ import java.util.Random;
 public class User {
 	private static final int SALT_LENGTH = 20;
 	private static final int PASSWORD_MINIMUM = 8;
+	
+	private static final int PRODIGIOUS_AUTHOR = 10;
+	private static final int PROLIFIC_AUTHOR = 5;
+	private static final int AMATEUR_AUTHOR = 1;
 	private final int id;
 	private final String username;
 
@@ -26,10 +30,10 @@ public class User {
 		this.id = uID;
 		this.username = username;	
 	}
-	
+
 	public boolean isAdmin(){
 		String query = "Select uID from administrators where uID=" + this.id + ";";
-		
+
 		Connection con = null;
 		Statement statement = null;
 		ResultSet rs = null;
@@ -47,7 +51,7 @@ public class User {
 			Database.closeConnections(con, statement, rs);
 		}
 		return admin;
-		
+
 	}
 
 	public int getID() {
@@ -352,7 +356,7 @@ public class User {
 		executeSimpleQuery(first);
 		executeSimpleQuery(second);
 	}
-	
+
 	public ArrayList<Message> getMessages() throws Exception {
 		ArrayList<Message> messages = Message.getMessages(id);
 		Iterator<Message> it = messages.iterator();
@@ -362,8 +366,104 @@ public class User {
 		}
 		return messages;
 	}
-	
+
 	public ArrayList<Challenge> getChallenges() {
 		return Challenge.getChallenges(id);
+	}
+
+	public ArrayList<String> getAchievements() {
+		ArrayList<String> achievements = new ArrayList<String>();
+		
+		ArrayList<Quiz> taken = getRecentlyTakenQuizzes(-1);
+		ArrayList<Quiz> created = getRecentlyCreatedQuizzes(-1);
+		
+		switch(created.size()) {
+		case PRODIGIOUS_AUTHOR:
+			achievements.add("Prodigious Author");
+		case PROLIFIC_AUTHOR:
+			achievements.add("Prolific Author");
+		case AMATEUR_AUTHOR:
+			achievements.add("Amateur Author");
+		}
+		
+		if (taken.size() > 10) {
+			achievements.add("Quiz Machine");
+		}
+
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			String query = "SELECT name FROM achievements WHERE uID=" + id;
+			
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				String name = rs.getString("name");
+				achievements.add(name);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}		
+		return achievements;
+	}
+
+	public ArrayList<Quiz> getRecentlyTakenQuizzes(int limit) {
+		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			String query = "Select zID from scores where uID="
+					+ id + " order by time DESC";
+			if (limit != -1) {
+				query += " LIMIT " + limit;
+			}
+			query += ";";
+			
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int zID = rs.getInt("zID");
+				quizzes.add(new Quiz(zID));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return quizzes;
+	}
+	
+	public ArrayList<Quiz> getRecentlyCreatedQuizzes(int limit) {
+		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+		Connection con = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			con = Database.openConnection();
+			statement = Database.getStatement(con);
+			String query = "Select zID from quizzes where uID="
+					+ id + " order by time DESC";
+			if (limit != -1) {
+				query += " LIMIT " + limit;
+			}
+			query += ";";
+			
+			rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int zID = rs.getInt("zID");
+				quizzes.add(new Quiz(zID));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeConnections(con, statement, rs);
+		}
+		return quizzes;
 	}
 }

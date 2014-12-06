@@ -44,10 +44,10 @@ public class CreateQuiz1 extends HttpServlet {
 			con = Database.openConnection();
 			statement = Database.getStatement(con);
 
-			String query = "Select count(*) as Count From quizzes";
+			String query = "Select max(zID) as Count From quizzes;";
 			rs = statement.executeQuery(query);
 			rs.next();
-			return rs.getInt("Count");
+			return rs.getInt("Count") + 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

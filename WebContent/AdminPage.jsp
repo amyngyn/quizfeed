@@ -51,14 +51,13 @@ input#input {
 	<p><b>Site Statistics:</b>
 		<br>&nbsp;&nbsp;Total Users: <b><%=totalUsers %></b>
 		<br>&nbsp;&nbsp;Total Quiz Attempts: <b><%=totalTaken %></b>
-	</p>	
+	</p>
 	
-	<p>Add an announcement:
+	<p>Add an announcement:</p>
 	<form action="AdminAnnouncement" method="post">
 		<input type="text" id="input" name="announcement"> <input
 			type="submit" name="Post">
 	</form>
-	</p>
 	
 	
 	<%
@@ -72,7 +71,7 @@ input#input {
 		uIDs.add(rs.getInt("uID"));
 	}
 	%>
-	<p>Remove a user:
+	<p>Remove a user:</p>
 	<form action="AdminUser" method="post">
 		<select name="removeUser">
 		<%for(int i=0; i<uIDs.size(); i++){ %>
@@ -81,7 +80,6 @@ input#input {
 		</select>
 		<input type="submit" name="Remove">
 	</form>
-	</p>
 	
 
 	<%
@@ -95,7 +93,7 @@ input#input {
 	}
 	%>
 	
-	<p>Add an administrator:
+	<p>Add an administrator:</p>
 	<form action="AdminNew" method="post">
 		<select name="newAdmin">
 		<%for(int i=0; i<everyone.size(); i++){ %>
@@ -104,7 +102,6 @@ input#input {
 		</select>
 		<input type="submit" name="Add">
 	</form>
-	</p>
 	
 	<%
 	
@@ -129,7 +126,7 @@ input#input {
 	}
 	%>
 	
-	<p>Remove an administrator:
+	<p>Remove an administrator:</p>
 	<form action="AdminRemove" method="post">
 		<select name="removeAdmin">
 		<%for(int i=0; i<names.size(); i++){ %>
@@ -137,11 +134,7 @@ input#input {
  	 	<%} %>
 		</select>
 		<input type="submit" name="Remove">
-	</form>
-	</p>
-	
-	
-	
+	</form>	
 	
 	
 	<%
@@ -158,7 +151,7 @@ input#input {
 	
 	%>
 	
-	<p>Remove quiz history:
+	<p>Remove quiz history:</p>
 	<form action="AdminQuiz" method="post">
 		<select name="removeQuiz">
 		<%for(int i=0; i<zIDs.size(); i++){ %>
@@ -167,7 +160,6 @@ input#input {
 		</select>
 		<input type="submit" name="Remove">
 	</form>
-	</p>
 
 
 <%
@@ -182,7 +174,7 @@ input#input {
 	}
 	
 	%>
-	<p>Remove a quiz and all its components:
+	<p>Remove a quiz and all its components:</p>
 	<form action="AdminEntireQuiz" method="post">
 		<select name="removeQuiz">
 		<%for(int i=0; i<zIDs.size(); i++){ %>
@@ -191,15 +183,7 @@ input#input {
 		</select>
 		<input type="submit" name="Remove">
 	</form>
-	</p>
 
-
-
-
-
-	<p>
-		<a href="<%=Constants.INDEX%>">Home</a>
-	</p>
 
 	<% Database.closeConnections(con, statement, rs); %>
 
