@@ -33,7 +33,6 @@ INSERT INTO questions VALUES
 	(1, 3, "", 4),
 	(1, 4, "Name the 4 cardinal directions.", 5),
 	(1, 5, "Who are Stanford Alumni?", 6),
-	(1, 6, "Can you match the rivals?", 7),
 	(2, 0, "What's the main languages from CS107 and CS108? (with the ++)", 5),
 	(2, 1, "The most popular open-source database is My###", 2),
 	(2, 2, "Which one isn't cool?", 3);
@@ -67,10 +66,6 @@ INSERT INTO choices VALUES
 	(1, 5, "Reese Witherspoon"),
 	(1, 5, "Harry Potter"),
 	(1, 5, "Charles Schwab"),
-	(1, 6, "Cal"),
-	(1, 6, "Michigan"),
-	(1, 6, "OSU"),
-	(1, 6, "Stanford"),
 	(2, 0, ""),
 	(2, 0, ""),
 	(2, 2, "Hacking"),
@@ -99,8 +94,6 @@ INSERT INTO answers VALUES
 	(1, 5, "Herbert Hoover"),
 	(1, 5, "Reese Witherspoon"),
 	(1, 5, "Charles Schwab"),
-	(1, 6, "1"),
-	(1, 6, "2"),
 	(2, 0, "Java"),
 	(2, 0, "C++"),
 	(2, 1, "SQL"),
@@ -128,10 +121,10 @@ DROP TABLE IF EXISTS administrators;
 CREATE TABLE administrators (
 	uID INT
 );
-insert into administrators (uID) VALUES
-	(0),
+INSERT INTO administrators (uID) VALUES
 	(1),
-	(2);
+	(2),
+	(3);
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements (

@@ -6,6 +6,13 @@
 </jsp:include>
 
 <%
+	User user = (User) session.getAttribute("user");
+	if (user == null) {
+		String redirectURL = "login.jsp";
+		response.sendRedirect(redirectURL);
+		return;
+	}
+	
 	HashMap<Integer, User> users = (HashMap<Integer, User>) request
 			.getAttribute("users");
 	ArrayList<Quiz> quizzes = (ArrayList<Quiz>) request

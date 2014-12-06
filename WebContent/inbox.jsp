@@ -45,7 +45,7 @@
 	<p>
 		<a href="QuizIntro?num=<%=challenge.getQuiz().getID()%>">Take the quiz!</a> <span
 			style="margin-left: 7px; margin-right: 7px;"> | </span> <a
-			href="message?request=<%=Constants.IGNORE_CHALLENGE%>&cID=<%=challenge.getID()%>">Ignore</a>
+			href="message?request=<%=Constants.IGNORE_CHALLENGE%>&cID=<%=challenge.getID()%>">Delete</a>
 	</p>
 </div>
 <%
